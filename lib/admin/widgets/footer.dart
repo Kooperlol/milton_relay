@@ -5,7 +5,7 @@ import 'package:milton_relay/shared/routing/routes.dart';
 
 import '../../shared/utils/color_util.dart';
 
-GNav getStudentFooter(BuildContext context) {
+GNav getAdminFooter(BuildContext context) {
   return GNav(
     backgroundColor: ColorUtil.red,
     color: Colors.white,
@@ -25,8 +25,9 @@ GNav getStudentFooter(BuildContext context) {
       const GButton(
         icon: Icons.calendar_month,
       ),
-      const GButton(
-        icon: Icons.person,
+      GButton(
+        icon: Icons.group,
+        onPressed: () => context.goNamed(Routes.userManagerScreen.toName),
       ),
       const GButton(
         icon: Icons.warning,

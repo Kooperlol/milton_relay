@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:milton_relay/shared/services/auth_service.dart';
 
-import '../routing/router_routes.dart';
+import '../routing/routes.dart';
 import '../utils/color_util.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -23,9 +23,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
     _initalizeFirebase().then((value) {
-      AuthService().authState.first.then((user) {
-        if (user == null) GoRouter.of(context).goNamed(Routes.login.toName);
-        GoRouter.of(context).goNamed(Routes.studentDashboard.toName);
+      AuthService().authState.first.then((user) async {
+        if (user == null) {
+          GoRouter.of(context).goNamed(Routes.login.toName);
+        } else {
+          GoRouter.of(context).goNamed(Routes.news.toName);
+        }
       });
     });
   }

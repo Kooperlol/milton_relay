@@ -34,13 +34,18 @@ dependencies:
   firebase_storage: ^11.0.9
   cloud_firestore: ^4.3.0
   table_calendar: ^3.0.8
-  sizer: ^2.0.15
+  social_share: ^2.3.1
+  image_picker: ^0.8.6+1
   google_nav_bar: ^5.0.6
   drop_shadow: ^0.0.2+1
+  multiselect: ^0.0.7
+  excel: ^2.0.1
+  json_annotation: ^4.7.0
+  webview_flutter: ^4.0.1
   go_router: ^6.0.0
   flutter_svg: ^1.1.6
-  provider: ^6.0.5
   cupertino_icons: ^1.0.2
+  font_awesome_flutter: ^10.3.0
   flutter:
     sdk: flutter
 

@@ -10,6 +10,15 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: getAppBar(),
       bottomNavigationBar: getStudentFooter(context),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text('Latest Feed', style: TextStyle(fontSize: 20)),
+          ],
+        ),
+      ),
     );
   }
 }
