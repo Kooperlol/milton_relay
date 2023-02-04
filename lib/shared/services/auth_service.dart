@@ -32,6 +32,10 @@ class AuthService {
     return null;
   }
 
+  bool isAdmin() {
+    return _auth.currentUser!.email == 'admin@milton.k12.wi.us';
+  }
+
   // state persistence
   Stream<User?> get authState => _auth.authStateChanges();
 

@@ -17,8 +17,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController(),
+      _passwordController = TextEditingController();
   bool _isLoading = false;
 
   @override
@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text, password: _passwordController.text);
     if (!mounted) return;
     if (res == 'success') {
-      GoRouter.of(context).goNamed(Routes.news.toName);
+      GoRouter.of(context).goNamed(Routes.adminNews.toName);
     } else {
       showSnackBar(context, res);
     }
@@ -46,11 +46,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: ColorUtil.gray,
       appBar: getAppBar(),
-      body: Container(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          child: Column(children: [
             const SizedBox.square(
               dimension: 32,
             ),

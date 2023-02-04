@@ -5,6 +5,7 @@ import 'package:drop_shadow/drop_shadow.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:milton_relay/parent/models/parent.dart';
 import 'package:milton_relay/parent/services/parent_service.dart';
@@ -57,7 +58,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     _setParentChildrenPickerDisplay();
   }
 
-  void pickAvatar() async {
+  void pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image == null) return;
     final imageTemp = File(image.path);
@@ -115,8 +116,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
               roleFromString(_roleValue)));
           break;
         case Roles.parent:
-          _parentChildrenPickerSelected
-              .map((e) => print(_parentChildrenPickerDisplay[e]));
           data = ParentService().parentToJson(ParentModel(
               userCredential.user!.uid,
               name[0].capitalize(),
@@ -147,16 +146,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     if (!mounted) return;
     showSnackBar(context, "Created user!");
 
-    setState(() {
-      _emailController.clear();
-      _nameController.clear();
-      _laudePointsController.clear();
-      _absencesController.clear();
-      _parentChildrenPickerSelected = [];
-      _passwordController.clear();
-      _roleValue = Roles.student.toName;
-      _image = null;
-    });
+    context.pop();
   }
 
   @override
@@ -212,7 +202,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     CircleAvatar(
                       radius: 35,
                       backgroundImage: _image == null
-                          ? Image.asset("assets/default_avatar.jpg").image
+                          ? Image.asset("assets/default-avatar.jpg").image
                           : Image.file(_image!).image,
                     ),
                     const SizedBox.square(dimension: 10),
@@ -220,7 +210,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       blurRadius: 5,
                       opacity: 0.5,
                       child: InkWell(
-                        onTap: () => pickAvatar(),
+                        onTap: () => pickImage(),
                         customBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
                         child: Container(

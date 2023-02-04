@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:milton_relay/admin/widgets/footer.dart';
-import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/utils/color_util.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
@@ -28,8 +25,9 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
   );
 }
 
-/**GNav getBottomNavBar(BuildContext context) {
-  if (AuthService().firebaseUser!.email == "admin@milton.k12.wi.us") {
-    return getAdminFooter(context);
-  }
-}**/
+class NavBarItem extends BottomNavigationBarItem {
+  final String location;
+
+  const NavBarItem({required this.location, required Widget icon})
+      : super(icon: icon, label: '');
+}

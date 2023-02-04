@@ -17,7 +17,7 @@ GNav getStudentFooter(BuildContext context) {
     tabs: [
       GButton(
         icon: Icons.newspaper,
-        onPressed: () => context.goNamed(Routes.news.toName),
+        onPressed: () => context.goNamed(Routes.adminNews.toName),
       ),
       const GButton(
         icon: Icons.photo,

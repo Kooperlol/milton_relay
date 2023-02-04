@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:milton_relay/admin/widgets/footer.dart';
 import 'package:milton_relay/parent/services/parent_service.dart';
 import 'package:milton_relay/shared/services/user_service.dart';
 import 'package:milton_relay/shared/utils/collections.dart';
@@ -39,7 +38,6 @@ class _UserManagerScreenState extends State<UserManagerScreen> {
             const Icon(Icons.person_add_alt_1, size: 45, color: Colors.white));
     return Scaffold(
       appBar: getAppBarWithIconRight(iconButton),
-      bottomNavigationBar: getAdminFooter(context),
       body: NotificationListener<ScrollEndNotification>(
         child: ListView.builder(
           itemBuilder: (context, index) {

@@ -1,9 +1,6 @@
-import 'package:json_annotation/json_annotation.dart';
-
 import '../../shared/models/roles.dart';
 import '../../shared/models/user.dart';
 
-@JsonSerializable(explicitToJson: true)
 class ParentModel extends UserModel {
   final List<String> children;
 

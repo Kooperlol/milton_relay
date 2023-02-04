@@ -4,8 +4,6 @@ import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../admin/widgets/footer.dart';
-
 class MediaScreen extends StatefulWidget {
   const MediaScreen({Key? key}) : super(key: key);
 
@@ -33,7 +31,6 @@ class _MediaScreenState extends State<MediaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: getAppBar(),
-      bottomNavigationBar: getAdminFooter(context),
       body: Container(
         margin: const EdgeInsets.all(20),
         child: Column(
