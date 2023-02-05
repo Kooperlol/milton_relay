@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:milton_relay/shared/models/event.dart';
 import 'package:milton_relay/shared/services/event_service.dart';
+import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,11 +27,13 @@ class AddEventScreen extends StatefulWidget {
 class _AddEventScreenState extends State<AddEventScreen> {
   final TextEditingController _eventInput = TextEditingController(),
       _dateInput = TextEditingController(),
-      _timeInput = TextEditingController(),
+      _startTimeInput = TextEditingController(),
+      _endTimeInput = TextEditingController(),
       _descriptionInput = TextEditingController(),
       _locationInput = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  TimeOfDay _timeOfEvent = TimeOfDay.now();
+  TimeOfDay _startTimeOfEvent = TimeOfDay.now(),
+      _endTimeOfEvent = TimeOfDay.now();
   DateTime _dateOfEvent = DateTime.now();
   File? _image;
 
@@ -39,7 +42,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
     super.dispose();
     _eventInput.dispose();
     _dateInput.dispose();
-    _timeInput.dispose();
+    _startTimeInput.dispose();
+    _endTimeInput.dispose();
     _descriptionInput.dispose();
     _locationInput.dispose();
   }
@@ -54,7 +58,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   void createEvent() async {
     if (_eventInput.text.isEmpty ||
         _dateInput.text.isEmpty ||
-        _timeInput.text.isEmpty ||
+        _startTimeInput.text.isEmpty ||
+        _endTimeInput.text.isEmpty ||
         _descriptionInput.text.isEmpty ||
         _locationInput.text.isEmpty) {
       showSnackBar(context, "Please fill out all fields!");
@@ -79,8 +84,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
           _eventInput.text,
           _descriptionInput.text,
           _locationInput.text,
-          _timeOfEvent,
-          _dateOfEvent,
+          _startTimeOfEvent,
+          _endTimeOfEvent,
+          _dateOfEvent.add(_dateOfEvent.timeZoneOffset),
           uploadTask != null
               ? await uploadTask.ref.getDownloadURL()
               : 'default');
@@ -141,19 +147,36 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     ),
                     const SizedBox.square(dimension: 25),
                     TextField(
-                      controller: _timeInput,
+                      controller: _startTimeInput,
                       readOnly: true,
                       decoration: const InputDecoration(
                           icon: Icon(Icons.access_time_outlined),
-                          labelText: 'Time'),
+                          labelText: 'Start Time'),
                       onTap: () async {
                         TimeOfDay? time = await showTimePicker(
-                            context: context, initialTime: _timeOfEvent);
+                            context: context, initialTime: _startTimeOfEvent);
                         if (time == null) return;
                         setState(() {
-                          _timeInput.text =
+                          _startTimeInput.text =
                               '${time.hourOfPeriod}:${time.minute < 10 ? '0${time.minute}' : time.minute} ${time.period.name.toUpperCase()}';
-                          _timeOfEvent = time;
+                          _startTimeOfEvent = time;
+                        });
+                      },
+                    ),
+                    const SizedBox.square(dimension: 25),
+                    TextField(
+                      controller: _endTimeInput,
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                          icon: Icon(Icons.access_time_outlined),
+                          labelText: 'End Time'),
+                      onTap: () async {
+                        TimeOfDay? time = await showTimePicker(
+                            context: context, initialTime: _endTimeOfEvent);
+                        if (time == null) return;
+                        setState(() {
+                          _endTimeInput.text = timeOfDayToString(time);
+                          _endTimeOfEvent = time;
                         });
                       },
                     ),

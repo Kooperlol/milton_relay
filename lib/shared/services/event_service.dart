@@ -8,7 +8,11 @@ class EventService {
       json['description'] as String,
       json['location'] as String,
       TimeOfDay(
-          hour: json['time-hour'] as int, minute: json['time-minute'] as int),
+          hour: json['start-time-hour'] as int,
+          minute: json['start-time-minute'] as int),
+      TimeOfDay(
+          hour: json['end-time-hour'] as int,
+          minute: json['end-time-minute'] as int),
       DateTime.fromMicrosecondsSinceEpoch(json['date'] as int),
       json['banner-URL'] as String);
 
@@ -17,8 +21,10 @@ class EventService {
         'event': event.event,
         'description': event.description,
         'location': event.location,
-        'time-hour': event.time.hour,
-        'time-minute': event.time.minute,
+        'start-time-hour': event.startTime.hour,
+        'start-time-minute': event.startTime.minute,
+        'end-time-hour': event.endTime.hour,
+        'end-time-minute': event.endTime.minute,
         'date': event.date.microsecondsSinceEpoch,
         'banner-URL': event.bannerURL
       };
