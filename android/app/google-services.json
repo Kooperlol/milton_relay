@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "43761257357",
+    "project_id": "miltonrelay-83d43",
+    "storage_bucket": "miltonrelay-83d43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43761257357:android:a0f145ca8ee49f3832cbc4",
+        "android_client_info": {
+          "package_name": "org.fbla.kooper.milton_relay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "43761257357-vk8ohlcj70g9npivsobgqqp9s3ob0luh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvAgkClstZAXNqK19MjMsUEmJ02CmqRmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "43761257357-vk8ohlcj70g9npivsobgqqp9s3ob0luh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
