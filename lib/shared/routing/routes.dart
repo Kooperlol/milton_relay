@@ -1,10 +1,19 @@
 enum Routes {
   login,
-  adminCalendar,
   adminNews,
-  userManagerScreen,
-  addUserScreen,
-  addEventScreen,
+  studentNews,
+  instructorNews,
+  parentNews,
+  adminCalendar,
+  studentCalendar,
+  instructorCalendar,
+  parentCalendar,
+  adminUserManager,
+  instructorUserList,
+  addUser,
+  addEvent,
+  viewEvent,
+  viewUpcomingEvents,
   viewChildren
 }
 
@@ -15,14 +24,32 @@ extension RoutesExtension on Routes {
         return "login";
       case Routes.adminCalendar:
         return "adminCalendar";
+      case Routes.instructorCalendar:
+        return "instructorCalendar";
+      case Routes.parentCalendar:
+        return "parentCalendar";
+      case Routes.studentCalendar:
+        return "studentCalendar";
       case Routes.adminNews:
         return "adminNews";
-      case Routes.userManagerScreen:
-        return "userManagerScreen";
+      case Routes.studentNews:
+        return "studentNews";
+      case Routes.parentNews:
+        return "parentNews";
+      case Routes.instructorNews:
+        return "instructorNews";
+      case Routes.adminUserManager:
+        return "adminUserManager";
+      case Routes.instructorUserList:
+        return "instructorUserList";
       case Routes.viewChildren:
         return "viewChildren";
-      case Routes.addEventScreen:
-        return "addEventScreen";
+      case Routes.addEvent:
+        return "addEvent";
+      case Routes.viewEvent:
+        return "viewEvent";
+      case Routes.viewUpcomingEvents:
+        return "viewUpcomingEvents";
       default:
         return "loading";
     }
@@ -34,16 +61,34 @@ extension RoutesExtension on Routes {
         return "/login";
       case Routes.adminNews:
         return "/admin/news";
+      case Routes.parentNews:
+        return "/parent/news";
+      case Routes.studentNews:
+        return "/student/news";
+      case Routes.instructorNews:
+        return "/instructor/news";
       case Routes.adminCalendar:
         return "/admin/calendar";
-      case Routes.userManagerScreen:
-        return "/userManagerScreen";
-      case Routes.addUserScreen:
-        return "/addUserScreen";
+      case Routes.parentCalendar:
+        return "/parent/calendar";
+      case Routes.instructorCalendar:
+        return "/instructor/calendar";
+      case Routes.studentCalendar:
+        return "/student/calendar";
+      case Routes.adminUserManager:
+        return "/admin/userManager";
+      case Routes.instructorUserList:
+        return "/instructor/userList";
+      case Routes.addUser:
+        return "/addUser";
       case Routes.viewChildren:
         return "/viewChildren";
-      case Routes.addEventScreen:
-        return "/admin/addEventScreen";
+      case Routes.addEvent:
+        return "/admin/addEvent";
+      case Routes.viewEvent:
+        return "/viewEvent";
+      case Routes.viewUpcomingEvents:
+        return "/viewUpcomingEvents";
       default:
         return "/";
     }

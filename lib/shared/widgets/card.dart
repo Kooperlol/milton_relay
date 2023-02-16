@@ -10,7 +10,7 @@ import '../routing/routes.dart';
 
 class UserCard extends StatelessWidget {
   final UserModel user;
-  final TextStyle textStyle = const TextStyle(fontSize: 15, fontFamily: 'Lato');
+  final TextStyle textStyle = const TextStyle(fontSize: 15);
 
   const UserCard({Key? key, required this.user}) : super(key: key);
 
@@ -57,18 +57,11 @@ class UserCard extends StatelessWidget {
         return const SizedBox(width: 0);
       case Roles.parent:
         ParentModel parentModel = (user as ParentModel);
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextButton(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.all(0),
-                ),
-                onPressed: () => context.push(Routes.viewChildren.toPath,
-                    extra: parentModel),
-                child: Text("View Children", style: textStyle))
-          ],
-        );
+        return InkWell(
+            onTap: () =>
+                context.push(Routes.viewChildren.toPath, extra: parentModel),
+            child: Text("View Children",
+                style: TextStyle(fontSize: 15, color: ColorUtil.darkRed)));
       case Roles.student:
         StudentModel studentModel = (user as StudentModel);
         return Column(

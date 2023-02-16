@@ -2,13 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:milton_relay/parent/services/parent_service.dart';
+import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/services/user_service.dart';
 import 'package:milton_relay/shared/utils/collections.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:milton_relay/shared/widgets/card.dart';
 
-import '../../shared/models/roles.dart';
-import '../../shared/routing/routes.dart';
+import '../models/roles.dart';
+import '../routing/routes.dart';
 import '../../student/services/student_service.dart';
 
 class UserManagerScreen extends StatefulWidget {
@@ -33,11 +34,13 @@ class _UserManagerScreenState extends State<UserManagerScreen> {
   @override
   Widget build(BuildContext context) {
     IconButton iconButton = IconButton(
-        onPressed: () => context.push(Routes.addUserScreen.toPath),
+        onPressed: () => context.push(Routes.addUser.toPath),
         icon:
             const Icon(Icons.person_add_alt_1, size: 45, color: Colors.white));
     return Scaffold(
-      appBar: getAppBarWithIconRight(iconButton),
+      appBar: AuthService().isAdmin()
+          ? getAppBarWithIconRight(iconButton)
+          : getAppBar(),
       body: NotificationListener<ScrollEndNotification>(
         child: ListView.builder(
           itemBuilder: (context, index) {

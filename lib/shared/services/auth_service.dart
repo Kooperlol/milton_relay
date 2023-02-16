@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/roles.dart';
 import '../models/user.dart';
@@ -10,14 +9,15 @@ class AuthService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  User? get firebaseUser => _auth.currentUser;
   String getUID() => _auth.currentUser!.uid;
 
   Future<UserModel?> get userModel async {
     QuerySnapshot snapshot = await _db
         .collection(Collections.users.toPath)
-        .where('uid', isEqualTo: getUID())
+        .where('id', isEqualTo: getUID())
         .get();
-    if (snapshot.docs.first.exists) {
+    if (snapshot.docs.isNotEmpty) {
       QueryDocumentSnapshot document = snapshot.docs.first;
       return UserModel(
           getUID(),
@@ -26,7 +26,7 @@ class AuthService {
           (document.get('avatarURL') as String),
           Roles.values
               .where((element) =>
-                  element.toString() == (document.get('role') as String))
+                  element.toName == (document.get('role') as String))
               .first);
     }
     return null;
@@ -35,11 +35,6 @@ class AuthService {
   bool isAdmin() {
     return _auth.currentUser!.email == 'admin@milton.k12.wi.us';
   }
-
-  // state persistence
-  Stream<User?> get authState => _auth.authStateChanges();
-
-  User? get firebaseUser => _auth.currentUser;
 
   // logging in user
   Future<String> loginUser({

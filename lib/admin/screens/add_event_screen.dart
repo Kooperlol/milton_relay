@@ -14,7 +14,6 @@ import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../shared/utils/collections.dart';
-import '../../shared/utils/color_util.dart';
 import '../../shared/utils/display_util.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -66,6 +65,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
       return;
     }
 
+    if (_descriptionInput.text.characters.length > 250) {
+      showSnackBar(
+          context, "The description can't be greater than 250 characters!");
+      return;
+    }
+
     var uuid = const Uuid();
     var id = uuid.v1();
 
@@ -107,10 +112,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
     return Scaffold(
       appBar: getAppBar(),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 32),
         child: SingleChildScrollView(
           child: Column(children: [
-            const SizedBox.square(dimension: 32),
             const Text(
               'Add an Event',
               style: TextStyle(fontSize: 32),
@@ -239,24 +243,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 ),
               ),
             ),
-            DropShadow(
-              blurRadius: 5,
-              opacity: 0.5,
-              child: InkWell(
-                onTap: () => createEvent(),
-                customBorder:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                child: Container(
-                    width: 150,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                    alignment: Alignment.center,
-                    color: ColorUtil.red,
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: const Text('Add Event',
-                        style: TextStyle(fontSize: 20, color: Colors.white))),
-              ),
-            )
+            createButton('Add Event', 150, () => createEvent())
           ]),
         ),
       ),
