@@ -5,9 +5,8 @@ import 'package:drop_shadow/drop_shadow.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:milton_relay/shared/models/event.dart';
+import 'package:milton_relay/shared/models/event_model.dart';
 import 'package:milton_relay/shared/services/event_service.dart';
 import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
@@ -30,7 +29,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
       _endTimeInput = TextEditingController(),
       _descriptionInput = TextEditingController(),
       _locationInput = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
   TimeOfDay _startTimeOfEvent = TimeOfDay.now(),
       _endTimeOfEvent = TimeOfDay.now();
   DateTime _dateOfEvent = DateTime.now();
@@ -45,13 +43,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
     _endTimeInput.dispose();
     _descriptionInput.dispose();
     _locationInput.dispose();
-  }
-
-  void pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-    final File imageTemp = File(image.path);
-    setState(() => _image = imageTemp);
   }
 
   void createEvent() async {
@@ -95,7 +86,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
           uploadTask != null
               ? await uploadTask.ref.getDownloadURL()
               : 'default');
-      eventsCollection.doc(id).set(EventService().eventToJson(eventModel));
+      await eventsCollection
+          .doc(id)
+          .set(EventService().eventToJson(eventModel));
     } catch (error) {
       stderr.writeln(
           "An error has occurred while attempting to create an event: ${error.toString()}");
@@ -110,16 +103,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(),
+      appBar: getAppBar("Add Event"),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 32),
         child: SingleChildScrollView(
           child: Column(children: [
-            const Text(
-              'Add an Event',
-              style: TextStyle(fontSize: 32),
-            ),
-            const SizedBox.square(dimension: 25),
             Card(
               shadowColor: Colors.black,
               child: Padding(
@@ -218,7 +206,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       blurRadius: 5,
                       opacity: 0.5,
                       child: InkWell(
-                        onTap: () => pickImage(),
+                        onTap: () async {
+                          File? image = await pickImage();
+                          setState(() => _image = image);
+                        },
                         customBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15)),
                         child: Container(

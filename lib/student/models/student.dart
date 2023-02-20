@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:milton_relay/shared/models/user.dart';
+import 'package:milton_relay/shared/models/user_model.dart';
 import 'package:milton_relay/student/services/student_service.dart';
 
-import '../../shared/models/roles.dart';
+import '../../shared/utils/roles.dart';
 
 @JsonSerializable(explicitToJson: true)
 class StudentModel extends UserModel {

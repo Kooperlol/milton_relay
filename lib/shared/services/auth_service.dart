@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../models/roles.dart';
-import '../models/user.dart';
+import '../utils/roles.dart';
+import '../models/user_model.dart';
 import '../utils/collections.dart';
 
 class AuthService {
@@ -24,10 +24,7 @@ class AuthService {
           (document.get('firstName') as String),
           (document.get('lastName') as String),
           (document.get('avatarURL') as String),
-          Roles.values
-              .where((element) =>
-                  element.toName == (document.get('role') as String))
-              .first);
+          roleFromString(document.get('role') as String));
     }
     return null;
   }

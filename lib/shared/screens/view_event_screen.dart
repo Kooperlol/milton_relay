@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:milton_relay/shared/models/event.dart';
+import 'package:milton_relay/shared/models/event_model.dart';
 import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/utils/collections.dart';
 import 'package:milton_relay/shared/utils/display_util.dart';
@@ -20,7 +20,7 @@ class ViewEventScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(),
+      appBar: getAppBar(event.event),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -37,11 +37,6 @@ class ViewEventScreen extends StatelessWidget {
                                   .image,
                           fit: BoxFit.cover))),
               SizedBox(height: 5.w),
-              Text(event.event,
-                  style: TextStyle(
-                      fontSize: 7.w, decoration: TextDecoration.underline),
-                  overflow: TextOverflow.ellipsis),
-              SizedBox(height: 3.w),
               Row(
                 children: [
                   Text('Date: ', style: TextStyle(fontSize: 5.w)),
@@ -86,8 +81,9 @@ class ViewEventScreen extends StatelessWidget {
               if (AuthService().isAdmin())
                 Column(
                   children: [
-                    createButton('Delete Event', double.infinity,
-                        () => _deleteEvent(context))
+                    SizedBox(height: 5.w),
+                    createButton(
+                        'Delete Event', 50.w, () => _deleteEvent(context))
                   ],
                 )
             ],

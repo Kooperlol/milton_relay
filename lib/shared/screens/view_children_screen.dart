@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:milton_relay/parent/models/parent.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
-import 'package:milton_relay/shared/widgets/card.dart';
+import 'package:milton_relay/shared/widgets/user_card_widget.dart';
 
 import '../utils/collections.dart';
 import '../../student/models/student.dart';
@@ -28,7 +28,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(),
+      appBar: getAppBar('Children'),
       body: Column(
           children: children.isEmpty
               ? [const CircularProgressIndicator()]

@@ -32,12 +32,17 @@ dependencies:
   firebase_auth: ^4.2.3
   firebase_core: ^2.4.0
   firebase_storage: ^11.0.9
+  responsive_framework: ^0.2.0
   cloud_firestore: ^4.3.0
   table_calendar: ^3.0.8
   image_picker: ^0.8.6+1
+  flutter_spinkit: ^5.1.0
   drop_shadow: ^0.0.2+1
   responsive_sizer: ^3.1.1
+  cached_network_image: ^3.2.3
+  auto_size_text: ^3.0.0
   intl: ^0.17.0
+  loader_overlay: ^2.1.0
   multiselect: ^0.0.7
   uuid: ^3.0.7
   webview_flutter: ^4.0.1
@@ -83,9 +88,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-   - family: Lato
+   - family: OpenSans
      fonts:
-       - asset: fonts/Lato-Regular.ttf
+       - asset: fonts/OpenSans.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

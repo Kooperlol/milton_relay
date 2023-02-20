@@ -1,5 +1,5 @@
-import '../../shared/models/roles.dart';
-import '../models/user.dart';
+import '../utils/roles.dart';
+import '../models/user_model.dart';
 
 class UserService {
   UserModel getUserFromJson(Map<String, dynamic> json) => UserModel(

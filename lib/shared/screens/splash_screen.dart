@@ -7,14 +7,14 @@ import '../routing/routes.dart';
 import '../utils/color_util.dart';
 import '../utils/display_util.dart';
 
-class LoadingScreen extends StatefulWidget {
-  const LoadingScreen({Key? key}) : super(key: key);
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoadingScreen> createState() => _LoadingScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen> {
+class _SplashScreenState extends State<SplashScreen> {
   Future<FirebaseApp> _initializeFirebase() async =>
       await Firebase.initializeApp();
 

@@ -13,7 +13,7 @@ class _ErrorScreenState extends State<ErrorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(),
+      appBar: getAppBar('Error'),
       body: Center(
         child: Text(widget.error),
       ),

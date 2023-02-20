@@ -1,4 +1,4 @@
-import '../../shared/models/roles.dart';
+import '../../shared/utils/roles.dart';
 import '../models/parent.dart';
 
 class ParentService {

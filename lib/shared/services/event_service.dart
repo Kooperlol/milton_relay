@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:milton_relay/shared/models/event.dart';
+import 'package:milton_relay/shared/models/event_model.dart';
 
 class EventService {
   EventModel getEventFromJson(Map<String, dynamic> json) => EventModel(

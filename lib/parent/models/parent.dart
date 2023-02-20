@@ -1,5 +1,5 @@
-import '../../shared/models/roles.dart';
-import '../../shared/models/user.dart';
+import '../../shared/utils/roles.dart';
+import '../../shared/models/user_model.dart';
 
 class ParentModel extends UserModel {
   final List<String> children;

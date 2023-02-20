@@ -2,6 +2,7 @@ import 'package:drop_shadow/drop_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:milton_relay/shared/routing/routes.dart';
 import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/widgets/text_field_widget.dart';
@@ -19,7 +20,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController(),
       _passwordController = TextEditingController();
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login() async {
-    setState(() => _isLoading = true);
+    context.loaderOverlay.show();
     String res = await AuthService().loginUser(
         email: _emailController.text, password: _passwordController.text);
     if (!mounted) return;
@@ -38,14 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       showSnackBar(context, res);
     }
-    setState(() => _isLoading = false);
+    context.loaderOverlay.hide();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorUtil.gray,
-      appBar: getAppBar(),
+      appBar: getAppBar('Milton Relay'),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
@@ -53,7 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox.square(
               dimension: 32,
             ),
-            SvgPicture.asset('assets/welcome.svg', width: 200, height: 200),
+            SvgPicture.asset('assets/welcome-vector.svg',
+                width: 200, height: 200),
             const SizedBox.square(
               dimension: 32,
             ),
@@ -97,15 +98,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.center,
                   color: ColorUtil.red,
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: !_isLoading
-                      ? const Text(
-                          'Login',
-                          style: TextStyle(
-                              fontFamily: 'Lato',
-                              fontSize: 25,
-                              color: Colors.white),
-                        )
-                      : const CircularProgressIndicator(color: Colors.white),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(
+                        fontFamily: 'Lato', fontSize: 25, color: Colors.white),
+                  ),
                 ),
               ),
             )

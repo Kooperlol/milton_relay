@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'color_util.dart';
-import 'display_util.dart';
+import '../utils/color_util.dart';
+import '../utils/display_util.dart';
 
 class Footer extends StatefulWidget {
   final String location;
@@ -29,13 +29,14 @@ class _FooterState extends State<Footer> {
     return Scaffold(
       body: SafeArea(child: widget.child),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 15,
         selectedItemColor: ColorUtil.darkRed,
         backgroundColor: ColorUtil.red,
         unselectedItemColor: Colors.white,
         showUnselectedLabels: false,
         showSelectedLabels: false,
         type: BottomNavigationBarType.fixed,
-        iconSize: 5.w,
+        iconSize: 3.5.w,
         onTap: (index) => _goToTab(context, index),
         currentIndex: _index,
         items: widget.nav,

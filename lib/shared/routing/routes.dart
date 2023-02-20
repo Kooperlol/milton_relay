@@ -14,7 +14,12 @@ enum Routes {
   addEvent,
   viewEvent,
   viewUpcomingEvents,
-  viewChildren
+  viewChildren,
+  studentReportIssue,
+  instructorReportIssue,
+  parentReportIssue,
+  viewImageScreen,
+  issueManagerScreen
 }
 
 extension RoutesExtension on Routes {
@@ -50,6 +55,16 @@ extension RoutesExtension on Routes {
         return "viewEvent";
       case Routes.viewUpcomingEvents:
         return "viewUpcomingEvents";
+      case Routes.studentReportIssue:
+        return "studentReportIssue";
+      case Routes.parentReportIssue:
+        return "parentReportIssue";
+      case Routes.instructorReportIssue:
+        return "instructorReportIssue";
+      case Routes.viewImageScreen:
+        return "viewImageScreen";
+      case Routes.issueManagerScreen:
+        return "issueManagerScreen";
       default:
         return "loading";
     }
@@ -89,6 +104,16 @@ extension RoutesExtension on Routes {
         return "/viewEvent";
       case Routes.viewUpcomingEvents:
         return "/viewUpcomingEvents";
+      case Routes.parentReportIssue:
+        return "/parent/reportIssue";
+      case Routes.instructorReportIssue:
+        return "/instructor/reportIssue";
+      case Routes.studentReportIssue:
+        return "/student/reportIssue";
+      case Routes.viewImageScreen:
+        return "/viewImageScreen";
+      case Routes.issueManagerScreen:
+        return "/admin/issueManagerScreen";
       default:
         return "/";
     }

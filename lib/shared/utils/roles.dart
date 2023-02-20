@@ -15,6 +15,5 @@ extension RolesExstention on Roles {
   }
 }
 
-Roles roleFromString(String string) {
-  return Roles.values.where((element) => element.toName == string).first;
-}
+Roles roleFromString(String string) =>
+    Roles.values.where((element) => element.toName == string).first;

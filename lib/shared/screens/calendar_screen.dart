@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:milton_relay/shared/models/event.dart';
+import 'package:milton_relay/shared/models/event_model.dart';
 import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/services/event_service.dart';
-import 'package:milton_relay/shared/utils/display_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -38,85 +37,110 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AuthService().isAdmin()
-          ? getAppBarWithIconRight(IconButton(
-              onPressed: () => context.push(Routes.addEvent.toPath),
-              icon: const Icon(Icons.add_box, size: 45, color: Colors.white)))
-          : getAppBar(),
+          ? getAppBar('Calendar',
+              rightIcon: IconButton(
+                  onPressed: () => context.push(Routes.addEvent.toPath),
+                  iconSize: 6.w,
+                  icon: const Icon(Icons.add_box, color: Colors.white)))
+          : getAppBar('Calendar'),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          createButton('View Upcoming Events', double.infinity,
-              () => context.push(Routes.viewUpcomingEvents.toPath)),
-          Card(
-            shadowColor: Colors.black,
-            margin: const EdgeInsets.all(10),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)),
-            child: TableCalendar(
-              rowHeight: 8.w,
-              daysOfWeekHeight: 5.w,
-              focusedDay: _focusedDay,
-              firstDay: DateTime.utc(2010),
-              lastDay: DateTime.utc(2030),
-              calendarFormat: _calendarFormat,
-              daysOfWeekStyle: DaysOfWeekStyle(
-                weekdayStyle:
-                    TextStyle(color: const Color(0xFF4F4F4F), fontSize: 2.w),
-                weekendStyle:
-                    TextStyle(color: const Color(0xFF6A6A6A), fontSize: 2.w),
+          //createButton('View Upcoming Events', 100.w,
+          //   () => context.push(Routes.viewUpcomingEvents.toPath)),
+          Container(
+            color: ColorUtil.blue,
+            child: Card(
+              shadowColor: Colors.black,
+              margin: EdgeInsets.all(1.5.w),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              child: TableCalendar(
+                rowHeight: 8.w,
+                daysOfWeekHeight: 5.w,
+                focusedDay: _focusedDay,
+                firstDay: DateTime.utc(2010),
+                lastDay: DateTime.utc(2030),
+                calendarFormat: _calendarFormat,
+                availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle:
+                      TextStyle(color: const Color(0xFF4F4F4F), fontSize: 2.w),
+                  weekendStyle:
+                      TextStyle(color: const Color(0xFF6A6A6A), fontSize: 2.w),
+                ),
+                headerStyle: HeaderStyle(
+                    titleCentered: true,
+                    titleTextStyle:
+                        TextStyle(fontSize: 4.w, fontWeight: FontWeight.bold),
+                    leftChevronIcon: Icon(Icons.chevron_left, size: 4.w),
+                    rightChevronIcon: Icon(Icons.chevron_right, size: 4.w),
+                    formatButtonTextStyle: TextStyle(fontSize: 2.w)),
+                calendarStyle: CalendarStyle(
+                    weekNumberTextStyle: TextStyle(
+                        fontSize: 3.w, color: const Color(0xFFBFBFBF)),
+                    defaultTextStyle: TextStyle(fontSize: 3.w),
+                    selectedTextStyle: TextStyle(
+                      color: const Color(0xFFFAFAFA),
+                      fontSize: 3.w,
+                    ),
+                    todayTextStyle: TextStyle(
+                      color: const Color(0xFFFAFAFA),
+                      fontSize: 3.w,
+                    ),
+                    weekendTextStyle: TextStyle(
+                        color: const Color(0xFF5A5A5A), fontSize: 3.w),
+                    outsideTextStyle: TextStyle(
+                        color: const Color(0xFFAEAEAE), fontSize: 3.w),
+                    selectedDecoration: BoxDecoration(
+                        shape: BoxShape.circle, color: ColorUtil.red),
+                    todayDecoration: BoxDecoration(
+                        shape: BoxShape.circle, color: ColorUtil.darkRed)),
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                onDaySelected: (selectedDay, focusedDay) {
+                  if (_loading) return;
+                  setState(() {
+                    _focusedDay = focusedDay;
+                    _selectedDay = selectedDay;
+                  });
+                  _setEventsOnDate();
+                },
+                onFormatChanged: (format) =>
+                    setState(() => _calendarFormat = format),
               ),
-              headerStyle: HeaderStyle(
-                  titleTextStyle: TextStyle(fontSize: 2.w),
-                  leftChevronIcon: Icon(Icons.chevron_left, size: 2.5.w),
-                  rightChevronIcon: Icon(Icons.chevron_right, size: 2.5.w),
-                  formatButtonTextStyle: TextStyle(fontSize: 2.w)),
-              calendarStyle: CalendarStyle(
-                  weekNumberTextStyle:
-                      TextStyle(fontSize: 2.w, color: const Color(0xFFBFBFBF)),
-                  defaultTextStyle: TextStyle(fontSize: 2.w),
-                  selectedTextStyle: TextStyle(
-                    color: const Color(0xFFFAFAFA),
-                    fontSize: 2.w,
-                  ),
-                  todayTextStyle: TextStyle(
-                    color: const Color(0xFFFAFAFA),
-                    fontSize: 2.w,
-                  ),
-                  weekendTextStyle:
-                      TextStyle(color: const Color(0xFF5A5A5A), fontSize: 2.w),
-                  outsideTextStyle:
-                      TextStyle(color: const Color(0xFFAEAEAE), fontSize: 2.w),
-                  selectedDecoration: BoxDecoration(
-                      shape: BoxShape.circle, color: ColorUtil.red),
-                  todayDecoration: BoxDecoration(
-                      shape: BoxShape.circle, color: ColorUtil.darkRed)),
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              onDaySelected: (selectedDay, focusedDay) {
-                if (_loading) return;
-                setState(() {
-                  _focusedDay = focusedDay;
-                  _selectedDay = selectedDay;
-                });
-                _setEventsOnDate();
-              },
-              onFormatChanged: (format) =>
-                  setState(() => _calendarFormat = format),
             ),
           ),
-          Text('Events on ${DateFormat('MM-dd-yy').format(_selectedDay)}',
-              style: TextStyle(fontSize: 5.w)),
+          Container(
+            height: 2.w,
+            color: ColorUtil.blue,
+          ),
+          Container(
+            color: ColorUtil.blue,
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50))),
+              child: SizedBox(
+                  width: double.infinity,
+                  height: 12.w,
+                  child: Center(
+                    child: Text('Events', style: TextStyle(fontSize: 6.w)),
+                  )),
+            ),
+          ),
+          SizedBox(height: 4.w),
           if (_loading) const CircularProgressIndicator(),
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {
                 if (_loading) return const SizedBox.square();
                 if (_eventList.isEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: Center(
-                        child:
-                            Text('No Events', style: TextStyle(fontSize: 3.w))),
-                  );
+                  return Center(
+                      child:
+                          Text('No Events', style: TextStyle(fontSize: 3.w)));
                 }
                 return _eventList[index];
               },
@@ -145,10 +169,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           children: [
             Container(
               width: double.infinity,
-              height: 8.w,
+              height: 9.w,
               color: const Color.fromRGBO(255, 255, 255, 0.8),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+                padding: EdgeInsets.only(left: 1.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,20 +187,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             style: TextStyle(fontSize: 2.w))
                       ],
                     ),
-                    Expanded(
-                        child: Container(
-                      color: Colors.grey,
-                    )),
-                    Container(
-                      color: Colors.blueGrey,
-                      child: IconButton(
-                          icon: Icon(Icons.keyboard_arrow_right, size: 8.w),
-                          onPressed: () {
-                            context.push(Routes.viewEvent.toPath, extra: event);
-                            GoRouter.of(context)
-                                .addListener(_refreshEventsOnPop);
-                          }),
-                    ),
+                    Expanded(child: Container()),
+                    IconButton(
+                        iconSize: 6.w,
+                        icon: const Icon(Icons.keyboard_arrow_right),
+                        onPressed: () {
+                          context.push(Routes.viewEvent.toPath, extra: event);
+                          GoRouter.of(context).addListener(_refreshEventsOnPop);
+                        }),
                   ],
                 ),
               ),

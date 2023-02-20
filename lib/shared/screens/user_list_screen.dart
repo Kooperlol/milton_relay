@@ -6,9 +6,10 @@ import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/services/user_service.dart';
 import 'package:milton_relay/shared/utils/collections.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
-import 'package:milton_relay/shared/widgets/card.dart';
+import 'package:milton_relay/shared/widgets/user_card_widget.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../models/roles.dart';
+import '../utils/roles.dart';
 import '../routing/routes.dart';
 import '../../student/services/student_service.dart';
 
@@ -35,12 +36,12 @@ class _UserManagerScreenState extends State<UserManagerScreen> {
   Widget build(BuildContext context) {
     IconButton iconButton = IconButton(
         onPressed: () => context.push(Routes.addUser.toPath),
-        icon:
-            const Icon(Icons.person_add_alt_1, size: 45, color: Colors.white));
+        iconSize: 5.w,
+        icon: const Icon(Icons.person_add_alt_1, color: Colors.white));
     return Scaffold(
       appBar: AuthService().isAdmin()
-          ? getAppBarWithIconRight(iconButton)
-          : getAppBar(),
+          ? getAppBar('User Manager', rightIcon: iconButton)
+          : getAppBar('User List'),
       body: NotificationListener<ScrollEndNotification>(
         child: ListView.builder(
           itemBuilder: (context, index) {

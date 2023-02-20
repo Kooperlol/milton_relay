@@ -1,69 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-AppBar getAppBar() {
+AppBar getAppBar(String title, {IconButton? leftIcon, IconButton? rightIcon}) {
   return AppBar(
+    leading: leftIcon,
+    elevation: 15,
+    toolbarHeight: 8.w,
+    actions: rightIcon == null ? [] : [rightIcon],
     backgroundColor: const Color.fromRGBO(159, 48, 47, 1),
-    toolbarHeight: 10.w,
+    centerTitle: true,
     title: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset(
-          'assets/miltonrelay-transparent.png',
-          height: 15.w,
-          width: 15.w,
+          'assets/miltonrelay-logo.png',
+          height: 10.w,
+          width: 10.w,
         ),
-        SizedBox.square(dimension: 2.w),
+        SizedBox.square(dimension: 1.w),
         Text(
-          'Milton Relay',
-          style: TextStyle(fontFamily: 'Lato', fontSize: 7.w),
+          title,
+          style: TextStyle(fontFamily: 'Lato', fontSize: 6.5.w),
         ),
-      ],
-    ),
-  );
-}
-
-AppBar getAppBarWithIconRight(IconButton icon) {
-  return AppBar(
-    backgroundColor: const Color.fromRGBO(159, 48, 47, 1),
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(
-          'assets/miltonrelay-transparent.png',
-          height: 15.w,
-          width: 15.w,
-        ),
-        SizedBox.square(dimension: 2.w),
-        Text(
-          'Milton Relay',
-          style: TextStyle(fontFamily: 'Lato', fontSize: 7.w),
-        ),
-        SizedBox.square(dimension: 5.w),
-        icon
-      ],
-    ),
-  );
-}
-
-AppBar getAppBarWithIconLeft(IconButton icon) {
-  return AppBar(
-    backgroundColor: const Color.fromRGBO(159, 48, 47, 1),
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        icon,
-        SizedBox.square(dimension: 5.w),
-        Image.asset(
-          'assets/miltonrelay-transparent.png',
-          height: 15.w,
-          width: 15.w,
-        ),
-        SizedBox.square(dimension: 2.w),
-        Text(
-          'Milton Relay',
-          style: TextStyle(fontFamily: 'Lato', fontSize: 7.w),
-        )
       ],
     ),
   );

@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../models/event.dart';
+import '../models/event_model.dart';
 import '../routing/routes.dart';
 import '../services/event_service.dart';
 import '../utils/collections.dart';
@@ -32,7 +32,7 @@ class _ViewUpcomingEventsScreenState extends State<ViewUpcomingEventsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: getAppBar(),
+        appBar: getAppBar('Upcoming Events'),
         body: _loading
             ? const Center(child: CircularProgressIndicator())
             : ListView.builder(

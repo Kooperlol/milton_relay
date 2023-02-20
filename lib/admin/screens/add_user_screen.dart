@@ -1,16 +1,14 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:drop_shadow/drop_shadow.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:milton_relay/parent/models/parent.dart';
 import 'package:milton_relay/parent/services/parent_service.dart';
-import 'package:milton_relay/shared/models/roles.dart';
-import 'package:milton_relay/shared/models/user.dart';
+import 'package:milton_relay/shared/utils/roles.dart';
+import 'package:milton_relay/shared/models/user_model.dart';
 import 'package:milton_relay/shared/services/user_service.dart';
 import 'package:milton_relay/shared/utils/display_util.dart';
 import 'package:milton_relay/shared/utils/text_util.dart';
@@ -19,6 +17,7 @@ import 'package:milton_relay/shared/widgets/text_field_widget.dart';
 import 'package:milton_relay/student/models/student.dart';
 import 'package:milton_relay/student/services/student_service.dart';
 import 'package:multiselect/multiselect.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../shared/utils/collections.dart';
 import '../../shared/utils/color_util.dart';
@@ -36,7 +35,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
       _passwordController = TextEditingController(),
       _absencesController = TextEditingController(),
       _laudePointsController = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
   List<String> _parentChildrenPickerSelected = [];
   final Map<String, String> _parentChildrenPickerDisplay = {};
   String _roleValue = Roles.student.toName;
@@ -58,29 +56,25 @@ class _AddUserScreenState extends State<AddUserScreen> {
     _setParentChildrenPickerDisplay();
   }
 
-  void pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-    final imageTemp = File(image.path);
-    setState(() => _image = imageTemp);
-  }
-
   void createUser() async {
     if (_nameController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         await _image?.exists() == false) {
+      if (!mounted) return;
       showSnackBar(context, "Please fill out all fields!");
       return;
     }
 
     List<String> name = _nameController.text.split(" ");
     if (name.length != 2) {
+      if (!mounted) return;
       showSnackBar(context, "Invalid name!");
       return;
     }
 
     if (_passwordController.text.length < 6) {
+      if (!mounted) return;
       showSnackBar(context, "Your password must be 6 characters!");
       return;
     }
@@ -88,6 +82,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     if (_laudePointsController.text.isNotEmpty &&
         (!isNumeric(_laudePointsController.text) ||
             !isNumeric(_absencesController.text))) {
+      if (!mounted) return;
       showSnackBar(context, "The value must be numeric!");
       return;
     }
@@ -152,33 +147,30 @@ class _AddUserScreenState extends State<AddUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: getAppBar(),
+        appBar: getAppBar('Create a User'),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+          padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 5.w),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text('Create a User',
-                    style: TextStyle(fontFamily: 'lato', fontSize: 25)),
-                const SizedBox.square(dimension: 30),
                 TextFieldInput(
                     textEditingController: _nameController,
                     hintText: 'Full Name',
                     textInputType: TextInputType.name),
-                const SizedBox.square(dimension: 10),
+                SizedBox.square(dimension: 2.w),
                 TextFieldInput(
                     textEditingController: _emailController,
                     hintText: 'Email',
                     textInputType: TextInputType.emailAddress),
-                const SizedBox.square(dimension: 10),
+                SizedBox.square(dimension: 2.w),
                 TextFieldInput(
                   textEditingController: _passwordController,
                   hintText: 'Password',
                   textInputType: TextInputType.text,
                   isPass: true,
                 ),
-                const SizedBox.square(dimension: 10),
+                SizedBox.square(dimension: 2.w),
                 DropdownButton<String>(
                   value: _roleValue,
                   icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
@@ -195,49 +187,28 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     );
                   }).toList(),
                 ),
-                const SizedBox.square(dimension: 10),
+                SizedBox.square(dimension: 2.w),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 35,
+                      radius: 7.5.w,
                       backgroundImage: _image == null
-                          ? Image.asset("assets/default-avatar.jpg").image
+                          ? Image.asset("assets/default-user-avatar.jpg").image
                           : Image.file(_image!).image,
                     ),
-                    const SizedBox.square(dimension: 10),
-                    DropShadow(
-                      blurRadius: 5,
-                      opacity: 0.5,
-                      child: InkWell(
-                        onTap: () => pickImage(),
-                        customBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Container(
-                            width: 150,
-                            alignment: Alignment.center,
-                            color: Colors.grey,
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.add_photo_alternate_rounded,
-                                      color: Colors.white),
-                                  SizedBox.square(dimension: 5),
-                                  Text('Upload Avatar',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.white,
-                                          fontFamily: 'Lato'))
-                                ])),
-                      ),
-                    ),
+                    SizedBox.square(dimension: 2.w),
+                    createButton('Upload Avatar', 30.w, () async {
+                      File? image = await pickImage();
+                      setState(() => _image = image);
+                    },
+                        color: ColorUtil.darkGray,
+                        icon: Icons.add_photo_alternate)
                   ],
                 ),
                 if (_roleValue == Roles.parent.toName)
                   Column(children: [
-                    const SizedBox.square(dimension: 10),
+                    SizedBox.square(dimension: 2.w),
                     DropDownMultiSelect(
                         options: _parentChildrenPickerDisplay.keys.toList(),
                         selectedValues: _parentChildrenPickerSelected,
@@ -247,39 +218,20 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   ]),
                 if (_roleValue == Roles.student.toName)
                   Column(children: [
-                    const SizedBox.square(dimension: 10),
+                    SizedBox.square(dimension: 2.w),
                     TextFieldInput(
                         textEditingController: _absencesController,
                         hintText: 'Absences',
                         textInputType: TextInputType.number),
-                    const SizedBox.square(dimension: 10),
+                    SizedBox.square(dimension: 2.w),
                     TextFieldInput(
                         textEditingController: _laudePointsController,
                         hintText: 'Laude Points',
                         textInputType: TextInputType.number),
                   ]),
-                const SizedBox.square(dimension: 30),
-                DropShadow(
-                  blurRadius: 5,
-                  opacity: 0.5,
-                  child: InkWell(
-                    onTap: () => createUser(),
-                    customBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Container(
-                        width: 150,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 0),
-                        alignment: Alignment.center,
-                        color: ColorUtil.red,
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: const Text('Add User',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontFamily: 'Lato'))),
-                  ),
-                )
+                SizedBox.square(dimension: 4.w),
+                createButton('Add User', 30.w, () => createUser(),
+                    icon: Icons.person_add_alt_1)
               ]),
         ));
   }
