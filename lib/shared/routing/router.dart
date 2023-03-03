@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:milton_relay/admin/screens/add_event_screen.dart';
+import 'package:milton_relay/admin/screens/manage_event_screen.dart';
 import 'package:milton_relay/admin/screens/add_user_screen.dart';
-import 'package:milton_relay/admin/screens/issue_manager.dart';
+import 'package:milton_relay/admin/screens/issue_manager_screen.dart';
+import 'package:milton_relay/admin/screens/view_issue_screen.dart';
+import 'package:milton_relay/shared/models/issue_model.dart';
 import 'package:milton_relay/shared/screens/report_issue_screen.dart';
 import 'package:milton_relay/shared/screens/user_list_screen.dart';
 import 'package:milton_relay/shared/screens/view_children_screen.dart';
@@ -19,6 +21,8 @@ import 'package:milton_relay/shared/screens/login_screen.dart';
 import 'package:milton_relay/shared/screens/news_screen.dart';
 import 'package:milton_relay/shared/screens/view_event_screen.dart';
 import 'package:milton_relay/shared/screens/view_upcoming_events_screen.dart';
+import 'package:milton_relay/student/screens/laude_point_calculator_screen.dart';
+import 'package:milton_relay/student/screens/student_profile_screen.dart';
 
 import '../models/event_model.dart';
 import '../utils/display_util.dart';
@@ -52,10 +56,10 @@ final router = GoRouter(
               const NoTransitionPage(child: AddUserScreen())),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
-          name: Routes.addEvent.toName,
-          path: Routes.addEvent.toPath,
-          pageBuilder: (context, state) =>
-              const NoTransitionPage(child: AddEventScreen())),
+          name: Routes.manageEvent.toName,
+          path: Routes.manageEvent.toPath,
+          pageBuilder: (context, state) => NoTransitionPage(
+              child: AddEventScreen(event: state.extra as EventModel))),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
           name: Routes.viewUpcomingEvents.toName,
@@ -64,10 +68,22 @@ final router = GoRouter(
               const NoTransitionPage(child: ViewUpcomingEventsScreen())),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
+          name: Routes.studentLaudePointCalculator.toName,
+          path: Routes.studentLaudePointCalculator.toPath,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: LaudePointCalculatorScreen())),
+      GoRoute(
+          parentNavigatorKey: _rootNavigatorKey,
           name: Routes.viewEvent.toName,
           path: Routes.viewEvent.toPath,
           pageBuilder: (context, state) => NoTransitionPage(
               child: ViewEventScreen(event: state.extra as EventModel))),
+      GoRoute(
+          parentNavigatorKey: _rootNavigatorKey,
+          name: Routes.viewIssue.toName,
+          path: Routes.viewIssue.toPath,
+          pageBuilder: (context, state) => NoTransitionPage(
+              child: ViewIssueScreen(issue: state.extra as IssueModel))),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
           name: Routes.viewChildren.toName,
@@ -76,8 +92,8 @@ final router = GoRouter(
               child: ViewChildrenScreen(parent: state.extra as ParentModel))),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
-          name: Routes.viewImageScreen.toName,
-          path: Routes.viewImageScreen.toPath,
+          name: Routes.viewImage.toName,
+          path: Routes.viewImage.toPath,
           pageBuilder: (context, state) => NoTransitionPage(
               child: ViewImageScreen(image: state.extra as File))),
       ShellRoute(
@@ -97,7 +113,7 @@ final router = GoRouter(
                         location: Routes.adminUserManager.toPath),
                     NavBarItem(
                         icon: const Icon(Icons.warning),
-                        location: Routes.issueManagerScreen.toPath)
+                        location: Routes.issueManager.toPath)
                   ],
                   child: child)),
           routes: [
@@ -121,8 +137,8 @@ final router = GoRouter(
                     const NoTransitionPage(child: CalendarScreen())),
             GoRoute(
                 parentNavigatorKey: _adminNavigatorKey,
-                name: Routes.issueManagerScreen.toName,
-                path: Routes.issueManagerScreen.toPath,
+                name: Routes.issueManager.toName,
+                path: Routes.issueManager.toPath,
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: IssueManagerScreen()))
           ]),
@@ -232,7 +248,7 @@ final router = GoRouter(
                         location: Routes.studentCalendar.toPath),
                     NavBarItem(
                         icon: const Icon(Icons.person),
-                        location: Routes.studentNews.toPath),
+                        location: Routes.studentProfile.toPath),
                     NavBarItem(
                         icon: const Icon(Icons.warning),
                         location: Routes.studentReportIssue.toPath)
@@ -251,6 +267,12 @@ final router = GoRouter(
                 path: Routes.studentCalendar.toPath,
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: CalendarScreen())),
+            GoRoute(
+                parentNavigatorKey: _studentNavigatorKey,
+                name: Routes.studentProfile.toName,
+                path: Routes.studentProfile.toPath,
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: StudentProfileScreen())),
             GoRoute(
                 parentNavigatorKey: _studentNavigatorKey,
                 name: Routes.studentReportIssue.toName,

@@ -54,6 +54,7 @@ class _ViewUpcomingEventsScreenState extends State<ViewUpcomingEventsScreen> {
   }
 
   void _refreshEventsOnPop() {
+    if (!mounted) return;
     if (GoRouter.of(context).location == Routes.viewUpcomingEvents.toPath) {
       _setUpcomingEvents();
       GoRouter.of(context).removeListener(_refreshEventsOnPop);
@@ -77,7 +78,7 @@ class _ViewUpcomingEventsScreenState extends State<ViewUpcomingEventsScreen> {
           children: [
             Container(
               width: double.infinity,
-              height: 8.w,
+              height: 9.w,
               color: const Color.fromRGBO(255, 255, 255, 0.8),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
@@ -97,7 +98,8 @@ class _ViewUpcomingEventsScreenState extends State<ViewUpcomingEventsScreen> {
                     ),
                     const Expanded(child: SizedBox()),
                     IconButton(
-                        icon: const Icon(Icons.keyboard_arrow_right, size: 35),
+                        icon: const Icon(Icons.keyboard_arrow_right),
+                        iconSize: 3.w,
                         onPressed: () {
                           context.push(Routes.viewEvent.toPath, extra: event);
                           GoRouter.of(context).addListener(_refreshEventsOnPop);

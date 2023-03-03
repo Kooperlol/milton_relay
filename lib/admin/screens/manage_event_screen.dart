@@ -1,22 +1,26 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:drop_shadow/drop_shadow.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:milton_relay/shared/models/event_model.dart';
 import 'package:milton_relay/shared/services/event_service.dart';
 import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../shared/utils/collections.dart';
+import '../../shared/utils/color_util.dart';
 import '../../shared/utils/display_util.dart';
 
 class AddEventScreen extends StatefulWidget {
-  const AddEventScreen({Key? key}) : super(key: key);
+  final EventModel? event;
+  const AddEventScreen({Key? key, this.event}) : super(key: key);
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
@@ -33,6 +37,22 @@ class _AddEventScreenState extends State<AddEventScreen> {
       _endTimeOfEvent = TimeOfDay.now();
   DateTime _dateOfEvent = DateTime.now();
   File? _image;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.event != null) {
+      _eventInput.text = widget.event!.event;
+      _dateInput.text = DateFormat('MM-dd-yy').format(widget.event!.date);
+      _dateOfEvent = widget.event!.date;
+      _startTimeOfEvent = widget.event!.startTime;
+      _startTimeInput.text = timeOfDayToString(widget.event!.startTime);
+      _endTimeOfEvent = widget.event!.endTime;
+      _endTimeInput.text = timeOfDayToString(widget.event!.endTime);
+      _descriptionInput.text = widget.event!.description;
+      _locationInput.text = widget.event!.location;
+    }
+  }
 
   @override
   void dispose() {
@@ -63,7 +83,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
 
     var uuid = const Uuid();
-    var id = uuid.v1();
+    var id = widget.event != null ? widget.event!.id : uuid.v1();
 
     try {
       TaskSnapshot? uploadTask;
@@ -71,6 +91,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
         Reference storageRef =
             FirebaseStorage.instance.ref().child("events/$id");
         uploadTask = await storageRef.putFile(_image!);
+      }
+
+      if (widget.event != null && _image != null) {
+        Reference storageRef =
+            FirebaseStorage.instance.ref().child("events/$id");
+        storageRef.delete();
       }
 
       CollectionReference eventsCollection =
@@ -85,31 +111,39 @@ class _AddEventScreenState extends State<AddEventScreen> {
           _dateOfEvent.add(_dateOfEvent.timeZoneOffset),
           uploadTask != null
               ? await uploadTask.ref.getDownloadURL()
-              : 'default');
+              : widget.event != null
+                  ? widget.event!.bannerURL
+                  : 'default');
       await eventsCollection
           .doc(id)
           .set(EventService().eventToJson(eventModel));
     } catch (error) {
       stderr.writeln(
-          "An error has occurred while attempting to create an event: ${error.toString()}");
+          'An error has occurred while attempting to create an event: ${error.toString()}');
     }
 
     if (!mounted) return;
-    showSnackBar(context, "Created event!");
+    showSnackBar(
+        context, widget.event != null ? 'Edited Event' : 'Created event!');
 
-    context.pop();
+    if (widget.event != null) {
+      context.pop();
+      context.pop();
+    } else {
+      context.pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar("Add Event"),
+      appBar: getAppBar(widget.event != null ? 'Edit Event' : 'Add Event'),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 32),
+        padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 5.w),
         child: SingleChildScrollView(
           child: Column(children: [
             Card(
-              shadowColor: Colors.black,
+              color: ColorUtil.snowWhite,
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Column(
@@ -118,7 +152,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         controller: _eventInput,
                         decoration: const InputDecoration(
                             icon: Icon(Icons.event_note), labelText: 'Event')),
-                    const SizedBox.square(dimension: 25),
+                    SizedBox(height: 5.w),
                     TextField(
                       controller: _dateInput,
                       readOnly: true,
@@ -137,7 +171,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         });
                       },
                     ),
-                    const SizedBox.square(dimension: 25),
+                    SizedBox(height: 5.w),
                     TextField(
                       controller: _startTimeInput,
                       readOnly: true,
@@ -149,13 +183,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             context: context, initialTime: _startTimeOfEvent);
                         if (time == null) return;
                         setState(() {
-                          _startTimeInput.text =
-                              '${time.hourOfPeriod}:${time.minute < 10 ? '0${time.minute}' : time.minute} ${time.period.name.toUpperCase()}';
+                          _startTimeInput.text = timeOfDayToString(time);
                           _startTimeOfEvent = time;
                         });
                       },
                     ),
-                    const SizedBox.square(dimension: 25),
+                    SizedBox(height: 5.w),
                     TextField(
                       controller: _endTimeInput,
                       readOnly: true,
@@ -172,7 +205,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         });
                       },
                     ),
-                    const SizedBox.square(dimension: 25),
+                    SizedBox.square(dimension: 5.w),
                     TextField(
                       maxLines: null,
                       controller: _descriptionInput,
@@ -180,61 +213,55 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           icon: Icon(Icons.description),
                           labelText: 'Description'),
                     ),
-                    const SizedBox.square(dimension: 25),
+                    SizedBox(height: 5.w),
                     TextField(
                       keyboardType: TextInputType.streetAddress,
                       controller: _locationInput,
                       decoration: const InputDecoration(
                           icon: Icon(Icons.location_on), labelText: 'Location'),
                     ),
-                    const SizedBox.square(dimension: 25),
-                    Container(
-                        width: 250,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              alignment: Alignment.center,
-                              image: _image != null
-                                  ? Image.file(_image!).image
-                                  : Image.asset(
-                                          'assets/default-event-banner.png')
-                                      .image),
-                        )),
-                    const SizedBox.square(dimension: 15),
-                    DropShadow(
-                      blurRadius: 5,
-                      opacity: 0.5,
-                      child: InkWell(
-                        onTap: () async {
-                          File? image = await pickImage();
-                          setState(() => _image = image);
-                        },
-                        customBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Container(
-                            width: double.infinity,
+                    SizedBox(height: 5.w),
+                    GestureDetector(
+                      onTap: () async {
+                        File? image = await pickImage();
+                        setState(() => _image = image);
+                      },
+                      child: Container(
+                          width: 250,
+                          height: 100,
+                          alignment: Alignment.bottomCenter,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center,
+                                image: _image != null
+                                    ? Image.file(_image!).image
+                                    : widget.event != null
+                                        ? Image.network(widget.event!.bannerURL)
+                                            .image
+                                        : Image.asset(
+                                                'assets/default-event-banner.png')
+                                            .image),
+                          ),
+                          child: Container(
+                            color: const Color.fromRGBO(255, 255, 255, 0.8),
+                            height: 6.w,
                             alignment: Alignment.center,
-                            color: Colors.grey,
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.add_photo_alternate_rounded,
-                                      color: Colors.white),
-                                  SizedBox.square(dimension: 5),
-                                  Text('Upload Banner',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.white))
-                                ])),
-                      ),
-                    ),
+                            width: double.infinity,
+                            child: Text('Tap to Replace Image',
+                                style: TextStyle(fontSize: 4.w)),
+                          )),
+                    )
                   ],
                 ),
               ),
             ),
-            createButton('Add Event', 150, () => createEvent())
+            SizedBox(height: 5.w),
+            GFButton(
+                onPressed: () => createEvent(),
+                text: widget.event != null ? 'Edit Event' : 'Add Event',
+                icon: const Icon(Icons.add, color: Colors.white),
+                color: ColorUtil.red)
           ]),
         ),
       ),

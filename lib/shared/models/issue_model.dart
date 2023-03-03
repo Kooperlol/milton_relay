@@ -1,11 +1,15 @@
+import 'package:flutter/material.dart';
+
 class IssueModel {
+  final String id;
   final Issues issue;
   final String description, reporter;
   final DateTime date;
+  final List<String> imageURLs;
   bool resolved;
 
-  IssueModel(
-      this.issue, this.description, this.reporter, this.date, this.resolved);
+  IssueModel(this.id, this.issue, this.description, this.reporter, this.date,
+      this.resolved, this.imageURLs);
 }
 
 enum Issues { design, coding, suggestion }
@@ -19,6 +23,17 @@ extension IssuesExstention on Issues {
         return "coding";
       case Issues.suggestion:
         return "suggestion";
+    }
+  }
+
+  IconData get toIcon {
+    switch (this) {
+      case Issues.design:
+        return Icons.format_paint;
+      case Issues.coding:
+        return Icons.code;
+      case Issues.suggestion:
+        return Icons.lightbulb;
     }
   }
 }

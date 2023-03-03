@@ -35,22 +35,24 @@ class _UserManagerScreenState extends State<UserManagerScreen> {
   @override
   Widget build(BuildContext context) {
     IconButton iconButton = IconButton(
-        onPressed: () => context.push(Routes.addUser.toPath),
-        iconSize: 5.w,
+        tooltip: 'Add User',
+        onPressed: () {
+          context.push(Routes.addUser.toPath);
+          GoRouter.of(context).addListener(_refreshUsersOnPop);
+        },
         icon: const Icon(Icons.person_add_alt_1, color: Colors.white));
     return Scaffold(
       appBar: AuthService().isAdmin()
-          ? getAppBar('User Manager', rightIcon: iconButton)
+          ? getAppBar('User Manager', icons: [iconButton])
           : getAppBar('User List'),
       body: NotificationListener<ScrollEndNotification>(
         child: ListView.builder(
           itemBuilder: (context, index) {
             if (index == _data.length) {
-              return const SizedBox(
-                key: ValueKey('loading'),
+              return SizedBox(
                 width: double.infinity,
-                height: 50,
-                child: Center(child: CircularProgressIndicator()),
+                height: 10.w,
+                child: const Center(child: CircularProgressIndicator()),
               );
             }
             return _data[index];
@@ -73,7 +75,7 @@ class _UserManagerScreenState extends State<UserManagerScreen> {
 
     Query query = FirebaseFirestore.instance
         .collection(Collections.users.toPath)
-        .orderBy('id');
+        .orderBy('lastName');
     query = _lastDocument == null
         ? query.limit(loadSize)
         : query.startAfterDocument(_lastDocument!).limit(loadSize);
@@ -87,25 +89,37 @@ class _UserManagerScreenState extends State<UserManagerScreen> {
         Map<String, dynamic> data = e.data() as Map<String, dynamic>;
         switch (roleFromString(data['role'])) {
           case Roles.student:
-            userCards
-                .add(UserCard(user: StudentService().getStudentFromJson(data)));
+            userCards.add(UserCard(StudentService().getStudentFromJson(data)));
             break;
           case Roles.parent:
-            userCards
-                .add(UserCard(user: ParentService().getParentFromJson(data)));
+            userCards.add(UserCard(ParentService().getParentFromJson(data)));
             break;
           case Roles.instructor:
-            userCards.add(UserCard(user: UserService().getUserFromJson(data)));
+            userCards.add(UserCard(UserService().getUserFromJson(data)));
             break;
           case Roles.admin:
         }
       }
     });
 
+    if (!mounted) return;
     setState(() {
       _data.addAll(userCards);
-      if (userCards.length < loadSize) _allFetched = true;
+      _allFetched = userCards.length < loadSize;
       _isLoading = false;
     });
+  }
+
+  void _refreshUsersOnPop() {
+    if (!mounted) return;
+    if (GoRouter.of(context).location == Routes.adminUserManager.toPath) {
+      setState(() {
+        _data.clear();
+        _lastDocument = null;
+        _allFetched = false;
+      });
+      _getUserData();
+      GoRouter.of(context).removeListener(_refreshUsersOnPop);
+    }
   }
 }

@@ -11,15 +11,18 @@ enum Routes {
   adminUserManager,
   instructorUserList,
   addUser,
-  addEvent,
+  manageEvent,
   viewEvent,
   viewUpcomingEvents,
   viewChildren,
   studentReportIssue,
   instructorReportIssue,
   parentReportIssue,
-  viewImageScreen,
-  issueManagerScreen
+  studentLaudePointCalculator,
+  studentProfile,
+  viewImage,
+  viewIssue,
+  issueManager
 }
 
 extension RoutesExtension on Routes {
@@ -49,8 +52,8 @@ extension RoutesExtension on Routes {
         return "instructorUserList";
       case Routes.viewChildren:
         return "viewChildren";
-      case Routes.addEvent:
-        return "addEvent";
+      case Routes.manageEvent:
+        return "manageEvent";
       case Routes.viewEvent:
         return "viewEvent";
       case Routes.viewUpcomingEvents:
@@ -61,10 +64,16 @@ extension RoutesExtension on Routes {
         return "parentReportIssue";
       case Routes.instructorReportIssue:
         return "instructorReportIssue";
-      case Routes.viewImageScreen:
-        return "viewImageScreen";
-      case Routes.issueManagerScreen:
-        return "issueManagerScreen";
+      case Routes.viewImage:
+        return "viewImage";
+      case Routes.issueManager:
+        return "issueManager";
+      case Routes.studentProfile:
+        return "studentProfile";
+      case Routes.studentLaudePointCalculator:
+        return "studentLaudePointCalculator";
+      case Routes.viewIssue:
+        return "viewIssue";
       default:
         return "loading";
     }
@@ -98,8 +107,8 @@ extension RoutesExtension on Routes {
         return "/addUser";
       case Routes.viewChildren:
         return "/viewChildren";
-      case Routes.addEvent:
-        return "/admin/addEvent";
+      case Routes.manageEvent:
+        return "/admin/manageEvent";
       case Routes.viewEvent:
         return "/viewEvent";
       case Routes.viewUpcomingEvents:
@@ -110,10 +119,16 @@ extension RoutesExtension on Routes {
         return "/instructor/reportIssue";
       case Routes.studentReportIssue:
         return "/student/reportIssue";
-      case Routes.viewImageScreen:
-        return "/viewImageScreen";
-      case Routes.issueManagerScreen:
-        return "/admin/issueManagerScreen";
+      case Routes.viewImage:
+        return "/viewImage";
+      case Routes.issueManager:
+        return "/admin/issueManager";
+      case Routes.viewIssue:
+        return "/admin/viewIssue";
+      case Routes.studentProfile:
+        return "/student/profile";
+      case Routes.studentLaudePointCalculator:
+        return "/student/laudePointCalculator";
       default:
         return "/";
     }

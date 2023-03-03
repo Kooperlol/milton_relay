@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/components/dropdown/gf_dropdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:milton_relay/parent/models/parent.dart';
 import 'package:milton_relay/parent/services/parent_service.dart';
@@ -13,7 +15,6 @@ import 'package:milton_relay/shared/services/user_service.dart';
 import 'package:milton_relay/shared/utils/display_util.dart';
 import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
-import 'package:milton_relay/shared/widgets/text_field_widget.dart';
 import 'package:milton_relay/student/models/student.dart';
 import 'package:milton_relay/student/services/student_service.dart';
 import 'package:multiselect/multiselect.dart';
@@ -56,7 +57,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     _setParentChildrenPickerDisplay();
   }
 
-  void createUser() async {
+  void _createUser() async {
     if (_nameController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
@@ -108,7 +109,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               name[0].capitalize(),
               name[1].capitalize(),
               await uploadTask.ref.getDownloadURL(),
-              roleFromString(_roleValue)));
+              Roles.instructor));
           break;
         case Roles.parent:
           data = ParentService().parentToJson(ParentModel(
@@ -154,84 +155,122 @@ class _AddUserScreenState extends State<AddUserScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TextFieldInput(
-                    textEditingController: _nameController,
-                    hintText: 'Full Name',
-                    textInputType: TextInputType.name),
-                SizedBox.square(dimension: 2.w),
-                TextFieldInput(
-                    textEditingController: _emailController,
-                    hintText: 'Email',
-                    textInputType: TextInputType.emailAddress),
-                SizedBox.square(dimension: 2.w),
-                TextFieldInput(
-                  textEditingController: _passwordController,
-                  hintText: 'Password',
-                  textInputType: TextInputType.text,
-                  isPass: true,
+                SizedBox(
+                  height: 10.w,
+                  width: double.infinity,
+                  child: DropdownButtonHideUnderline(
+                    child: GFDropdown(
+                        dropdownButtonColor: ColorUtil.snowWhite,
+                        dropdownColor: ColorUtil.snowWhite,
+                        padding: EdgeInsets.all(1.5.w),
+                        borderRadius: BorderRadius.circular(2.w),
+                        border: BorderSide(color: Colors.black12, width: 0.1.w),
+                        value: _roleValue,
+                        icon: const Icon(Icons.arrow_drop_down,
+                            color: Colors.black),
+                        items: Roles.values
+                            .where((e) => e != Roles.admin)
+                            .map((e) => DropdownMenuItem<dynamic>(
+                                  value: e.toName,
+                                  child: Text(e.toName.capitalize()),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          if (value == null) return;
+                          setState(() => _roleValue = value);
+                        }),
+                  ),
                 ),
-                SizedBox.square(dimension: 2.w),
-                DropdownButton<String>(
-                  value: _roleValue,
-                  icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-                  onChanged: (String? value) {
-                    setState(() => {_roleValue = value!});
-                  },
-                  items: Roles.values
-                      .where((element) => element != Roles.admin)
-                      .map((e) => e.toName)
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                SizedBox.square(dimension: 2.w),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 7.5.w,
-                      backgroundImage: _image == null
-                          ? Image.asset("assets/default-user-avatar.jpg").image
-                          : Image.file(_image!).image,
+                SizedBox.square(dimension: 5.w),
+                Card(
+                  color: ColorUtil.snowWhite,
+                  child: Padding(
+                    padding: EdgeInsets.all(3.w),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 7.5.w,
+                              backgroundImage: _image == null
+                                  ? Image.asset(
+                                          "assets/default-user-avatar.jpg")
+                                      .image
+                                  : Image.file(_image!).image,
+                            ),
+                            SizedBox.square(dimension: 3.w),
+                            GFButton(
+                                onPressed: () async {
+                                  File? image = await pickImage();
+                                  setState(() => _image = image);
+                                },
+                                text: 'Upload Avatar',
+                                icon: const Icon(Icons.add_photo_alternate,
+                                    color: Colors.white),
+                                color: ColorUtil.darkGray)
+                          ],
+                        ),
+                        SizedBox.square(dimension: 5.w),
+                        TextField(
+                            controller: _nameController,
+                            decoration: const InputDecoration(
+                                icon: Icon(Icons.drive_file_rename_outline),
+                                labelText: 'Full Name')),
+                        SizedBox.square(dimension: 5.w),
+                        TextField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                                icon: Icon(Icons.email),
+                                labelText: 'Email Address')),
+                        SizedBox.square(dimension: 5.w),
+                        TextField(
+                            controller: _passwordController,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                                icon: Icon(Icons.lock), labelText: 'Password')),
+                        SizedBox.square(dimension: 5.w),
+                        if (_roleValue == Roles.parent.toName)
+                          Column(children: [
+                            SizedBox.square(dimension: 5.w),
+                            DropDownMultiSelect(
+                                options:
+                                    _parentChildrenPickerDisplay.keys.toList(),
+                                selectedValues: _parentChildrenPickerSelected,
+                                whenEmpty: 'Children',
+                                onChanged: (List<String> e) =>
+                                    _parentChildrenPickerSelected = e)
+                          ]),
+                        if (_roleValue == Roles.student.toName)
+                          Column(children: [
+                            SizedBox.square(dimension: 5.w),
+                            TextField(
+                                controller: _absencesController,
+                                decoration: const InputDecoration(
+                                    icon: Icon(Icons.remove_circle),
+                                    labelText: 'Absence'),
+                                keyboardType: TextInputType.number),
+                            SizedBox.square(dimension: 5.w),
+                            TextField(
+                                controller: _laudePointsController,
+                                decoration: const InputDecoration(
+                                    icon: Icon(Icons.numbers),
+                                    labelText: 'Laude Points'),
+                                keyboardType: TextInputType.number),
+                          ]),
+                      ],
                     ),
-                    SizedBox.square(dimension: 2.w),
-                    createButton('Upload Avatar', 30.w, () async {
-                      File? image = await pickImage();
-                      setState(() => _image = image);
-                    },
-                        color: ColorUtil.darkGray,
-                        icon: Icons.add_photo_alternate)
-                  ],
+                  ),
                 ),
-                if (_roleValue == Roles.parent.toName)
-                  Column(children: [
-                    SizedBox.square(dimension: 2.w),
-                    DropDownMultiSelect(
-                        options: _parentChildrenPickerDisplay.keys.toList(),
-                        selectedValues: _parentChildrenPickerSelected,
-                        whenEmpty: 'Children',
-                        onChanged: (List<String> e) =>
-                            _parentChildrenPickerSelected = e)
-                  ]),
-                if (_roleValue == Roles.student.toName)
-                  Column(children: [
-                    SizedBox.square(dimension: 2.w),
-                    TextFieldInput(
-                        textEditingController: _absencesController,
-                        hintText: 'Absences',
-                        textInputType: TextInputType.number),
-                    SizedBox.square(dimension: 2.w),
-                    TextFieldInput(
-                        textEditingController: _laudePointsController,
-                        hintText: 'Laude Points',
-                        textInputType: TextInputType.number),
-                  ]),
-                SizedBox.square(dimension: 4.w),
-                createButton('Add User', 30.w, () => createUser(),
-                    icon: Icons.person_add_alt_1)
+                SizedBox.square(dimension: 5.w),
+                GFButton(
+                    onPressed: () => _createUser(),
+                    text: 'Create User',
+                    icon:
+                        const Icon(Icons.person_add_alt_1, color: Colors.white),
+                    color: ColorUtil.red)
               ]),
         ));
   }

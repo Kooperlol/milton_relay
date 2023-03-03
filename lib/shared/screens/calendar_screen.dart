@@ -35,103 +35,91 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    IconButton upcomingButton = IconButton(
+        tooltip: 'Upcoming Events',
+        onPressed: () => context.push(Routes.viewUpcomingEvents.toPath),
+        icon: const Icon(Icons.next_week, color: Colors.white));
     return Scaffold(
       appBar: AuthService().isAdmin()
-          ? getAppBar('Calendar',
-              rightIcon: IconButton(
-                  onPressed: () => context.push(Routes.addEvent.toPath),
-                  iconSize: 6.w,
-                  icon: const Icon(Icons.add_box, color: Colors.white)))
-          : getAppBar('Calendar'),
+          ? getAppBar('Calendar', icons: [
+              upcomingButton,
+              IconButton(
+                  tooltip: 'Add Event',
+                  onPressed: () => context.push(Routes.manageEvent.toPath),
+                  icon: const Icon(Icons.add_box, color: Colors.white))
+            ])
+          : getAppBar('Calendar', icons: [upcomingButton]),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          //createButton('View Upcoming Events', 100.w,
-          //   () => context.push(Routes.viewUpcomingEvents.toPath)),
-          Container(
-            color: ColorUtil.blue,
-            child: Card(
-              shadowColor: Colors.black,
-              margin: EdgeInsets.all(1.5.w),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)),
-              child: TableCalendar(
-                rowHeight: 8.w,
-                daysOfWeekHeight: 5.w,
-                focusedDay: _focusedDay,
-                firstDay: DateTime.utc(2010),
-                lastDay: DateTime.utc(2030),
-                calendarFormat: _calendarFormat,
-                availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-                daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle:
-                      TextStyle(color: const Color(0xFF4F4F4F), fontSize: 2.w),
-                  weekendStyle:
-                      TextStyle(color: const Color(0xFF6A6A6A), fontSize: 2.w),
-                ),
-                headerStyle: HeaderStyle(
-                    titleCentered: true,
-                    titleTextStyle:
-                        TextStyle(fontSize: 4.w, fontWeight: FontWeight.bold),
-                    leftChevronIcon: Icon(Icons.chevron_left, size: 4.w),
-                    rightChevronIcon: Icon(Icons.chevron_right, size: 4.w),
-                    formatButtonTextStyle: TextStyle(fontSize: 2.w)),
-                calendarStyle: CalendarStyle(
-                    weekNumberTextStyle: TextStyle(
-                        fontSize: 3.w, color: const Color(0xFFBFBFBF)),
-                    defaultTextStyle: TextStyle(fontSize: 3.w),
-                    selectedTextStyle: TextStyle(
-                      color: const Color(0xFFFAFAFA),
-                      fontSize: 3.w,
-                    ),
-                    todayTextStyle: TextStyle(
-                      color: const Color(0xFFFAFAFA),
-                      fontSize: 3.w,
-                    ),
-                    weekendTextStyle: TextStyle(
-                        color: const Color(0xFF5A5A5A), fontSize: 3.w),
-                    outsideTextStyle: TextStyle(
-                        color: const Color(0xFFAEAEAE), fontSize: 3.w),
-                    selectedDecoration: BoxDecoration(
-                        shape: BoxShape.circle, color: ColorUtil.red),
-                    todayDecoration: BoxDecoration(
-                        shape: BoxShape.circle, color: ColorUtil.darkRed)),
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                onDaySelected: (selectedDay, focusedDay) {
-                  if (_loading) return;
-                  setState(() {
-                    _focusedDay = focusedDay;
-                    _selectedDay = selectedDay;
-                  });
-                  _setEventsOnDate();
-                },
-                onFormatChanged: (format) =>
-                    setState(() => _calendarFormat = format),
+          Card(
+            shadowColor: Colors.black,
+            color: ColorUtil.snowWhite,
+            margin: EdgeInsets.all(1.5.w),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            child: TableCalendar(
+              rowHeight: 8.w,
+              daysOfWeekHeight: 5.w,
+              focusedDay: _focusedDay,
+              firstDay: DateTime.utc(2010),
+              lastDay: DateTime.utc(2030),
+              calendarFormat: _calendarFormat,
+              availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+              daysOfWeekStyle: DaysOfWeekStyle(
+                weekdayStyle:
+                    TextStyle(color: const Color(0xFF4F4F4F), fontSize: 2.w),
+                weekendStyle:
+                    TextStyle(color: const Color(0xFF6A6A6A), fontSize: 2.w),
               ),
+              headerStyle: HeaderStyle(
+                  titleCentered: true,
+                  titleTextStyle:
+                      TextStyle(fontSize: 4.w, fontWeight: FontWeight.bold),
+                  leftChevronIcon: Icon(Icons.chevron_left, size: 4.w),
+                  rightChevronIcon: Icon(Icons.chevron_right, size: 4.w),
+                  formatButtonTextStyle: TextStyle(fontSize: 2.w)),
+              calendarStyle: CalendarStyle(
+                  weekNumberTextStyle:
+                      TextStyle(fontSize: 3.w, color: const Color(0xFFBFBFBF)),
+                  defaultTextStyle: TextStyle(fontSize: 3.w),
+                  selectedTextStyle: TextStyle(
+                    color: const Color(0xFFFAFAFA),
+                    fontSize: 3.w,
+                  ),
+                  todayTextStyle: TextStyle(
+                    color: const Color(0xFFFAFAFA),
+                    fontSize: 3.w,
+                  ),
+                  weekendTextStyle:
+                      TextStyle(color: const Color(0xFF5A5A5A), fontSize: 3.w),
+                  outsideTextStyle:
+                      TextStyle(color: const Color(0xFFAEAEAE), fontSize: 3.w),
+                  selectedDecoration: BoxDecoration(
+                      shape: BoxShape.circle, color: ColorUtil.red),
+                  todayDecoration: BoxDecoration(
+                      shape: BoxShape.circle, color: ColorUtil.darkRed)),
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+              onDaySelected: (selectedDay, focusedDay) {
+                if (_loading) return;
+                setState(() {
+                  _focusedDay = focusedDay;
+                  _selectedDay = selectedDay;
+                });
+                _setEventsOnDate();
+              },
+              onFormatChanged: (format) =>
+                  setState(() => _calendarFormat = format),
             ),
           ),
-          Container(
-            height: 2.w,
-            color: ColorUtil.blue,
-          ),
-          Container(
-            color: ColorUtil.blue,
-            child: Container(
+          SizedBox(
               width: double.infinity,
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50))),
-              child: SizedBox(
-                  width: double.infinity,
-                  height: 12.w,
-                  child: Center(
-                    child: Text('Events', style: TextStyle(fontSize: 6.w)),
-                  )),
-            ),
-          ),
-          SizedBox(height: 4.w),
+              height: 12.w,
+              child: Center(
+                child: Text(
+                    'Events on ${DateFormat.yMMMEd().format(_selectedDay)}',
+                    style: TextStyle(fontSize: 6.w)),
+              )),
           if (_loading) const CircularProgressIndicator(),
           Expanded(
             child: ListView.builder(
@@ -189,6 +177,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     Expanded(child: Container()),
                     IconButton(
+                        tooltip: 'View Event',
                         iconSize: 6.w,
                         icon: const Icon(Icons.keyboard_arrow_right),
                         onPressed: () {
@@ -209,6 +198,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     setState(() => _loading = true);
     CollectionReference eventsCollection =
         FirebaseFirestore.instance.collection(Collections.events.toPath);
+    print(_selectedDay.microsecondsSinceEpoch);
     QuerySnapshot eventsQuery = await eventsCollection
         .where('date', isEqualTo: _selectedDay.microsecondsSinceEpoch)
         .orderBy('start-time-hour')
@@ -227,6 +217,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   void _refreshEventsOnPop() {
+    if (!mounted) return;
     if (GoRouter.of(context).location.contains('/calendar')) {
       _setEventsOnDate();
       GoRouter.of(context).removeListener(_refreshEventsOnPop);

@@ -29,14 +29,13 @@ class _FooterState extends State<Footer> {
     return Scaffold(
       body: SafeArea(child: widget.child),
       bottomNavigationBar: BottomNavigationBar(
-        elevation: 15,
         selectedItemColor: ColorUtil.darkRed,
         backgroundColor: ColorUtil.red,
         unselectedItemColor: Colors.white,
         showUnselectedLabels: false,
         showSelectedLabels: false,
         type: BottomNavigationBarType.fixed,
-        iconSize: 3.5.w,
+        iconSize: 5.w,
         onTap: (index) => _goToTab(context, index),
         currentIndex: _index,
         items: widget.nav,

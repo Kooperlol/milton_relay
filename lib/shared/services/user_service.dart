@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../utils/collections.dart';
 import '../utils/roles.dart';
 import '../models/user_model.dart';
 
@@ -16,4 +19,25 @@ class UserService {
         'avatarURL': user.avatarURL,
         'role': user.role.toName,
       };
+
+  Future<UserModel> getUserFromID(String id) async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection(Collections.users.toPath)
+        .where('id', isEqualTo: id)
+        .get();
+    assert(snapshot.docs.isNotEmpty,
+        'Database Query Error: No user could be found with id $id');
+    QueryDocumentSnapshot document = snapshot.docs.first;
+    return getUserFromJson(document.data() as Map<String, dynamic>);
+  }
+
+  Future<Map<String, dynamic>> getDataFromID(String id) async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection(Collections.users.toPath)
+        .where('id', isEqualTo: id)
+        .get();
+    assert(snapshot.docs.isNotEmpty,
+        'Database Query Error: No user could be found with id $id');
+    return snapshot.docs.first.data() as Map<String, dynamic>;
+  }
 }

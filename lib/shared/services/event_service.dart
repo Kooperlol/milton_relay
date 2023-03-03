@@ -13,7 +13,7 @@ class EventService {
       TimeOfDay(
           hour: json['end-time-hour'] as int,
           minute: json['end-time-minute'] as int),
-      DateTime.fromMicrosecondsSinceEpoch(json['date'] as int),
+      DateTime.fromMicrosecondsSinceEpoch(json['date'] as int, isUtc: true),
       json['banner-URL'] as String);
 
   Map<String, dynamic> eventToJson(EventModel event) => <String, dynamic>{

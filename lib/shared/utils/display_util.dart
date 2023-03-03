@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:drop_shadow/drop_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,30 +34,6 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
     ),
   );
 }
-
-Widget createButton(String text, double width, Function onTap,
-        {IconData? icon, Color? color}) =>
-    DropShadow(
-        blurRadius: 3,
-        opacity: 0.5,
-        child: InkWell(
-            onTap: () => onTap.call(),
-            customBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-            child: Container(
-                width: width,
-                color: color ?? ColorUtil.red,
-                padding: EdgeInsets.all(3.w),
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (icon != null) Icon(icon, color: Colors.white),
-                        if (icon != null) SizedBox.square(dimension: 1.w),
-                        Text(text, style: const TextStyle(color: Colors.white))
-                      ]),
-                ))));
 
 class NavBarItem extends BottomNavigationBarItem {
   final String location;

@@ -42,8 +42,8 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen> {
         FirebaseFirestore.instance.collection(Collections.users.toPath);
     for (String child in widget.parent.children) {
       DocumentSnapshot doc = await users.doc(child).get();
-      childrenData.add(UserCard(
-          user: StudentModel.fromJson(doc.data() as Map<String, dynamic>)));
+      childrenData.add(
+          UserCard(StudentModel.fromJson(doc.data() as Map<String, dynamic>)));
     }
     setState(() => children = childrenData);
   }

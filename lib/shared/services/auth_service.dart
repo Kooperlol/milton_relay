@@ -1,37 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:milton_relay/shared/services/user_service.dart';
 
-import '../utils/roles.dart';
 import '../models/user_model.dart';
-import '../utils/collections.dart';
 
 class AuthService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   User? get firebaseUser => _auth.currentUser;
   String getUID() => _auth.currentUser!.uid;
 
-  Future<UserModel?> get userModel async {
-    QuerySnapshot snapshot = await _db
-        .collection(Collections.users.toPath)
-        .where('id', isEqualTo: getUID())
-        .get();
-    if (snapshot.docs.isNotEmpty) {
-      QueryDocumentSnapshot document = snapshot.docs.first;
-      return UserModel(
-          getUID(),
-          (document.get('firstName') as String),
-          (document.get('lastName') as String),
-          (document.get('avatarURL') as String),
-          roleFromString(document.get('role') as String));
-    }
-    return null;
-  }
+  Future<UserModel> get userModel async =>
+      UserService().getUserFromID(getUID());
 
-  bool isAdmin() {
-    return _auth.currentUser!.email == 'admin@milton.k12.wi.us';
-  }
+  bool isAdmin() => _auth.currentUser!.email == 'admin@milton.k12.wi.us';
 
   // logging in user
   Future<String> loginUser({

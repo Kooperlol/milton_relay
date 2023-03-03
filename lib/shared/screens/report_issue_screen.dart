@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:getwidget/components/button/gf_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:milton_relay/shared/models/issue_model.dart';
@@ -17,6 +18,7 @@ import 'package:uuid/uuid.dart';
 
 import '../routing/routes.dart';
 import '../utils/collections.dart';
+import '../utils/color_util.dart';
 
 class ReportIssueScreen extends StatefulWidget {
   const ReportIssueScreen({Key? key}) : super(key: key);
@@ -53,6 +55,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
     var uuid = const Uuid();
     var id = uuid.v1();
 
+    List<String> imageURls = [];
     try {
       if (_images.isNotEmpty) {
         for (var image in _images) {
@@ -60,17 +63,20 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
               .ref()
               .child("issues/$id/${image.path.split('/').last}");
           await storageRef.putFile(image);
+          imageURls.add(await storageRef.getDownloadURL());
         }
       }
 
       CollectionReference issuesCollection =
           FirebaseFirestore.instance.collection(Collections.issues.toPath);
       IssueModel issueModel = IssueModel(
+          id,
           issueFromString(_issueValue!.toLowerCase()),
           _descriptionInput.text,
           AuthService().getUID(),
           DateTime.now(),
-          false);
+          false,
+          imageURls);
       await issuesCollection
           .doc(id)
           .set(IssueService().issueToJson(issueModel));
@@ -143,14 +149,22 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                 ),
               ),
               SizedBox.square(dimension: 3.w),
-              createButton('Attach Photos', 35.w, () {
-                if (_images.length >= 3) {
-                  showSnackBar(
-                      context, 'The maximum number of attachments is 3!');
-                  return;
-                }
-                _attachContent();
-              }, icon: Icons.add_photo_alternate),
+              GFButton(
+                  onPressed: () {
+                    if (_images.length >= 3) {
+                      showSnackBar(
+                          context, 'The maximum number of attachments is 3!');
+                      return;
+                    }
+                    _attachContent();
+                  },
+                  text: 'Attach Photos',
+                  textStyle: TextStyle(fontSize: 3.w),
+                  size: 6.w,
+                  padding: EdgeInsets.all(1.w),
+                  color: ColorUtil.red,
+                  icon: Icon(Icons.add_photo_alternate,
+                      color: Colors.white, size: 3.w)),
               SizedBox.square(dimension: 3.w),
               ListView.builder(
                 shrinkWrap: true,
@@ -160,7 +174,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     child: Text(_images[index].path.split('/').last,
                         style: TextStyle(fontSize: 2.w)),
                     onPressed: () {
-                      context.push(Routes.viewImageScreen.toPath,
+                      context.push(Routes.viewImage.toPath,
                           extra: _images[index]);
                     },
                   ));
@@ -168,8 +182,14 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                 itemCount: _images.length,
               ),
               SizedBox.square(dimension: 3.w),
-              createButton('Submit Report', 50.w, () => _submitReport(),
-                  icon: Icons.send)
+              GFButton(
+                  onPressed: () => _submitReport(),
+                  icon: Icon(Icons.send, color: Colors.white, size: 4.w),
+                  textStyle: TextStyle(fontSize: 4.w),
+                  size: 8.w,
+                  padding: EdgeInsets.all(1.w),
+                  text: 'Submit Report',
+                  color: ColorUtil.red)
             ],
           ),
         ),

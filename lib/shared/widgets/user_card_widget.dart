@@ -14,12 +14,12 @@ class UserCard extends StatelessWidget {
   final UserModel user;
   final TextStyle textStyle = TextStyle(fontSize: 3.w);
 
-  UserCard({Key? key, required this.user}) : super(key: key);
+  UserCard(this.user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color.fromRGBO(255, 250, 250, 1),
+      color: ColorUtil.snowWhite,
       shadowColor: Colors.black,
       elevation: 2,
       margin: EdgeInsets.all(1.w),
