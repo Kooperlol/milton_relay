@@ -10,7 +10,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../routing/routes.dart';
-import '../utils/collections.dart';
+import '../models/collections.dart';
 import '../utils/color_util.dart';
 import '../utils/text_util.dart';
 

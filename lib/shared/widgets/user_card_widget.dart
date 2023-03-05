@@ -6,7 +6,7 @@ import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/student/models/student.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../utils/roles.dart';
+import '../models/roles.dart';
 import '../models/user_model.dart';
 import '../routing/routes.dart';
 

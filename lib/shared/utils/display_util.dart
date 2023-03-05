@@ -9,7 +9,7 @@ import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/utils/color_util.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'roles.dart';
+import '../models/roles.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
     BuildContext context, String text) {

@@ -1,4 +1,4 @@
-import '../../shared/utils/roles.dart';
+import '../../shared/models/roles.dart';
 import '../models/student.dart';
 
 class StudentService {

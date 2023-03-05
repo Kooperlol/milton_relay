@@ -8,7 +8,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../models/event_model.dart';
 import '../routing/routes.dart';
 import '../services/event_service.dart';
-import '../utils/collections.dart';
+import '../models/collections.dart';
 import '../utils/text_util.dart';
 
 class ViewUpcomingEventsScreen extends StatefulWidget {

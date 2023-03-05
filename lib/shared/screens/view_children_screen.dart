@@ -4,7 +4,7 @@ import 'package:milton_relay/parent/models/parent.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:milton_relay/shared/widgets/user_card_widget.dart';
 
-import '../utils/collections.dart';
+import '../models/collections.dart';
 import '../../student/models/student.dart';
 
 class ViewChildrenScreen extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:milton_relay/shared/utils/roles.dart';
+import 'package:milton_relay/shared/models/roles.dart';
 
 class UserModel {
   final String id, firstName, lastName, avatarURL;

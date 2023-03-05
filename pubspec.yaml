@@ -39,6 +39,7 @@ dependencies:
   drop_shadow: ^0.0.2+1
   responsive_sizer: ^3.1.1
   getwidget: ^3.0.1
+  checkbox_grouped: ^1.8.2
   intl: ^0.17.0
   loader_overlay: ^2.1.0
   multiselect: ^0.0.7

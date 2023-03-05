@@ -14,7 +14,7 @@ import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../shared/utils/collections.dart';
+import '../../shared/models/collections.dart';
 import '../../shared/utils/color_util.dart';
 import '../../shared/utils/display_util.dart';
 

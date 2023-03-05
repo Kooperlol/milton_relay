@@ -9,7 +9,7 @@ import 'package:getwidget/components/dropdown/gf_dropdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:milton_relay/parent/models/parent.dart';
 import 'package:milton_relay/parent/services/parent_service.dart';
-import 'package:milton_relay/shared/utils/roles.dart';
+import 'package:milton_relay/shared/models/roles.dart';
 import 'package:milton_relay/shared/models/user_model.dart';
 import 'package:milton_relay/shared/services/user_service.dart';
 import 'package:milton_relay/shared/utils/display_util.dart';
@@ -20,7 +20,7 @@ import 'package:milton_relay/student/services/student_service.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../shared/utils/collections.dart';
+import '../../shared/models/collections.dart';
 import '../../shared/utils/color_util.dart';
 
 class AddUserScreen extends StatefulWidget {

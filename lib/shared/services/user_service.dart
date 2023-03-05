@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../utils/collections.dart';
-import '../utils/roles.dart';
+import '../models/collections.dart';
+import '../models/roles.dart';
 import '../models/user_model.dart';
 
 class UserService {

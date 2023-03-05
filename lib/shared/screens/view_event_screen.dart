@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:milton_relay/shared/models/event_model.dart';
 import 'package:milton_relay/shared/routing/routes.dart';
 import 'package:milton_relay/shared/services/auth_service.dart';
-import 'package:milton_relay/shared/utils/collections.dart';
+import 'package:milton_relay/shared/models/collections.dart';
 import 'package:milton_relay/shared/utils/display_util.dart';
 import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';

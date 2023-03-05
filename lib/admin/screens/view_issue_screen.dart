@@ -13,7 +13,7 @@ import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../shared/utils/collections.dart';
+import '../../shared/models/collections.dart';
 import '../../shared/utils/color_util.dart';
 
 class ViewIssueScreen extends StatefulWidget {

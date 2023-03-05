@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:milton_relay/parent/services/parent_service.dart';
 import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/services/user_service.dart';
-import 'package:milton_relay/shared/utils/collections.dart';
+import 'package:milton_relay/shared/models/collections.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:milton_relay/shared/widgets/user_card_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../utils/roles.dart';
+import '../models/roles.dart';
 import '../routing/routes.dart';
 import '../../student/services/student_service.dart';
 

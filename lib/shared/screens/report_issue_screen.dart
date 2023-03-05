@@ -17,7 +17,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:uuid/uuid.dart';
 
 import '../routing/routes.dart';
-import '../utils/collections.dart';
+import '../models/collections.dart';
 import '../utils/color_util.dart';
 
 class ReportIssueScreen extends StatefulWidget {
