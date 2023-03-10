@@ -11,13 +11,6 @@
 
   <p align="center">
     A project for FBLA Mobile App Development
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report a Bug</a>
   </p>
 </div>
 
@@ -58,10 +51,18 @@ This project is for my junior year of high school in FBLA and is my first big ja
 
 ### Built With
 
-* [![Flutter][Flutter]](https://flutter.dev/)
-* [![Firebase][Firebase]](https://firebase.google.com/)
+[![Flutter][Flutter]](https://flutter.dev/)<br>
+[![Firebase][Firebase]](https://firebase.google.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- COMPATIBILITY -->
+## Compatibility
+
+![IOS][IOS]<br>
+![Android][Android]
 
 
 
@@ -107,7 +108,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Kooper Propp - kooperjack8@gmail.com
+Kooper Propp - kooperjack8@gmail.com<br>
 Project Link: [https://github.com/Kooperlol/milton_relay](https://github.com/Kooperlol/milton_relay)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -143,3 +144,5 @@ Project Link: [https://github.com/Kooperlol/milton_relay](https://github.com/Koo
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
 [Flutter]: https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white
 [Firebase]: https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white
+[IOS]: https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white
+[Android]: https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white
