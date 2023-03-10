@@ -72,8 +72,8 @@ Use the `BLANK_README.md` to get started.
 
 ### Built With
 
-* [![Flutter][Flutter][https://flutter.dev/]]
-* [![Firebase][Firebase][https://firebase.google.com/]]
+* [Flutter](https://flutter.dev/)
+* [Firebase](https://firebase.google.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -88,7 +88,7 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
-* flutter(https://docs.flutter.dev/get-started/install)
+* [flutter](https://docs.flutter.dev/get-started/install)
 
 
 
