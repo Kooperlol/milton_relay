@@ -3,8 +3,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/Kooperlol/milton_relay/blob/master/assets/miltonrelay-logo.png?raw=true">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/Kooperlol/milton_relay">
+    <img src="https://raw.githubusercontent.com/Kooperlol/milton_relay/master/assets/miltonrelay-logo.png" alt="Logo" width="110" height="80">
   </a>
 
 <h3 align="center">Milton Relay</h3>
