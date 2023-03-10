@@ -1,12 +1,9 @@
 <a name="readme-top"></a>
 
-<!-- PROJECT SHIELDS -->
-[![MIT License][license-shield]][license-url]
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/Kooperlol/milton_relay/blob/master/assets/miltonrelay-logo.png">
+  <a href="https://github.com/Kooperlol/milton_relay/blob/master/assets/miltonrelay-logo.png?raw=true">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -41,10 +38,10 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#images">Images</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#dependencies">Dependencies</a></li>
   </ol>
 </details>
 
@@ -53,18 +50,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
-
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+This project is for my junior year of high school in FBLA and is my first big java project. The given task was to create a mobile application for your school to help keep parents and the community up to date. The app needs to include upcoming events, important information such as the school calendar and activities schedule, a way for teachers and students to share photos, and a way for parents to notify the school of student absences. The app must also include one additional item that is recommended by your administration.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -72,10 +58,8 @@ Use the `BLANK_README.md` to get started.
 
 ### Built With
 
-* [![Flutter][Flutter]][https://flutter.dev/]
-* [Flutter](https://flutter.dev/)
-* [Firebase](https://firebase.google.com/)
-* [TagBox](https://taggbox.com/)
+* [![Flutter][Flutter]](https://flutter.dev/)
+* [![Firebase][Firebase]](https://firebase.google.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -103,11 +87,9 @@ Clone the repository and compile the code in an emulator such as Android Studio,
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## Images
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+Coming Soon!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -126,15 +108,14 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## Contact
 
 Kooper Propp - kooperjack8@gmail.com
-
 Project Link: [https://github.com/Kooperlol/milton_relay](https://github.com/Kooperlol/milton_relay)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+<!-- DEPENDENCIES -->
+## Dependencies
 
 * [Table Calendar](https://pub.dev/packages/table_calendar)
 * [Image Picker](https://pub.dev/packages/image_picker)
@@ -152,12 +133,13 @@ Project Link: [https://github.com/Kooperlol/milton_relay](https://github.com/Koo
 * [Flutter SVG](https://pub.dev/packages/flutter_svg)
 * [Lato Regular](https://fonts.google.com/specimen/Lato)
 * [Undraw](https://undraw.co/)
+* [TagBox](https://taggbox.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
 [Flutter]: https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white
+[Firebase]: https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white
