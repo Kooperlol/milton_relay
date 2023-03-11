@@ -43,7 +43,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project is for my junior year of high school in FBLA, and it is my first fluttrr project. The given task was to create a mobile application for your school to help keep parents and the community up to date. The app needs to include upcoming events, important information such as the school calendar and activities schedule, a way for teachers and students to share photos, and a way for parents to notify the school of student absences. The app must also include one additional item that is recommended by your administration.
+This project is for my junior year of high school in FBLA, and it is my first Flutter project. The given task was to create a mobile application for your school to help keep parents and the community up to date. The app needs to include upcoming events, important information such as the school calendar and activities schedule, a way for teachers and students to share photos, and a way for parents to notify the school of student absences. The app must also include one additional item that is recommended by your administration.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
