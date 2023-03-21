@@ -19,7 +19,7 @@
 <!-- ABOUT THE PROJECT -->
 ## ❓ About The Project
 
-Milton Relay is a mobile application for my school to help keep parents and the community up to date. The app includes upcoming events, important information such as the school calendar and activities schedule, a way for teachers and students to share photos, and a way for parents to notify the school of student absences. In addition, I add a Laude Point calculator recommended by the school administration. In the program, there is a admin, student, teacher, and parent interface, each with different features.
+Milton Relay is a mobile application for my school to help keep parents and the community up to date. The app includes upcoming events, important information such as the school calendar and activities schedule, a way for teachers and students to share photos, and a way for parents to notify the school of student absences. In addition, I added a Laude Point calculator recommended by the school administration. In the program, there is a admin, student, teacher, and parent interface, each with different features.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -28,8 +28,26 @@ Milton Relay is a mobile application for my school to help keep parents and the 
 ## 📜 Requirements Met
 
 The program meets the requirements stated on the [FBLA Application Development Rubric](https://www.fbla-pbl.org/media/Mobile-Application-Development-FBLA-Rating-Sheet-1.pdf)
-- [x] Rubric 1.
-  - 2.
+- [x] Packaged with complete file, readme, and instructions.
+  - The readme contains instructions and relavent information. The program is packaged so that it can easily be cloned and ran on another machine.
+- [x] Application functionality.
+  - The application is compatiable with both IOS and Android. In addition, it can be resized to display on phones and tablets.
+- [x] Documentation and copyright compliance.
+  - The application is licensed under MIT and all resources used are cited below and copyright free.
+- [x] Application addresses the topic.
+  - The application addresses the topic fully by including a news feed, photo sharing, student absences, a calendar, and a feature recommend by my school administration.
+- [x] Planning process.
+  - Tangible documents will be provided to show the planning process. This includes some flowcharts, google documents, and Figma blueprints.
+- [x] Navigation.
+  - The app navigation is simplistic and easy to use with there being a bottom navigation bar and header contating intuitive UI.
+- [x] Code.
+  - The code contains comments and all code is error free during compilation. If runtime errors occur, they can be reported through the bug report system.
+- [x] Icons and Graphics.
+  - The Milton Relay logo is integrated into the app's header, which is persistent throughout the app's UI. In addition, it relates to the app as it has our school mascot within a chat box, which shows that it is a communication app for our school.
+- [x] Social media.
+  - The school's facebook is linked on the news page so students can easily access school district feed. On the media sharing tab, there is an option to share your post directly with Instagram or Twitter.
+- [x] Bugs.
+  - The application does not have any known bugs. However, if a bug is stumbled upon, a user can easily report the bug through the app's bug report system.
  
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -39,8 +57,8 @@ The program meets the requirements stated on the [FBLA Application Development R
 
 | Technology                                                                                                        | Description                               |
 | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [![Flutter][Flutter]](https://flutter.dev/)           | A multiplatform framework that can deliver UI from one coding language        |
-| [![Firebase][Firebase]](https://firebase.google.com/) | A backend database used for authentication, file storage, and document storage           |
+| [![Flutter][Flutter]](https://flutter.dev/)           | A framework that can compile to multiple operating systems from just one coding language.        |
+| [![Firebase][Firebase]](https://firebase.google.com/) | A backend database used for authentication, file storage, and document storage.           |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -99,7 +117,7 @@ To get a local copy up and running follow these simple steps.
 
 ### 🧠 Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+Install the following before cloning the project.
 * [Flutter](https://docs.flutter.dev/get-started/install)
 * [An Emulator](https://www.geeksforgeeks.org/how-to-run-a-flutter-app-on-android-emulator/)
 
@@ -108,6 +126,21 @@ This is an example of how to list things you need to use the software and how to
 ### ⬇️ Installation
 
 Clone the repository and compile the code in an emulator such as Android Studio, XCode, or Visual Studio Code.
+* Go to Firebase and create an account. After that, create a project that supports IOS and/or Android and follow the given steps.
+* Add the following modules to the project: Authentication, Firestore, and Storage.
+* In Authentication, create a user with the email "admin@school.domain.com" and make a secure password.
+* In Firestore Database, create a users, posts, issues, and events collection.
+* In Storage, create an avatars, events, issues, and posts folder.
+* Then, launch the application and sign in as an adminstrator.
+* Navigate to the users tab and at the top click the add user button. From there, add all of the students, teachers, and parents to the application.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+### 📑 Instructions
+
+Coming Soon!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
