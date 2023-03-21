@@ -60,7 +60,7 @@ This project is for my junior year of high school in FBLA, and it is my first Fl
 
 
 <!-- DEPENDENCIES -->
-## Dependencies
+### Dependencies
 
 * [Table Calendar](https://pub.dev/packages/table_calendar)
 * [Image Picker](https://pub.dev/packages/image_picker)
@@ -84,7 +84,7 @@ This project is for my junior year of high school in FBLA, and it is my first Fl
 
 
 <!-- EXTERNAL RESOURCES -->
-## External Resources
+### External Resources
 
 * [Undraw](https://undraw.co/)
 * [TagBox](https://taggbox.com/)
