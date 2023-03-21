@@ -22,6 +22,8 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+        <li><a href="#dependencies">Dependencies</a></li>
+        <li><a href="#external-resources">External Resources</a></li>
       </ul>
     </li>
     <li>
@@ -34,7 +36,6 @@
     <li><a href="#images">Images</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#dependencies">Dependencies</a></li>
   </ol>
 </details>
 
@@ -53,6 +54,44 @@ This project is for my junior year of high school in FBLA, and it is my first Fl
 
 [![Flutter][Flutter]](https://flutter.dev/)<br>
 [![Firebase][Firebase]](https://firebase.google.com/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- DEPENDENCIES -->
+## Dependencies
+
+* [Table Calendar](https://pub.dev/packages/table_calendar)
+* [Image Picker](https://pub.dev/packages/image_picker)
+* [Flutter Spinkit](https://pub.dev/packages/flutter_spinkit)
+* [Drop Shadow](https://pub.dev/packages/drop_shadow)
+* [Responsive Sizer](https://pub.dev/packages/responsive_sizer)
+* [GetWidget](https://pub.dev/packages/getwidget)
+* [Checkbox Grouped](https://pub.dev/packages/checkbox_grouped)
+* [Intl](https://pub.dev/packages/intl)
+* [Loader Overlay](https://pub.dev/packages/loader_overlay)
+* [Multiselect](https://pub.dev/packages/multiselect)
+* [UUID](https://pub.dev/packages/uuid)
+* [Webview Flutter](https://pub.dev/packages/webview_flutter)
+* [GoRouter](https://pub.dev/packages/go_router)
+* [Flutter SVG](https://pub.dev/packages/flutter_svg)
+* [Dots Indicator](https://pub.dev/packages/dots_indicator)
+* [Readmore](https://pub.dev/packages/readmore)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- EXTERNAL RESOURCES -->
+## External Resources
+
+* [Undraw](https://undraw.co/)
+* [TagBox](https://taggbox.com/)
+* [Pexels](https://www.pexels.com/)
+* [Lato Regular](https://fonts.google.com/specimen/Lato)
+* [Best Readme Template](https://github.com/othneildrew/Best-README-Template)
+* [Github Image Shields](https://github.com/badges/shields)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -110,31 +149,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Kooper Propp - kooperjack8@gmail.com<br>
 Project Link: [https://github.com/Kooperlol/milton_relay](https://github.com/Kooperlol/milton_relay)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- DEPENDENCIES -->
-## Dependencies
-
-* [Table Calendar](https://pub.dev/packages/table_calendar)
-* [Image Picker](https://pub.dev/packages/image_picker)
-* [Flutter Spinkit](https://pub.dev/packages/flutter_spinkit)
-* [Drop Shadow](https://pub.dev/packages/drop_shadow)
-* [Responsive Sizer](https://pub.dev/packages/responsive_sizer)
-* [GetWidget](https://pub.dev/packages/getwidget)
-* [Checkbox Grouped](https://pub.dev/packages/checkbox_grouped)
-* [Intl](https://pub.dev/packages/intl)
-* [Loader Overlay](https://pub.dev/packages/loader_overlay)
-* [Multiselect](https://pub.dev/packages/multiselect)
-* [UUID](https://pub.dev/packages/uuid)
-* [Webview Flutter](https://pub.dev/packages/webview_flutter)
-* [GoRouter](https://pub.dev/packages/go_router)
-* [Flutter SVG](https://pub.dev/packages/flutter_svg)
-* [Lato Regular](https://fonts.google.com/specimen/Lato)
-* [Undraw](https://undraw.co/)
-* [TagBox](https://taggbox.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
