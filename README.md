@@ -128,7 +128,7 @@ Install the following before cloning the project.
 Clone the repository and compile the code in an emulator such as Android Studio, XCode, or Visual Studio Code.
 * Go to Firebase and create an account. After that, create a project that supports IOS and/or Android and follow the given steps.
 * Add the following modules to the project: Authentication, Firestore, and Storage.
-* In Authentication, create a user with the email "admin@school.domain.com" and make a secure password.
+* In Authentication, create an admin account with the email "admin@school.domain.com" and make a secure password.
 * In Firestore Database, create a users, posts, issues, and events collection.
 * In Storage, create an avatars, events, issues, and posts folder.
 * Then, launch the application and sign in as an adminstrator.
