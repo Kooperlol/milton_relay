@@ -21,8 +21,6 @@
 
 Milton Relay is a mobile application for my school to help keep parents and the community up to date. The app includes upcoming events, important information such as the school calendar and activities schedule, a way for teachers and students to share photos, and a way for parents to notify the school of student absences. In addition, I added a Laude Point calculator recommended by the school administration. In the program, there is a admin, student, teacher, and parent interface, each with different features.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 ## 📜 Requirements Met
@@ -48,8 +46,6 @@ The program meets the requirements stated on the [FBLA Application Development R
   - The school's facebook is linked on the news page so students can easily access school district feed. On the media sharing tab, there is an option to share your post directly with Instagram or Twitter.
 - [x] Bugs.
   - The application does not have any known bugs. However, if a bug is stumbled upon, a user can easily report the bug through the app's bug report system.
- 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -59,8 +55,6 @@ The program meets the requirements stated on the [FBLA Application Development R
 | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
 | [![Flutter][Flutter]](https://flutter.dev/)           | A framework that can compile to multiple operating systems from just one coding language.        |
 | [![Firebase][Firebase]](https://firebase.google.com/) | A backend database used for authentication, file storage, and document storage.           |
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -84,8 +78,6 @@ The program meets the requirements stated on the [FBLA Application Development R
 * [Dots Indicator](https://pub.dev/packages/dots_indicator)
 * [Readmore](https://pub.dev/packages/readmore)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- EXTERNAL RESOURCES -->
@@ -97,8 +89,6 @@ The program meets the requirements stated on the [FBLA Application Development R
 * [Lato Regular](https://fonts.google.com/specimen/Lato)
 * [Best Readme Template](https://github.com/othneildrew/Best-README-Template)
 * [Github Image Shields](https://github.com/badges/shields)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -134,15 +124,11 @@ Clone the repository and compile the code in an IDE such as Android Studio, XCod
 * Then, launch the application and sign in as an adminstrator.
 * Navigate to the users tab and at the top click the add user button. From there, add all of the students, teachers, and parents to the application.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 ### 📑 Instructions
 
 Coming Soon!
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -151,16 +137,12 @@ Coming Soon!
 
 Coming Soon!
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- LICENSE -->
 ## 👨‍⚖️ License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -169,8 +151,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Kooper Propp - kooperjack8@gmail.com<br>
 Project Link: [https://github.com/Kooperlol/milton_relay](https://github.com/Kooperlol/milton_relay)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
