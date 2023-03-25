@@ -1,5 +1,5 @@
 import '../../shared/models/roles.dart';
-import '../models/parent.dart';
+import '../models/parent_model.dart';
 
 class ParentService {
   ParentModel getParentFromJson(Map<String, dynamic> json) => ParentModel(

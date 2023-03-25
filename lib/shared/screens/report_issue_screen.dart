@@ -117,67 +117,86 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
               SvgPicture.asset('assets/issue-vector.svg',
                   width: 200.w, height: 50.w),
               SizedBox.square(dimension: 3.w),
-              DropdownButton(
-                style: TextStyle(fontSize: 4.w, color: Colors.black),
-                iconSize: 4.w,
-                hint: const Text('Type of issue'),
-                value: _issueValue,
-                icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-                onChanged: (String? value) {
-                  setState(() => {_issueValue = value ?? ""});
-                },
-                items: Issues.values
-                    .map((e) => e.toName.capitalize())
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              SizedBox.square(dimension: 3.w),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: TextField(
-                  maxLines: null,
-                  controller: _descriptionInput,
-                  style: TextStyle(fontSize: 2.5.w),
-                  decoration: InputDecoration(
-                      icon: Icon(Icons.description, size: 6.w),
-                      labelText: 'Description',
-                      labelStyle: TextStyle(fontSize: 3.w)),
+              Card(
+                margin: EdgeInsets.all(3.w),
+                color: ColorUtil.snowWhite,
+                elevation: 2,
+                child: Padding(
+                  padding: EdgeInsets.all(2.w),
+                  child: Column(
+                    children: [
+                      DropdownButton(
+                        style: TextStyle(fontSize: 4.w, color: Colors.black),
+                        iconSize: 4.w,
+                        hint: const Text('Type of issue'),
+                        value: _issueValue,
+                        icon: const Icon(Icons.arrow_drop_down,
+                            color: Colors.black),
+                        onChanged: (String? value) {
+                          setState(() => {_issueValue = value ?? ""});
+                        },
+                        items: Issues.values
+                            .map((e) => e.toName.capitalize())
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                      SizedBox.square(dimension: 3.w),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: TextField(
+                          maxLines: null,
+                          controller: _descriptionInput,
+                          style: TextStyle(fontSize: 2.5.w),
+                          decoration: InputDecoration(
+                              icon: Icon(Icons.description, size: 6.w),
+                              labelText: 'Description',
+                              labelStyle: TextStyle(fontSize: 3.w)),
+                        ),
+                      ),
+                      SizedBox.square(dimension: 3.w),
+                      GFButton(
+                          onPressed: () {
+                            if (_images.length >= 3) {
+                              showSnackBar(context,
+                                  'The maximum number of attachments is 3!');
+                              return;
+                            }
+                            _attachContent();
+                          },
+                          text: 'Attach Photos',
+                          textStyle: TextStyle(fontSize: 3.w),
+                          size: 6.w,
+                          padding: EdgeInsets.all(1.w),
+                          color: ColorUtil.red,
+                          icon: Icon(Icons.add_photo_alternate,
+                              color: Colors.white, size: 3.w)),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox.square(dimension: 3.w),
-              GFButton(
-                  onPressed: () {
-                    if (_images.length >= 3) {
-                      showSnackBar(
-                          context, 'The maximum number of attachments is 3!');
-                      return;
-                    }
-                    _attachContent();
-                  },
-                  text: 'Attach Photos',
-                  textStyle: TextStyle(fontSize: 3.w),
-                  size: 6.w,
-                  padding: EdgeInsets.all(1.w),
-                  color: ColorUtil.red,
-                  icon: Icon(Icons.add_photo_alternate,
-                      color: Colors.white, size: 3.w)),
               SizedBox.square(dimension: 3.w),
               ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return Center(
-                      child: TextButton(
-                    child: Text(_images[index].path.split('/').last,
-                        style: TextStyle(fontSize: 2.w)),
-                    onPressed: () {
-                      context.push(Routes.viewImage.toPath,
-                          extra: _images[index]);
-                    },
-                  ));
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    IconButton(
+                        onPressed: () =>
+                            setState(() => _images.removeAt(index)),
+                        icon: Icon(Icons.delete, color: ColorUtil.red)),
+                    TextButton(
+                      child: Text(_images[index].path.split('/').last,
+                          style: TextStyle(fontSize: 2.w)),
+                      onPressed: () {
+                        context.push(Routes.viewImage.toPath,
+                            extra: _images[index]);
+                      },
+                    ),
+                  ]));
                 },
                 itemCount: _images.length,
               ),
@@ -189,7 +208,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                   size: 8.w,
                   padding: EdgeInsets.all(1.w),
                   text: 'Submit Report',
-                  color: ColorUtil.red)
+                  color: ColorUtil.red),
+              SizedBox.square(dimension: 3.w)
             ],
           ),
         ),

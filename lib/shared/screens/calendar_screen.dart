@@ -22,6 +22,8 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  final eventsCollection =
+      FirebaseFirestore.instance.collection(Collections.events.toPath);
   DateTime _focusedDay = DateTime.now(), _selectedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   bool _loading = false;
@@ -196,9 +198,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   void _setEventsOnDate() async {
     setState(() => _loading = true);
-    CollectionReference eventsCollection =
-        FirebaseFirestore.instance.collection(Collections.events.toPath);
-    print(_selectedDay.microsecondsSinceEpoch);
     QuerySnapshot eventsQuery = await eventsCollection
         .where('date', isEqualTo: _selectedDay.microsecondsSinceEpoch)
         .orderBy('start-time-hour')

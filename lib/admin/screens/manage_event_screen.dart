@@ -65,7 +65,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     _locationInput.dispose();
   }
 
-  void createEvent() async {
+  void _createEvent() async {
     if (_eventInput.text.isEmpty ||
         _dateInput.text.isEmpty ||
         _startTimeInput.text.isEmpty ||
@@ -258,7 +258,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
             ),
             SizedBox(height: 5.w),
             GFButton(
-                onPressed: () => createEvent(),
+                onPressed: _createEvent,
                 text: widget.event != null ? 'Edit Event' : 'Add Event',
                 icon: const Icon(Icons.add, color: Colors.white),
                 color: ColorUtil.red)

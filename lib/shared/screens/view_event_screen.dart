@@ -24,12 +24,12 @@ class ViewEventScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('day: ${event.date.day}');
     return Scaffold(
       appBar: getAppBar(event.event),
       body: SingleChildScrollView(
         child: Card(
           margin: EdgeInsets.all(3.w),
+          elevation: 2,
           color: ColorUtil.snowWhite,
           child: Padding(
             padding: EdgeInsets.all(3.w),

@@ -7,7 +7,7 @@ import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/services/user_service.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:milton_relay/shared/widgets/user_card_widget.dart';
-import 'package:milton_relay/student/models/student.dart';
+import 'package:milton_relay/student/models/student_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../shared/utils/color_util.dart';
@@ -87,11 +87,13 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             SizedBox.square(dimension: 1.w),
             GFButton(
                 onPressed: () {
+                  if (student == null) return;
                   GoRouter.of(context)
                       .push(Routes.studentLaudePointCalculator.toPath);
                   GoRouter.of(context).addListener(_refreshProfileOnView);
                 },
                 text: 'Calculate',
+                icon: const Icon(Icons.calculate, color: Colors.white),
                 textStyle: TextStyle(fontSize: 4.w),
                 size: 7.w,
                 color: ColorUtil.red)

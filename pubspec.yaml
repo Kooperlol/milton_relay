@@ -35,12 +35,17 @@ dependencies:
   cloud_firestore: ^4.3.0
   table_calendar: ^3.0.8
   image_picker: ^0.8.6+1
+  readmore: ^2.2.0
   flutter_spinkit: ^5.1.0
   drop_shadow: ^0.0.2+1
+  like_button: ^2.0.5
   responsive_sizer: ^3.1.1
   getwidget: ^3.0.1
+  openai_client: ^0.0.7 # remove
+  pexels_null_safety: ^0.1.2 # remove
   checkbox_grouped: ^1.8.2
   intl: ^0.17.0
+  dots_indicator: ^2.1.0
   loader_overlay: ^2.1.0
   multiselect: ^0.0.7
   uuid: ^3.0.7

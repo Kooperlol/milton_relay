@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/dropdown/gf_dropdown.dart';
 import 'package:go_router/go_router.dart';
-import 'package:milton_relay/parent/models/parent.dart';
+import 'package:milton_relay/parent/models/parent_model.dart';
 import 'package:milton_relay/parent/services/parent_service.dart';
 import 'package:milton_relay/shared/models/roles.dart';
 import 'package:milton_relay/shared/models/user_model.dart';
@@ -15,7 +15,7 @@ import 'package:milton_relay/shared/services/user_service.dart';
 import 'package:milton_relay/shared/utils/display_util.dart';
 import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
-import 'package:milton_relay/student/models/student.dart';
+import 'package:milton_relay/student/models/student_model.dart';
 import 'package:milton_relay/student/services/student_service.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -34,7 +34,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
   final TextEditingController _nameController = TextEditingController(),
       _emailController = TextEditingController(),
       _passwordController = TextEditingController(),
-      _absencesController = TextEditingController(),
       _laudePointsController = TextEditingController();
   List<String> _parentChildrenPickerSelected = [];
   final Map<String, String> _parentChildrenPickerDisplay = {};
@@ -47,7 +46,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _absencesController.dispose();
     _laudePointsController.dispose();
   }
 
@@ -81,8 +79,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     }
 
     if (_laudePointsController.text.isNotEmpty &&
-        (!isNumeric(_laudePointsController.text) ||
-            !isNumeric(_absencesController.text))) {
+        !isNumeric(_laudePointsController.text)) {
       if (!mounted) return;
       showSnackBar(context, "The value must be numeric!");
       return;
@@ -127,7 +124,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               name[0].capitalize(),
               name[1].capitalize(),
               await uploadTask.ref.getDownloadURL(),
-              int.parse(_absencesController.text),
+              [],
               double.parse(_laudePointsController.text)));
           break;
         case Roles.admin:
@@ -245,13 +242,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
                           ]),
                         if (_roleValue == Roles.student.toName)
                           Column(children: [
-                            SizedBox.square(dimension: 5.w),
-                            TextField(
-                                controller: _absencesController,
-                                decoration: const InputDecoration(
-                                    icon: Icon(Icons.remove_circle),
-                                    labelText: 'Absence'),
-                                keyboardType: TextInputType.number),
                             SizedBox.square(dimension: 5.w),
                             TextField(
                                 controller: _laudePointsController,

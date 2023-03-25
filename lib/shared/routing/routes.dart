@@ -19,10 +19,17 @@ enum Routes {
   instructorReportIssue,
   parentReportIssue,
   studentLaudePointCalculator,
+  familyManager,
   studentProfile,
   viewImage,
   viewIssue,
-  issueManager
+  viewAbsences,
+  issueManager,
+  studentPosts,
+  instructorPosts,
+  reportAbsence,
+  adminPosts,
+  createPost
 }
 
 extension RoutesExtension on Routes {
@@ -74,6 +81,20 @@ extension RoutesExtension on Routes {
         return "studentLaudePointCalculator";
       case Routes.viewIssue:
         return "viewIssue";
+      case Routes.familyManager:
+        return "familyManager";
+      case Routes.viewAbsences:
+        return "viewAbsences";
+      case Routes.instructorPosts:
+        return "instructorPosts";
+      case Routes.studentPosts:
+        return "studentPosts";
+      case Routes.adminPosts:
+        return "adminPosts";
+      case Routes.createPost:
+        return "createPost";
+      case Routes.reportAbsence:
+        return "reportAbsence";
       default:
         return "loading";
     }
@@ -129,6 +150,20 @@ extension RoutesExtension on Routes {
         return "/student/profile";
       case Routes.studentLaudePointCalculator:
         return "/student/laudePointCalculator";
+      case Routes.familyManager:
+        return "/parent/familyManager";
+      case Routes.viewAbsences:
+        return "/student/viewAbsences";
+      case Routes.studentPosts:
+        return "/student/posts";
+      case Routes.instructorPosts:
+        return "/instructor/posts";
+      case Routes.adminPosts:
+        return "/admin/posts";
+      case Routes.createPost:
+        return "/createPost";
+      case Routes.reportAbsence:
+        return "/reportAbsence";
       default:
         return "/";
     }

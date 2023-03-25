@@ -54,10 +54,9 @@ void redirectToDashboard(BuildContext context) async {
     context.go(Routes.adminNews.toPath);
     return;
   }
-  UserModel? user = await AuthService().userModel;
-  assert(user != null);
+  UserModel user = await AuthService().userModel;
   if (!context.mounted) return;
   context.go(Routes.values
-      .firstWhere((element) => element.name == '${user!.role.toName}News')
+      .firstWhere((element) => element.name == '${user.role.toName}News')
       .toPath);
 }
