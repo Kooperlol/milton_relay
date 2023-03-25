@@ -34,7 +34,14 @@ class _UserManagerScreenState extends State<UserManagerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    IconButton iconButton = IconButton(
+    IconButton addUserButton = IconButton(
+        tooltip: 'Add User',
+        onPressed: () {
+          context.push(Routes.addUser.toPath);
+          GoRouter.of(context).addListener(_refreshUsersOnPop);
+        },
+        icon: const Icon(Icons.person_add_alt_1, color: Colors.white));
+    IconButton addUserButton = IconButton(
         tooltip: 'Add User',
         onPressed: () {
           context.push(Routes.addUser.toPath);
@@ -43,7 +50,7 @@ class _UserManagerScreenState extends State<UserManagerScreen> {
         icon: const Icon(Icons.person_add_alt_1, color: Colors.white));
     return Scaffold(
       appBar: AuthService().isAdmin()
-          ? getAppBar('User Manager', icons: [iconButton])
+          ? getAppBar('User Manager', icons: [addUserButton])
           : getAppBar('User List'),
       body: NotificationListener<ScrollEndNotification>(
         child: ListView.builder(
