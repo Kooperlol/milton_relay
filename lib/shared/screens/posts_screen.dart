@@ -15,6 +15,7 @@ import 'package:readmore/readmore.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../models/collections.dart';
+import '../models/load_model.dart';
 import '../models/user_model.dart';
 import '../routing/routes.dart';
 import '../services/auth_service.dart';
@@ -27,23 +28,17 @@ class PostsScreen extends StatefulWidget {
   State<PostsScreen> createState() => _PostsScreenState();
 }
 
-class _PostsScreenState extends State<PostsScreen> {
-  static const int loadSize = 8;
-  final List<Widget> _posts = [];
-  bool _isLoading = false, _allFetched = false;
-  DocumentSnapshot? _lastDocument;
-
+class _PostsScreenState extends State<PostsScreen> with LoadModel {
   @override
   void initState() {
     super.initState();
-    _getPostData();
-    //_createPosts();
+    fetchData(4);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: getAppBar('Community Posts', icons: [
+        appBar: AppBarWidget(title: 'Community Posts', icons: [
           IconButton(
             tooltip: 'Create Post',
             icon: const Icon(Icons.add_photo_alternate),
@@ -56,41 +51,55 @@ class _PostsScreenState extends State<PostsScreen> {
         body: NotificationListener<ScrollEndNotification>(
           child: ListView.builder(
               itemBuilder: (context, index) {
-                if (index == _posts.length) {
+                if (index == data.length) {
                   return SizedBox(
                     width: double.infinity,
                     height: 10.w,
                     child: const Center(child: CircularProgressIndicator()),
                   );
                 }
-                return _posts[index];
+                return data[index];
               },
-              itemCount: _posts.length + (_allFetched ? 0 : 1)),
+              itemCount: data.length + (isAllFetched ? 0 : 1)),
           onNotification: (scrollEnd) {
             if (scrollEnd.metrics.atEdge && scrollEnd.metrics.pixels > 0) {
-              _getPostData();
+              fetchData(3);
             }
             return true;
           },
         ));
   }
 
-  Future<void> _getPostData() async {
-    if (_isLoading || _allFetched) return;
-    setState(() => _isLoading = true);
+  void _refreshPostsOnPop() {
+    if (!mounted) return;
+    if (GoRouter.of(context).location.contains('/posts')) {
+      setState(() {
+        data.clear();
+        lastDocument = null;
+        isAllFetched = false;
+      });
+      fetchData(3);
+      GoRouter.of(context).removeListener(_refreshPostsOnPop);
+    }
+  }
+
+  @override
+  Future<void> fetchData(int loadSize) async {
+    if (isLoading || isAllFetched) return;
+    setState(() => isLoading = true);
 
     Query query = FirebaseFirestore.instance
         .collection(Collections.posts.toPath)
         .orderBy('date', descending: true);
-    query = _lastDocument == null
+    query = lastDocument == null
         ? query.limit(loadSize)
-        : query.startAfterDocument(_lastDocument!).limit(loadSize);
+        : query.startAfterDocument(lastDocument!).limit(loadSize);
 
     List<Widget> postCards = [];
     await query.get().then((value) {
       value.docs.isNotEmpty
-          ? _lastDocument = value.docs.last
-          : _lastDocument = null;
+          ? lastDocument = value.docs.last
+          : lastDocument = null;
       for (var e in value.docs) {
         postCards.add(PostWidget(
             post: PostService()
@@ -100,23 +109,10 @@ class _PostsScreenState extends State<PostsScreen> {
 
     if (!mounted) return;
     setState(() {
-      _posts.addAll(postCards);
-      _allFetched = postCards.length < loadSize;
-      _isLoading = false;
+      data.addAll(postCards);
+      isAllFetched = postCards.length < loadSize;
+      isLoading = false;
     });
-  }
-
-  void _refreshPostsOnPop() {
-    if (!mounted) return;
-    if (GoRouter.of(context).location.contains('/posts')) {
-      setState(() {
-        _posts.clear();
-        _lastDocument = null;
-        _allFetched = false;
-      });
-      _getPostData();
-      GoRouter.of(context).removeListener(_refreshPostsOnPop);
-    }
   }
 }
 

@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:milton_relay/admin/screens/manage_event_screen.dart';
+import 'package:milton_relay/admin/screens/absence_manager_screen.dart';
+import 'package:milton_relay/admin/screens/event_manager_screen.dart';
 import 'package:milton_relay/admin/screens/add_user_screen.dart';
 import 'package:milton_relay/admin/screens/issue_manager_screen.dart';
 import 'package:milton_relay/admin/screens/view_issue_screen.dart';
@@ -65,7 +66,7 @@ final router = GoRouter(
           name: Routes.manageEvent.toName,
           path: Routes.manageEvent.toPath,
           pageBuilder: (context, state) => NoTransitionPage(
-              child: AddEventScreen(event: state.extra as EventModel))),
+              child: EventManagerScreen(event: state.extra as EventModel))),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
           name: Routes.viewUpcomingEvents.toName,
@@ -84,6 +85,12 @@ final router = GoRouter(
           path: Routes.createPost.toPath,
           pageBuilder: (context, state) =>
               const NoTransitionPage(child: CreatePostScreen())),
+      GoRoute(
+          parentNavigatorKey: _rootNavigatorKey,
+          name: Routes.absenceManager.toName,
+          path: Routes.absenceManager.toPath,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: AbsenceManagerScreen())),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
           name: Routes.viewEvent.toName,
@@ -162,7 +169,7 @@ final router = GoRouter(
                 name: Routes.adminUserManager.toName,
                 path: Routes.adminUserManager.toPath,
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: UserManagerScreen())),
+                    const NoTransitionPage(child: UserListScreen())),
             GoRoute(
                 parentNavigatorKey: _adminNavigatorKey,
                 name: Routes.adminCalendar.toName,
@@ -269,7 +276,7 @@ final router = GoRouter(
                 name: Routes.instructorUserList.toName,
                 path: Routes.instructorUserList.toPath,
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: UserManagerScreen())),
+                    const NoTransitionPage(child: UserListScreen())),
             GoRoute(
                 parentNavigatorKey: _instructorNavigatorKey,
                 name: Routes.instructorReportIssue.toName,

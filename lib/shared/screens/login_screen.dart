@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorUtil.gray,
-      appBar: getAppBar('Milton Relay'),
+      appBar: const AppBarWidget(title: 'Milton Relay'),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(

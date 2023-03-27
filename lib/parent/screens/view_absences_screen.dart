@@ -1,32 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:milton_relay/student/models/absence_model.dart';
 import 'package:milton_relay/student/models/student_model.dart';
+import 'package:milton_relay/student/services/absence_service.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../shared/utils/color_util.dart';
 import '../../shared/utils/text_util.dart';
+import '../../shared/widgets/app_bar_widget.dart';
 
-class ViewAbsencesScreen extends StatelessWidget {
+class ViewAbsencesScreen extends StatefulWidget {
   final StudentModel student;
-
   const ViewAbsencesScreen({Key? key, required this.student}) : super(key: key);
 
   @override
+  State<ViewAbsencesScreen> createState() => _ViewAbsencesScreenState();
+}
+
+class _ViewAbsencesScreenState extends State<ViewAbsencesScreen> {
+  final List<Widget> _data = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List<Widget> absences = _getAbsenceDisplay();
     return Scaffold(
-      appBar: getAppBar('Absences'),
+      appBar: const AppBarWidget(title: 'Absences'),
       body: ListView.builder(
-          itemBuilder: (context, index) => absences[index],
-          itemCount: student.absences.length),
+          itemBuilder: (context, index) {
+            if (widget.student.absences.isEmpty) {
+              return Center(
+                  child: Text('No Absences', style: TextStyle(fontSize: 3.w)));
+            }
+            if (_data.isEmpty) {
+              return SizedBox(
+                width: double.infinity,
+                height: 10.w,
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            }
+            return _data[index];
+          },
+          itemCount: _data.isEmpty ? 1 : _data.length),
     );
   }
 
-  List<Widget> _getAbsenceDisplay() {
+  void _initData() async {
     List<Widget> absences = [];
-    List<AbsenceModel> sortedAbsences = List.from(student.absences);
+    List<AbsenceModel> sortedAbsences =
+        await AbsenceService().getAbsencesFromIDs(widget.student.absences);
     sortedAbsences.sort((a, b) => b.date.compareTo(a.date));
     for (AbsenceModel absence in sortedAbsences) {
       absences.add(Card(
@@ -106,6 +132,6 @@ class ViewAbsencesScreen extends StatelessWidget {
             ),
           )));
     }
-    return absences;
+    setState(() => _data.addAll(absences));
   }
 }

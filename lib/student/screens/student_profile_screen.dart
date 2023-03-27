@@ -33,7 +33,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar('Your Profile'),
+      appBar: const AppBarWidget(title: 'Your Profile'),
       body: Padding(
         padding: EdgeInsets.all(2.5.w),
         child: Column(

@@ -145,7 +145,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: getAppBar('Create a User'),
+        appBar: const AppBarWidget(title: 'Create a User'),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 5.w),
           child: Column(

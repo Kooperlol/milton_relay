@@ -28,10 +28,10 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar('Children'),
+      appBar: const AppBarWidget(title: 'Children'),
       body: Column(
           children: children.isEmpty
-              ? [const CircularProgressIndicator()]
+              ? [const Center(child: CircularProgressIndicator())]
               : children),
     );
   }

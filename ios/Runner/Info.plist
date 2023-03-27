@@ -4,6 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCalendarsUsageDescription</key>
+    <string>INSERT_REASON_HERE</string>
+    <key>NSContactsUsageDescription</key>
+    <string>INSERT_REASON_HERE</string>
 	<key>CFBundleDisplayName</key>
 	<string>Milton Relay</string>
 	<key>CFBundleExecutable</key>

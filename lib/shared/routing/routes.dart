@@ -29,7 +29,8 @@ enum Routes {
   instructorPosts,
   reportAbsence,
   adminPosts,
-  createPost
+  createPost,
+  absenceManager
 }
 
 extension RoutesExtension on Routes {
@@ -95,6 +96,8 @@ extension RoutesExtension on Routes {
         return "createPost";
       case Routes.reportAbsence:
         return "reportAbsence";
+      case Routes.absenceManager:
+        return "absenceManager";
       default:
         return "loading";
     }
@@ -164,6 +167,8 @@ extension RoutesExtension on Routes {
         return "/createPost";
       case Routes.reportAbsence:
         return "/reportAbsence";
+      case Routes.absenceManager:
+        return "/admin/absenceManager";
       default:
         return "/";
     }

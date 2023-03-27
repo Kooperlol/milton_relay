@@ -1,4 +1,4 @@
-enum Collections { users, events, issues, posts }
+enum Collections { users, events, issues, posts, absences }
 
 extension CollectionsExtension on Collections {
   String get toPath {
@@ -11,6 +11,8 @@ extension CollectionsExtension on Collections {
         return "issues";
       case Collections.posts:
         return "posts";
+      case Collections.absences:
+        return "absences";
     }
   }
 }

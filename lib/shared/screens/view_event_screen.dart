@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +25,7 @@ class ViewEventScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(event.event),
+      appBar: AppBarWidget(title: event.event),
       body: SingleChildScrollView(
         child: Card(
           margin: EdgeInsets.all(3.w),
@@ -108,11 +108,20 @@ class ViewEventScreen extends StatelessWidget {
                       text: event.description,
                       style: TextStyle(fontSize: 5.w, color: Colors.black))
                 ])),
+                SizedBox(height: 3.w),
+                Center(
+                  child: GFButton(
+                      onPressed: _exportEvent,
+                      color: ColorUtil.red,
+                      text: 'Export Event',
+                      size: GFSize.LARGE,
+                      icon: const Icon(Icons.exit_to_app, color: Colors.white)),
+                ),
                 if (AuthService().isAdmin())
                   Center(
                     child: Column(
                       children: [
-                        SizedBox(height: 3.w),
+                        SizedBox(height: 1.w),
                         GFButton(
                             onPressed: () => _deleteEvent(context),
                             color: ColorUtil.red,
@@ -136,6 +145,16 @@ class ViewEventScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _exportEvent() => Add2Calendar.addEvent2Cal(Event(
+        title: event.event,
+        description: event.description,
+        location: event.location,
+        startDate: DateTime(event.date.year, event.date.month, event.date.day,
+            event.startTime.hour, event.startTime.minute),
+        endDate: DateTime(event.date.year, event.date.month, event.date.day,
+            event.endTime.hour, event.endTime.minute),
+      ));
 
   void _deleteEvent(BuildContext context) async {
     try {

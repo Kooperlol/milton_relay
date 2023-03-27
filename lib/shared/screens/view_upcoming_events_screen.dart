@@ -32,7 +32,7 @@ class _ViewUpcomingEventsScreenState extends State<ViewUpcomingEventsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: getAppBar('Upcoming Events'),
+        appBar: const AppBarWidget(title: 'Upcoming Events'),
         body: _loading
             ? const Center(child: CircularProgressIndicator())
             : ListView.builder(

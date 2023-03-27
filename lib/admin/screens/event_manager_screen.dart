@@ -18,15 +18,15 @@ import '../../shared/models/collections.dart';
 import '../../shared/utils/color_util.dart';
 import '../../shared/utils/display_util.dart';
 
-class AddEventScreen extends StatefulWidget {
+class EventManagerScreen extends StatefulWidget {
   final EventModel? event;
-  const AddEventScreen({Key? key, this.event}) : super(key: key);
+  const EventManagerScreen({Key? key, this.event}) : super(key: key);
 
   @override
-  State<AddEventScreen> createState() => _AddEventScreenState();
+  State<EventManagerScreen> createState() => _EventManagerScreenState();
 }
 
-class _AddEventScreenState extends State<AddEventScreen> {
+class _EventManagerScreenState extends State<EventManagerScreen> {
   final TextEditingController _eventInput = TextEditingController(),
       _dateInput = TextEditingController(),
       _startTimeInput = TextEditingController(),
@@ -137,7 +137,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(widget.event != null ? 'Edit Event' : 'Add Event'),
+      appBar: AppBarWidget(
+          title: widget.event != null ? 'Edit Event' : 'Add Event'),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 5.w),
         child: SingleChildScrollView(

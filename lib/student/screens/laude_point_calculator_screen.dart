@@ -154,7 +154,7 @@ class _LaudePointCalculatorScreenState
         selectedIcon: Icons.check,
         selectedTextColor: Colors.white);
     return Scaffold(
-      appBar: getAppBar('Laude Point Calculator'),
+      appBar: const AppBarWidget(title: 'Laude Point Calculator'),
       body: Padding(
         padding: EdgeInsets.all(1.w),
         child: Column(

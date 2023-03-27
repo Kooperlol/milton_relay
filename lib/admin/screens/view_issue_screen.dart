@@ -36,7 +36,8 @@ class _ViewIssueScreenState extends State<ViewIssueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: getAppBar('${widget.issue.issue.toName.capitalize()} Issue'),
+        appBar: AppBarWidget(
+            title: '${widget.issue.issue.toName.capitalize()} Issue'),
         body: SingleChildScrollView(
           child: Card(
               margin: EdgeInsets.all(3.w),

@@ -40,7 +40,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar('Create Post'),
+      appBar: const AppBarWidget(title: 'Create Post'),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 5.w),
         child: Column(

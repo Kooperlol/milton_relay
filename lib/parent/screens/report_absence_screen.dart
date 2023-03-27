@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:milton_relay/student/models/absence_model.dart';
 import 'package:milton_relay/student/models/student_model.dart';
+import 'package:milton_relay/student/services/absence_service.dart';
 import 'package:milton_relay/student/services/student_service.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -45,7 +46,7 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar('Report Absence'),
+      appBar: const AppBarWidget(title: 'Report Absence'),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 5.w),
         child: SingleChildScrollView(
@@ -65,28 +66,31 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
                               style: TextStyle(fontSize: 2.5.w),
                             ),
                             SizedBox(width: 2.w),
-                            DropdownButtonHideUnderline(
-                              child: GFDropdown(
-                                  dropdownButtonColor: ColorUtil.snowWhite,
-                                  dropdownColor: ColorUtil.snowWhite,
-                                  padding: EdgeInsets.all(1.5.w),
-                                  itemHeight: 6.w,
-                                  borderRadius: BorderRadius.circular(2.w),
-                                  border: BorderSide(
-                                      color: Colors.black12, width: 0.1.w),
-                                  value: _reason,
-                                  icon: const Icon(Icons.arrow_drop_down,
-                                      color: Colors.black),
-                                  items: AbsenceReasons.values
-                                      .map((e) => DropdownMenuItem<dynamic>(
-                                            value: e.toName,
-                                            child: Text(e.toName.capitalize()),
-                                          ))
-                                      .toList(),
-                                  onChanged: (value) {
-                                    if (value == null) return;
-                                    setState(() => _reason = value);
-                                  }),
+                            Expanded(
+                              child: DropdownButtonHideUnderline(
+                                child: GFDropdown(
+                                    dropdownButtonColor: ColorUtil.snowWhite,
+                                    dropdownColor: ColorUtil.snowWhite,
+                                    padding: EdgeInsets.all(1.5.w),
+                                    itemHeight: 6.w,
+                                    borderRadius: BorderRadius.circular(2.w),
+                                    border: BorderSide(
+                                        color: Colors.black12, width: 0.1.w),
+                                    value: _reason,
+                                    icon: const Icon(Icons.arrow_drop_down,
+                                        color: Colors.black),
+                                    items: AbsenceReasons.values
+                                        .map((e) => DropdownMenuItem<dynamic>(
+                                              value: e.toName,
+                                              child:
+                                                  Text(e.toName.capitalize()),
+                                            ))
+                                        .toList(),
+                                    onChanged: (value) {
+                                      if (value == null) return;
+                                      setState(() => _reason = value);
+                                    }),
+                              ),
                             ),
                           ],
                         ),
@@ -169,13 +173,27 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
       return;
     }
 
-    AbsenceModel absenceModel = AbsenceModel(DateTime.now(), _date, _startTime,
-        _endTime, absenceReasonFromString(_reason), false, false);
-    student.absences.add(absenceModel);
-
     CollectionReference userCollection =
-        FirebaseFirestore.instance.collection(Collections.users.toPath);
+            FirebaseFirestore.instance.collection(Collections.users.toPath),
+        absenceCollection =
+            FirebaseFirestore.instance.collection(Collections.absences.toPath);
+
+    DocumentReference doc = absenceCollection.doc();
+
+    AbsenceModel absenceModel = AbsenceModel(
+        doc.id,
+        student.id,
+        DateTime.now(),
+        _date,
+        _startTime,
+        _endTime,
+        absenceReasonFromString(_reason),
+        false,
+        false);
+
     try {
+      doc.set(AbsenceService().absenceToJson(absenceModel));
+      student.absences.add(doc.id);
       await userCollection
           .doc(student.id)
           .update(StudentService().studentToJson(student));

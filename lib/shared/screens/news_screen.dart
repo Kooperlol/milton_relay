@@ -34,7 +34,7 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar('News'),
+      appBar: const AppBarWidget(title: 'News'),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
         child: context.loaderOverlay.visible

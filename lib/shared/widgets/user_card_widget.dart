@@ -75,7 +75,8 @@ class UserCard extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Laude Points: ${studentModel.laudePoints.toStringAsFixed(2)}',
+            Text(
+                'Laude Points: ${studentModel.laudePoints == 0 ? 'N/A' : studentModel.laudePoints.toStringAsFixed(2)}',
                 style: textStyle),
             Text('Absences: ${studentModel.absences.length}', style: textStyle)
           ],

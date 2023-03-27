@@ -10,7 +10,7 @@ class ViewImageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(image.path.split('/').last),
+      appBar: AppBarWidget(title: image.path.split('/').last),
       body: Image.file(image,
           fit: BoxFit.cover,
           height: double.infinity,

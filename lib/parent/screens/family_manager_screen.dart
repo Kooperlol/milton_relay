@@ -34,7 +34,7 @@ class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar('Your Family'),
+      appBar: const AppBarWidget(title: 'Your Family'),
       body: ListView.builder(
         itemBuilder: (context, index) {
           return studentCards[index];
@@ -50,7 +50,7 @@ class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
 
     final List<Widget> cards = [];
     for (String child in parentModel.children) {
-      StudentModel student = StudentService()
+      StudentModel student = await StudentService()
           .getStudentFromJson(await UserService().getDataFromID(child));
       cards.add(
         UserCard(student,

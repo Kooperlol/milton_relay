@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/components/dropdown/gf_dropdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:milton_relay/shared/models/issue_model.dart';
@@ -107,7 +108,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar('Report Issue'),
+      appBar: const AppBarWidget(title: 'Report Issue'),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -125,24 +126,38 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                   padding: EdgeInsets.all(2.w),
                   child: Column(
                     children: [
-                      DropdownButton(
-                        style: TextStyle(fontSize: 4.w, color: Colors.black),
-                        iconSize: 4.w,
-                        hint: const Text('Type of issue'),
-                        value: _issueValue,
-                        icon: const Icon(Icons.arrow_drop_down,
-                            color: Colors.black),
-                        onChanged: (String? value) {
-                          setState(() => {_issueValue = value ?? ""});
-                        },
-                        items: Issues.values
-                            .map((e) => e.toName.capitalize())
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 7.w,
+                          child: DropdownButtonHideUnderline(
+                            child: GFDropdown(
+                              dropdownButtonColor: ColorUtil.snowWhite,
+                              dropdownColor: ColorUtil.snowWhite,
+                              padding: EdgeInsets.all(1.5.w),
+                              borderRadius: BorderRadius.circular(2.w),
+                              border: BorderSide(
+                                  color: Colors.black12, width: 0.1.w),
+                              hint: const Text('Type of issue'),
+                              value: _issueValue,
+                              icon: const Icon(Icons.arrow_drop_down,
+                                  color: Colors.black),
+                              onChanged: (value) {
+                                setState(() => {_issueValue = value ?? ""});
+                              },
+                              items: Issues.values
+                                  .map((e) => e.toName.capitalize())
+                                  .map<DropdownMenuItem<dynamic>>(
+                                      (String value) {
+                                return DropdownMenuItem<dynamic>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
                       ),
                       SizedBox.square(dimension: 3.w),
                       Padding(

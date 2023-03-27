@@ -44,7 +44,7 @@ class _IssueManagerScreenState extends State<IssueManagerScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar("Issues"),
+      appBar: const AppBarWidget(title: "Issues"),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

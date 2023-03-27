@@ -43,14 +43,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
         icon: const Icon(Icons.next_week, color: Colors.white));
     return Scaffold(
       appBar: AuthService().isAdmin()
-          ? getAppBar('Calendar', icons: [
+          ? AppBarWidget(title: 'Calendar', icons: [
               upcomingButton,
               IconButton(
                   tooltip: 'Add Event',
                   onPressed: () => context.push(Routes.manageEvent.toPath),
                   icon: const Icon(Icons.add_box, color: Colors.white))
             ])
-          : getAppBar('Calendar', icons: [upcomingButton]),
+          : AppBarWidget(title: 'Calendar', icons: [upcomingButton]),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

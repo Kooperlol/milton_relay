@@ -1,10 +1,9 @@
 import 'package:milton_relay/shared/models/user_model.dart';
-import 'package:milton_relay/student/models/absence_model.dart';
 
 import '../../shared/models/roles.dart';
 
 class StudentModel extends UserModel {
-  final List<AbsenceModel> absences;
+  final List<String> absences;
   double laudePoints;
 
   StudentModel(String id, String firstName, String lastName, String avatarURL,
