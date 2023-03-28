@@ -67,6 +67,8 @@ The program meets the requirements stated on the [FBLA Application Development R
 * [Drop Shadow](https://pub.dev/packages/drop_shadow)
 * [Responsive Sizer](https://pub.dev/packages/responsive_sizer)
 * [GetWidget](https://pub.dev/packages/getwidget)
+* [Social Share](https://pub.dev/packages/social_share)
+* [Add 2 Calendar](https://pub.dev/packages/add_2_calendar)
 * [Checkbox Grouped](https://pub.dev/packages/checkbox_grouped)
 * [Intl](https://pub.dev/packages/intl)
 * [Loader Overlay](https://pub.dev/packages/loader_overlay)
