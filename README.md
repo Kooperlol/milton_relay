@@ -123,7 +123,7 @@ Clone the repository and compile the code in an IDE such as Android Studio, XCod
 * Go to Firebase and create an account. After that, create a project that supports IOS and/or Android and follow the given steps.
 * Add the following modules to the project: Authentication, Firestore, and Storage.
 * In Authentication, create an admin account with the email "admin@school.domain.com" and make a secure password.
-* In Firestore Database, create a users, posts, issues, and events collection.
+* In Firestore Database, create a users, posts, absences, issues, and events collection.
 * In Storage, create an avatars, events, issues, and posts folder.
 * Then, launch the application and sign in as an adminstrator.
 * Navigate to the users tab and at the top click the add user button. From there, add all of the students, teachers, and parents to the application.
