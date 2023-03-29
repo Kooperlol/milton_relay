@@ -64,7 +64,6 @@ The program meets the requirements stated on the [FBLA Application Development R
 * [Table Calendar](https://pub.dev/packages/table_calendar)
 * [Image Picker](https://pub.dev/packages/image_picker)
 * [Flutter Spinkit](https://pub.dev/packages/flutter_spinkit)
-* [Drop Shadow](https://pub.dev/packages/drop_shadow)
 * [Responsive Sizer](https://pub.dev/packages/responsive_sizer)
 * [GetWidget](https://pub.dev/packages/getwidget)
 * [Social Share](https://pub.dev/packages/social_share)
