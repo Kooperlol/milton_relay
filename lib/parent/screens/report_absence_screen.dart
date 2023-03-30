@@ -148,7 +148,21 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
                               _endTime = time;
                             });
                           },
-                        )
+                        ),
+                        SizedBox(height: 5.w),
+                        GFButton(
+                            onPressed: () => setState(() {
+                                  _startTimeInput.text = '7:35 AM';
+                                  _startTime =
+                                      const TimeOfDay(hour: 7, minute: 35);
+                                  _endTimeInput.text = '2:55 PM';
+                                  _endTime =
+                                      const TimeOfDay(hour: 14, minute: 55);
+                                }),
+                            text: 'All Day',
+                            icon: const Icon(Icons.access_time_filled,
+                                color: Colors.white),
+                            color: ColorUtil.red)
                       ],
                     ),
                   )),
@@ -180,16 +194,8 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
 
     DocumentReference doc = absenceCollection.doc();
 
-    AbsenceModel absenceModel = AbsenceModel(
-        doc.id,
-        student.id,
-        DateTime.now(),
-        _date,
-        _startTime,
-        _endTime,
-        absenceReasonFromString(_reason),
-        false,
-        false);
+    AbsenceModel absenceModel = AbsenceModel(doc.id, student.id, DateTime.now(),
+        _startTime, _endTime, absenceReasonFromString(_reason));
 
     try {
       doc.set(AbsenceService().absenceToJson(absenceModel));

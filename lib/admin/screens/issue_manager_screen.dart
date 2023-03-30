@@ -14,6 +14,7 @@ import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../shared/models/collections.dart';
+import '../../shared/models/load_model.dart';
 import '../../shared/utils/color_util.dart';
 
 class IssueManagerScreen extends StatefulWidget {
@@ -73,16 +74,16 @@ class _IssueManagerScreenState extends State<IssueManagerScreen>
 
   void _refreshContent() {
     _resolvedKey.currentState?.setState(() {
-      _resolvedKey.currentState?._allFetched = false;
-      _resolvedKey.currentState?._lastDocument = null;
-      _resolvedKey.currentState?._issues.clear();
-      _resolvedKey.currentState?._getIssueData();
+      _resolvedKey.currentState?.isAllFetched = false;
+      _resolvedKey.currentState?.lastDocument = null;
+      _resolvedKey.currentState?.data.clear();
+      _resolvedKey.currentState?.fetchData(10);
     });
     _unresolvedKey.currentState?.setState(() {
-      _unresolvedKey.currentState?._allFetched = false;
-      _unresolvedKey.currentState?._lastDocument = null;
-      _unresolvedKey.currentState?._issues.clear();
-      _unresolvedKey.currentState?._getIssueData();
+      _unresolvedKey.currentState?.isAllFetched = false;
+      _unresolvedKey.currentState?.lastDocument = null;
+      _unresolvedKey.currentState?.data.clear();
+      _unresolvedKey.currentState?.fetchData(10);
     });
   }
 }
@@ -98,16 +99,11 @@ class IssueView extends StatefulWidget {
 }
 
 class _IssueViewState extends State<IssueView>
-    with AutomaticKeepAliveClientMixin {
-  static const int loadSize = 10;
-  bool _loading = false, _allFetched = false;
-  final List<Widget> _issues = [];
-  DocumentSnapshot? _lastDocument;
-
+    with AutomaticKeepAliveClientMixin, LoadModel {
   @override
   void initState() {
     super.initState();
-    _getIssueData();
+    fetchData(10);
   }
 
   @override
@@ -121,57 +117,27 @@ class _IssueViewState extends State<IssueView>
     return NotificationListener<ScrollEndNotification>(
       child: ListView.builder(
         itemBuilder: (context, index) {
-          if (_issues.isEmpty && _allFetched) {
+          if (data.isEmpty && isAllFetched) {
             return SizedBox(
                 height: 10.w,
                 child: Center(
                     child: Text('No Issues', style: TextStyle(fontSize: 5.w))));
           }
-          if (index == _issues.length) {
-            return SizedBox(
-              width: double.infinity,
-              height: 10.w,
-              child: const Center(child: CircularProgressIndicator()),
-            );
+          if (index == data.length) {
+            return loading;
           }
-          return _issues[index];
+          return data[index];
         },
-        itemCount: _issues.length +
-            ((_allFetched && _issues.isEmpty) || _loading ? 1 : 0),
+        itemCount:
+            data.length + ((isAllFetched && data.isEmpty) || isLoading ? 1 : 0),
       ),
       onNotification: (scrollEnd) {
         if (scrollEnd.metrics.atEdge && scrollEnd.metrics.pixels > 0) {
-          _getIssueData();
+          fetchData(10);
         }
         return true;
       },
     );
-  }
-
-  void _getIssueData() async {
-    if (_loading || _allFetched) return;
-    setState(() => _loading = true);
-    Query query = FirebaseFirestore.instance
-        .collection(Collections.issues.toPath)
-        .where('resolved', isEqualTo: widget.resolved)
-        .orderBy('date');
-    query = _lastDocument == null
-        ? query.limit(loadSize)
-        : query.startAfterDocument(_lastDocument!).limit(loadSize);
-    QuerySnapshot querySnapshot = await query.get();
-    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-      IssueModel issueModel = IssueService()
-          .getIssueFromJson(doc.id, doc.data() as Map<String, dynamic>);
-      if (!mounted) return;
-      _issues.add(await _getIssueWidget(context, issueModel));
-    }
-    setState(() {
-      _loading = false;
-      _lastDocument = querySnapshot.docs.isNotEmpty
-          ? _lastDocument = querySnapshot.docs.last
-          : _lastDocument = null;
-      _allFetched = querySnapshot.docs.length < loadSize;
-    });
   }
 
   Future<Widget> _getIssueWidget(
@@ -218,4 +184,32 @@ class _IssueViewState extends State<IssueView>
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  Future<void> fetchData(int loadSize) async {
+    if (isLoading || isAllFetched) return;
+    setState(() => isLoading = true);
+    Query query = FirebaseFirestore.instance
+        .collection(Collections.issues.toPath)
+        .where('resolved', isEqualTo: widget.resolved)
+        .orderBy('date', descending: true);
+    query = lastDocument == null
+        ? query.limit(loadSize)
+        : query.startAfterDocument(lastDocument!).limit(loadSize);
+    QuerySnapshot querySnapshot = await query.get();
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      IssueModel issueModel = IssueService()
+          .getIssueFromJson(doc.id, doc.data() as Map<String, dynamic>);
+      if (!mounted) return;
+      data.add(await _getIssueWidget(context, issueModel));
+    }
+    setState(() {
+      if (!mounted) return;
+      isLoading = false;
+      lastDocument = querySnapshot.docs.isNotEmpty
+          ? lastDocument = querySnapshot.docs.last
+          : lastDocument = null;
+      isAllFetched = querySnapshot.docs.length < loadSize;
+    });
+  }
 }

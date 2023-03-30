@@ -11,13 +11,14 @@ enum Routes {
   adminUserManager,
   instructorUserList,
   addUser,
-  manageEvent,
+  editEvent,
+  addEvent,
   viewEvent,
   viewUpcomingEvents,
   viewChildren,
-  studentReportIssue,
-  instructorReportIssue,
-  parentReportIssue,
+  studentSettings,
+  instructorSettings,
+  parentSettings,
   studentLaudePointCalculator,
   familyManager,
   studentProfile,
@@ -26,6 +27,7 @@ enum Routes {
   viewAbsences,
   issueManager,
   studentPosts,
+  reportIssue,
   instructorPosts,
   reportAbsence,
   adminPosts,
@@ -60,18 +62,20 @@ extension RoutesExtension on Routes {
         return "instructorUserList";
       case Routes.viewChildren:
         return "viewChildren";
-      case Routes.manageEvent:
-        return "manageEvent";
+      case Routes.editEvent:
+        return "editEvent";
+      case Routes.addEvent:
+        return "addEvent";
       case Routes.viewEvent:
         return "viewEvent";
       case Routes.viewUpcomingEvents:
         return "viewUpcomingEvents";
-      case Routes.studentReportIssue:
-        return "studentReportIssue";
-      case Routes.parentReportIssue:
-        return "parentReportIssue";
-      case Routes.instructorReportIssue:
-        return "instructorReportIssue";
+      case Routes.studentSettings:
+        return "studentSettings";
+      case Routes.parentSettings:
+        return "parentSettings";
+      case Routes.instructorSettings:
+        return "instructorSettings";
       case Routes.viewImage:
         return "viewImage";
       case Routes.issueManager:
@@ -98,6 +102,8 @@ extension RoutesExtension on Routes {
         return "reportAbsence";
       case Routes.absenceManager:
         return "absenceManager";
+      case Routes.reportIssue:
+        return "reportIssue";
       default:
         return "loading";
     }
@@ -131,18 +137,20 @@ extension RoutesExtension on Routes {
         return "/addUser";
       case Routes.viewChildren:
         return "/viewChildren";
-      case Routes.manageEvent:
-        return "/admin/manageEvent";
+      case Routes.editEvent:
+        return "/admin/editEvent";
+      case Routes.addEvent:
+        return "/admin/addEvent";
       case Routes.viewEvent:
         return "/viewEvent";
       case Routes.viewUpcomingEvents:
         return "/viewUpcomingEvents";
-      case Routes.parentReportIssue:
-        return "/parent/reportIssue";
-      case Routes.instructorReportIssue:
-        return "/instructor/reportIssue";
-      case Routes.studentReportIssue:
-        return "/student/reportIssue";
+      case Routes.parentSettings:
+        return "/parent/settings";
+      case Routes.instructorSettings:
+        return "/instructor/settings";
+      case Routes.studentSettings:
+        return "/student/settings";
       case Routes.viewImage:
         return "/viewImage";
       case Routes.issueManager:
@@ -169,6 +177,8 @@ extension RoutesExtension on Routes {
         return "/reportAbsence";
       case Routes.absenceManager:
         return "/admin/absenceManager";
+      case Routes.reportIssue:
+        return "/reportIssue";
       default:
         return "/";
     }

@@ -126,51 +126,44 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                   padding: EdgeInsets.all(2.w),
                   child: Column(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: 7.w,
-                          child: DropdownButtonHideUnderline(
-                            child: GFDropdown(
-                              dropdownButtonColor: ColorUtil.snowWhite,
-                              dropdownColor: ColorUtil.snowWhite,
-                              padding: EdgeInsets.all(1.5.w),
-                              borderRadius: BorderRadius.circular(2.w),
-                              border: BorderSide(
-                                  color: Colors.black12, width: 0.1.w),
-                              hint: const Text('Type of issue'),
-                              value: _issueValue,
-                              icon: const Icon(Icons.arrow_drop_down,
-                                  color: Colors.black),
-                              onChanged: (value) {
-                                setState(() => {_issueValue = value ?? ""});
-                              },
-                              items: Issues.values
-                                  .map((e) => e.toName.capitalize())
-                                  .map<DropdownMenuItem<dynamic>>(
-                                      (String value) {
-                                return DropdownMenuItem<dynamic>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 10.w,
+                        child: DropdownButtonHideUnderline(
+                          child: GFDropdown(
+                            dropdownButtonColor: ColorUtil.snowWhite,
+                            dropdownColor: ColorUtil.snowWhite,
+                            padding: EdgeInsets.all(1.5.w),
+                            borderRadius: BorderRadius.circular(2.w),
+                            border:
+                                BorderSide(color: Colors.black12, width: 0.1.w),
+                            hint: const Text('Type of issue'),
+                            value: _issueValue,
+                            icon: const Icon(Icons.arrow_drop_down,
+                                color: Colors.black),
+                            onChanged: (value) {
+                              setState(() => {_issueValue = value ?? ""});
+                            },
+                            items: Issues.values
+                                .map((e) => e.toName.capitalize())
+                                .map<DropdownMenuItem<dynamic>>((String value) {
+                              return DropdownMenuItem<dynamic>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
                           ),
                         ),
                       ),
                       SizedBox.square(dimension: 3.w),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        child: TextField(
-                          maxLines: null,
-                          controller: _descriptionInput,
-                          style: TextStyle(fontSize: 2.5.w),
-                          decoration: InputDecoration(
-                              icon: Icon(Icons.description, size: 6.w),
-                              labelText: 'Description',
-                              labelStyle: TextStyle(fontSize: 3.w)),
-                        ),
+                      TextField(
+                        maxLines: null,
+                        controller: _descriptionInput,
+                        style: TextStyle(fontSize: 2.5.w),
+                        decoration: InputDecoration(
+                            icon: Icon(Icons.description, size: 6.w),
+                            labelText: 'Description',
+                            labelStyle: TextStyle(fontSize: 3.w)),
                       ),
                       SizedBox.square(dimension: 3.w),
                       GFButton(

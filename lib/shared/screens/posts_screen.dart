@@ -1,24 +1,34 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:milton_relay/shared/models/post_model.dart';
 import 'package:milton_relay/shared/models/roles.dart';
+import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/services/post_service.dart';
 import 'package:milton_relay/shared/services/user_service.dart';
 import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:http/http.dart' as http;
+import 'package:social_share/social_share.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/collections.dart';
 import '../models/load_model.dart';
 import '../models/user_model.dart';
 import '../routing/routes.dart';
-import '../services/auth_service.dart';
 import '../utils/color_util.dart';
 
 class PostsScreen extends StatefulWidget {
@@ -32,42 +42,27 @@ class _PostsScreenState extends State<PostsScreen> with LoadModel {
   @override
   void initState() {
     super.initState();
-    fetchData(4);
+    fetchData(3);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBarWidget(title: 'Community Posts', icons: [
-          IconButton(
-            tooltip: 'Create Post',
-            icon: const Icon(Icons.add_photo_alternate),
-            onPressed: () {
-              context.push(Routes.createPost.toPath);
-              GoRouter.of(context).addListener(_refreshPostsOnPop);
-            },
-          )
-        ]),
-        body: NotificationListener<ScrollEndNotification>(
-          child: ListView.builder(
-              itemBuilder: (context, index) {
-                if (index == data.length) {
-                  return SizedBox(
-                    width: double.infinity,
-                    height: 10.w,
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                }
-                return data[index];
-              },
-              itemCount: data.length + (isAllFetched ? 0 : 1)),
-          onNotification: (scrollEnd) {
-            if (scrollEnd.metrics.atEdge && scrollEnd.metrics.pixels > 0) {
-              fetchData(3);
-            }
-            return true;
-          },
-        ));
+        appBar: AppBarWidget(
+            title: 'Community Posts',
+            icons: AuthService().isAdmin()
+                ? []
+                : [
+                    IconButton(
+                      tooltip: 'Create Post',
+                      icon: const Icon(Icons.add_photo_alternate),
+                      onPressed: () {
+                        context.push(Routes.createPost.toPath);
+                        GoRouter.of(context).addListener(_refreshPostsOnPop);
+                      },
+                    )
+                  ]),
+        body: getDisplay(3));
   }
 
   void _refreshPostsOnPop() {
@@ -126,15 +121,15 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
-  final CollectionReference postsCollection =
+  final CollectionReference _postsCollection =
       FirebaseFirestore.instance.collection(Collections.posts.toPath);
-  UserModel? poster;
-  int index = 0;
+  UserModel? _poster;
+  int _index = 0;
 
   @override
   void initState() {
     super.initState();
-    initUser();
+    _initUser();
   }
 
   @override
@@ -155,17 +150,18 @@ class _PostWidgetState extends State<PostWidget> {
                 CircleAvatar(
                   radius: 5.w,
                   backgroundColor: ColorUtil.red,
-                  backgroundImage: poster != null ? poster!.avatar.image : null,
+                  backgroundImage:
+                      _poster != null ? _poster!.avatar.image : null,
                 ),
                 SizedBox(width: 2.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    poster != null
-                        ? Text(poster!.fullName, style: nameStyle)
+                    _poster != null
+                        ? Text(_poster!.fullName, style: nameStyle)
                         : Text('Loading...', style: nameStyle),
-                    poster != null
-                        ? Text(poster!.role.toName.capitalize(),
+                    _poster != null
+                        ? Text(_poster!.role.toName.capitalize(),
                             style: roleStyle)
                         : Text('Loading...', style: roleStyle)
                   ],
@@ -173,56 +169,85 @@ class _PostWidgetState extends State<PostWidget> {
                 const Expanded(child: SizedBox.square()),
                 if (AuthService().isAdmin())
                   IconButton(
-                      onPressed: () => print('yest'),
-                      iconSize: 4.w,
-                      icon: const Icon(Icons.more_horiz_outlined))
+                      onPressed: () async {
+                        Reference storageRef = FirebaseStorage.instance
+                            .ref()
+                            .child('posts/${widget.post.id}');
+                        await storageRef.delete();
+                        await FirebaseFirestore.instance
+                            .collection(Collections.posts.toPath)
+                            .doc(widget.post.id)
+                            .delete();
+                      },
+                      iconSize: 5.w,
+                      icon: const Icon(Icons.delete))
               ]),
               SizedBox(height: 1.w),
               GFCarousel(
                   viewportFraction: 1.0,
                   enableInfiniteScroll: false,
                   hasPagination: false,
-                  onPageChanged: (i) => setState(() => index = i),
+                  onPageChanged: (i) => setState(() => _index = i),
                   height: 50.h,
                   items: widget.post.images
                       .map((url) => Image.network(url, fit: BoxFit.fill))
                       .toList()),
-              SizedBox(height: 1.w),
-              Row(
+              Stack(
+                alignment: Alignment.center,
                 children: [
-                  LikeButton(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      size: 5.w,
-                      likeCount: widget.post.likes.length,
-                      onTap: (e) async {
-                        e
-                            ? widget.post.likes.remove(poster!.id)
-                            : widget.post.likes.add(poster!.id);
-                        postsCollection.doc(widget.post.id).update(
-                            <String, List<String>>{'likes': widget.post.likes});
-                        return !e;
-                      },
-                      isLiked: poster == null
-                          ? false
-                          : widget.post.likes.contains(poster!.id)),
-                  const Expanded(child: SizedBox.square()),
+                  Row(
+                    children: [
+                      LikeButton(
+                          size: 5.w,
+                          likeCount: widget.post.likes.length,
+                          onTap: (e) async {
+                            e
+                                ? widget.post.likes.remove(_poster!.id)
+                                : widget.post.likes.add(_poster!.id);
+                            _postsCollection
+                                .doc(widget.post.id)
+                                .update(<String, List<String>>{
+                              'likes': widget.post.likes
+                            });
+                            return !e;
+                          },
+                          isLiked: _poster == null
+                              ? false
+                              : widget.post.likes.contains(_poster!.id)),
+                      IconButton(
+                          onPressed: () async =>
+                              await SocialShare.shareInstagramStory(
+                                  imagePath: await _saveImageData(
+                                      widget.post.images[_index]),
+                                  appId: dotenv.env['APP_ID']!),
+                          color: ColorUtil.red,
+                          icon: SvgPicture.asset(
+                            'assets/instagram-icon.svg',
+                            width: 6.w,
+                            height: 6.w,
+                            colorFilter: ColorFilter.mode(
+                                ColorUtil.red, BlendMode.srcIn),
+                          )),
+                      const Expanded(child: SizedBox.square()),
+                      Text(DateFormat.yMMMMd().format(widget.post.date),
+                          style: TextStyle(
+                              color: ColorUtil.darkGray, fontSize: 2.5.w))
+                    ],
+                  ),
                   widget.post.images.length > 1
-                      ? DotsIndicator(
-                          dotsCount: widget.post.images.length,
-                          position: index.toDouble(),
-                          decorator: DotsDecorator(
-                              color: ColorUtil.darkGray,
-                              activeColor: ColorUtil.red,
-                              size: Size(1.5.w, 1.5.w),
-                              activeSize: Size(1.5.w, 1.5.w)))
+                      ? Center(
+                          child: DotsIndicator(
+                              dotsCount: widget.post.images.length,
+                              position: _index.toDouble(),
+                              decorator: DotsDecorator(
+                                  color: ColorUtil.darkGray,
+                                  activeColor: ColorUtil.red,
+                                  size: Size(1.5.w, 1.5.w),
+                                  activeSize: Size(1.5.w, 1.5.w))),
+                        )
                       : Container(),
-                  const Expanded(child: SizedBox.square()),
-                  Text(DateFormat.yMMMMd().format(widget.post.date),
-                      style:
-                          TextStyle(color: ColorUtil.darkGray, fontSize: 2.w))
                 ],
               ),
-              SizedBox(height: 1.w),
               Text(widget.post.title,
                   style:
                       TextStyle(fontSize: 2.5.w, fontWeight: FontWeight.w600)),
@@ -239,9 +264,17 @@ class _PostWidgetState extends State<PostWidget> {
         ));
   }
 
-  Future<void> initUser() async {
+  Future<void> _initUser() async {
     UserModel userModel = await UserService().getUserFromID(widget.post.poster);
     if (!mounted) return;
-    setState(() => poster = userModel);
+    setState(() => _poster = userModel);
+  }
+
+  Future<String> _saveImageData(String url) async {
+    var response = await http.get(Uri.parse(url));
+    Directory? documentDirectory = await getTemporaryDirectory();
+    File file = File(path.join(documentDirectory.path, const Uuid().v1()));
+    file.writeAsBytes(response.bodyBytes);
+    return file.path;
   }
 }

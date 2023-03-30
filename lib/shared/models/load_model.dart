@@ -9,16 +9,17 @@ mixin LoadModel {
 
   Future<void> fetchData(int loadSize);
 
+  SizedBox get loading => SizedBox(
+      width: double.infinity,
+      height: 10.w,
+      child: const Center(child: CircularProgressIndicator()));
+
   Widget getDisplay(int loadSize) =>
       NotificationListener<ScrollEndNotification>(
         child: ListView.builder(
             itemBuilder: (context, index) {
               if (index == data.length || (isLoading && data.isEmpty)) {
-                return SizedBox(
-                  width: double.infinity,
-                  height: 10.w,
-                  child: const Center(child: CircularProgressIndicator()),
-                );
+                return loading;
               }
               return data[index];
             },

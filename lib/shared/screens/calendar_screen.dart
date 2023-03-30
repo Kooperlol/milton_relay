@@ -24,11 +24,14 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   final eventsCollection =
       FirebaseFirestore.instance.collection(Collections.events.toPath);
-  DateTime _focusedDay = DateTime.now(), _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now(),
+      _selectedDay = DateTime.utc(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
   CalendarFormat _calendarFormat = CalendarFormat.month;
   bool _loading = false;
   List<Widget> _eventList = [];
 
+  @override
   @override
   void initState() {
     super.initState();
@@ -47,7 +50,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               upcomingButton,
               IconButton(
                   tooltip: 'Add Event',
-                  onPressed: () => context.push(Routes.manageEvent.toPath),
+                  onPressed: () => context.push(Routes.addEvent.toPath),
                   icon: const Icon(Icons.add_box, color: Colors.white))
             ])
           : AppBarWidget(title: 'Calendar', icons: [upcomingButton]),

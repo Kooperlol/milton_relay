@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:milton_relay/shared/services/user_service.dart';
 
 import '../models/user_model.dart';
+import '../routing/routes.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -46,5 +49,8 @@ class AuthService {
     return res;
   }
 
-  Future<void> logout() async => await _auth.signOut();
+  Future<void> logout(BuildContext context) async {
+    GoRouter.of(context).go(Routes.login.toPath);
+    await _auth.signOut();
+  }
 }

@@ -4,6 +4,7 @@ import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +16,7 @@ import 'package:milton_relay/shared/utils/display_util.dart';
 import 'package:milton_relay/shared/utils/text_util.dart';
 import 'package:milton_relay/shared/widgets/app_bar_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:social_share/social_share.dart';
 
 import '../utils/color_util.dart';
 
@@ -113,9 +115,42 @@ class ViewEventScreen extends StatelessWidget {
                   child: GFButton(
                       onPressed: _exportEvent,
                       color: ColorUtil.red,
-                      text: 'Export Event',
+                      text: 'Copy to Calendar',
                       size: GFSize.LARGE,
-                      icon: const Icon(Icons.exit_to_app, color: Colors.white)),
+                      icon: const Icon(Icons.calendar_month,
+                          color: Colors.white)),
+                ),
+                SizedBox(height: 1.w),
+                Center(
+                  child: GFButton(
+                      onPressed: () {
+                        SocialShare.copyToClipboard(
+                            text:
+                                'Event: ${event.event} Date: ${DateFormat.yMMMMd().format(event.date)} Time: ${timeOfDayToString(event.startTime)} to ${timeOfDayToString(event.endTime)} Location: ${event.location} Description: ${event.description}');
+                      },
+                      color: ColorUtil.red,
+                      text: 'Copy Details',
+                      size: GFSize.LARGE,
+                      icon: const Icon(Icons.copy, color: Colors.white)),
+                ),
+                SizedBox(height: 1.w),
+                Center(
+                  child: GFButton(
+                      onPressed: () {
+                        SocialShare.shareTwitter(
+                            'Hey Everyone! I\'m looking forward to the ${event.event} happening at ${event.location} hosted by the Milton School District! It will be happening from ${timeOfDayToString(event.startTime)} to ${timeOfDayToString(event.endTime)}. Hope to see you there!',
+                            hashtags: ['milton']);
+                      },
+                      color: ColorUtil.red,
+                      text: 'Share on Twitter',
+                      size: GFSize.LARGE,
+                      icon: SvgPicture.asset(
+                        'assets/twitter-icon.svg',
+                        width: 6.w,
+                        height: 6.w,
+                        colorFilter: const ColorFilter.mode(
+                            Colors.white, BlendMode.srcIn),
+                      )),
                 ),
                 if (AuthService().isAdmin())
                   Center(
@@ -131,7 +166,7 @@ class ViewEventScreen extends StatelessWidget {
                         SizedBox(height: 1.w),
                         GFButton(
                             onPressed: () => GoRouter.of(context)
-                                .push(Routes.manageEvent.toPath, extra: event),
+                                .push(Routes.editEvent.toPath, extra: event),
                             color: ColorUtil.red,
                             text: 'Edit Event',
                             icon: const Icon(Icons.edit, color: Colors.white))

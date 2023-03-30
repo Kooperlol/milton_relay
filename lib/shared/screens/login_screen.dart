@@ -1,9 +1,6 @@
-import 'package:drop_shadow/drop_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:milton_relay/shared/routing/routes.dart';
 import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/widgets/text_field_widget.dart';
 import '../utils/color_util.dart';
@@ -34,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text, password: _passwordController.text);
     if (!mounted) return;
     if (res == 'success') {
-      GoRouter.of(context).goNamed(Routes.adminNews.toName);
+      redirectToDashboard(context);
     } else {
       showSnackBar(context, res);
     }
@@ -63,7 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 32,
-                fontFamily: 'Lato',
               ),
             ),
             const SizedBox.square(
@@ -86,23 +82,18 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox.square(
               dimension: 32,
             ),
-            DropShadow(
-              blurRadius: 5,
-              opacity: 0.5,
-              child: InkWell(
-                onTap: login,
-                customBorder:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                child: Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  color: ColorUtil.red,
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                        fontFamily: 'Lato', fontSize: 25, color: Colors.white),
-                  ),
+            InkWell(
+              onTap: login,
+              customBorder:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+              child: Container(
+                width: double.infinity,
+                alignment: Alignment.center,
+                color: ColorUtil.red,
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: const Text(
+                  'Login',
+                  style: TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
             )

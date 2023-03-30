@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 class AbsenceModel {
   final String student, id;
-  final DateTime date, posted;
+  final DateTime date;
   final TimeOfDay startTime, endTime;
   final AbsenceReasons reason;
-  bool isExcused, isViewed;
 
-  AbsenceModel(this.id, this.student, this.posted, this.date, this.startTime,
-      this.endTime, this.reason, this.isExcused, this.isViewed);
+  AbsenceModel(this.id, this.student, this.date, this.startTime, this.endTime,
+      this.reason);
 }
 
 enum AbsenceReasons { sick, appointment, vacation, funeral, religion, other }

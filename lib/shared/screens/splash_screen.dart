@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 
 import '../routing/routes.dart';
@@ -17,10 +18,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Future<FirebaseApp> _initializeFirebase() async =>
       await Firebase.initializeApp();
+  Future<void> _initializeEnv() async => await dotenv.load();
 
   @override
   void initState() {
     super.initState();
+    _initializeEnv();
     _initializeFirebase().then((value) =>
         FirebaseAuth.instance.currentUser != null
             ? redirectToDashboard(context)

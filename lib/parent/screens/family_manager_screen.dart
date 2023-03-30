@@ -50,7 +50,7 @@ class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
 
     final List<Widget> cards = [];
     for (String child in parentModel.children) {
-      StudentModel student = await StudentService()
+      StudentModel student = StudentService()
           .getStudentFromJson(await UserService().getDataFromID(child));
       cards.add(
         UserCard(student,

@@ -110,23 +110,6 @@ class _ViewAbsencesScreenState extends State<ViewAbsencesScreen> {
                   TextSpan(
                       text: absence.reason.toName.capitalize(),
                       style: TextStyle(fontSize: 5.w, color: Colors.black))
-                ])),
-                SizedBox(height: 1.w),
-                RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                      text: 'Excused: ',
-                      style: TextStyle(fontSize: 5.w, color: ColorUtil.blue)),
-                  WidgetSpan(
-                      child: Padding(
-                    padding: EdgeInsets.only(right: 1.w),
-                    child: Icon(
-                        absence.isExcused ? Icons.check : Icons.not_interested,
-                        size: 5.w),
-                  )),
-                  TextSpan(
-                      text: absence.isExcused ? 'Yes' : 'No',
-                      style: TextStyle(fontSize: 5.w, color: Colors.black))
                 ]))
               ],
             ),

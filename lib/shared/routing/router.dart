@@ -14,9 +14,11 @@ import 'package:milton_relay/shared/models/issue_model.dart';
 import 'package:milton_relay/shared/screens/create_post_screen.dart';
 import 'package:milton_relay/shared/screens/posts_screen.dart';
 import 'package:milton_relay/shared/screens/report_issue_screen.dart';
+import 'package:milton_relay/shared/screens/settings_screen.dart';
 import 'package:milton_relay/shared/screens/user_list_screen.dart';
 import 'package:milton_relay/shared/screens/view_children_screen.dart';
 import 'package:milton_relay/shared/screens/view_image_screen.dart';
+import 'package:milton_relay/shared/services/auth_service.dart';
 import 'package:milton_relay/shared/widgets/footer_widget.dart';
 import 'package:milton_relay/parent/models/parent_model.dart';
 import 'package:milton_relay/shared/routing/routes.dart';
@@ -63,10 +65,16 @@ final router = GoRouter(
               const NoTransitionPage(child: AddUserScreen())),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
-          name: Routes.manageEvent.toName,
-          path: Routes.manageEvent.toPath,
+          name: Routes.editEvent.toName,
+          path: Routes.editEvent.toPath,
           pageBuilder: (context, state) => NoTransitionPage(
               child: EventManagerScreen(event: state.extra as EventModel))),
+      GoRoute(
+          parentNavigatorKey: _rootNavigatorKey,
+          name: Routes.addEvent.toName,
+          path: Routes.addEvent.toPath,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: EventManagerScreen())),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
           name: Routes.viewUpcomingEvents.toName,
@@ -91,6 +99,12 @@ final router = GoRouter(
           path: Routes.absenceManager.toPath,
           pageBuilder: (context, state) =>
               const NoTransitionPage(child: AbsenceManagerScreen())),
+      GoRoute(
+          parentNavigatorKey: _rootNavigatorKey,
+          name: Routes.reportIssue.toName,
+          path: Routes.reportIssue.toPath,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: ReportIssueScreen())),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
           name: Routes.viewEvent.toName,
@@ -199,8 +213,8 @@ final router = GoRouter(
                         icon: const Icon(Icons.group),
                         location: Routes.familyManager.toPath),
                     NavBarItem(
-                        icon: const Icon(Icons.warning),
-                        location: Routes.parentReportIssue.toPath)
+                        icon: const Icon(Icons.settings),
+                        location: Routes.parentSettings.toPath)
                   ],
                   child: child)),
           routes: [
@@ -224,10 +238,10 @@ final router = GoRouter(
                     const NoTransitionPage(child: FamilyManagerScreen())),
             GoRoute(
                 parentNavigatorKey: _parentNavigatorKey,
-                name: Routes.parentReportIssue.toName,
-                path: Routes.parentReportIssue.toPath,
+                name: Routes.parentSettings.toName,
+                path: Routes.parentSettings.toPath,
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: ReportIssueScreen())),
+                    const NoTransitionPage(child: SettingsScreen())),
           ]),
       ShellRoute(
           navigatorKey: _instructorNavigatorKey,
@@ -248,8 +262,8 @@ final router = GoRouter(
                         icon: const Icon(Icons.group),
                         location: Routes.instructorUserList.toPath),
                     NavBarItem(
-                        icon: const Icon(Icons.warning),
-                        location: Routes.instructorReportIssue.toPath)
+                        icon: const Icon(Icons.settings),
+                        location: Routes.instructorSettings.toPath)
                   ],
                   child: child)),
           routes: [
@@ -279,10 +293,10 @@ final router = GoRouter(
                     const NoTransitionPage(child: UserListScreen())),
             GoRoute(
                 parentNavigatorKey: _instructorNavigatorKey,
-                name: Routes.instructorReportIssue.toName,
-                path: Routes.instructorReportIssue.toPath,
+                name: Routes.instructorSettings.toName,
+                path: Routes.instructorSettings.toPath,
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: ReportIssueScreen())),
+                    const NoTransitionPage(child: SettingsScreen())),
           ]),
       ShellRoute(
           navigatorKey: _studentNavigatorKey,
@@ -303,8 +317,8 @@ final router = GoRouter(
                         icon: const Icon(Icons.person),
                         location: Routes.studentProfile.toPath),
                     NavBarItem(
-                        icon: const Icon(Icons.warning),
-                        location: Routes.studentReportIssue.toPath)
+                        icon: const Icon(Icons.settings),
+                        location: Routes.studentSettings.toPath)
                   ],
                   child: child)),
           routes: [
@@ -334,11 +348,18 @@ final router = GoRouter(
                     const NoTransitionPage(child: StudentProfileScreen())),
             GoRoute(
                 parentNavigatorKey: _studentNavigatorKey,
-                name: Routes.studentReportIssue.toName,
-                path: Routes.studentReportIssue.toPath,
+                name: Routes.studentSettings.toName,
+                path: Routes.studentSettings.toPath,
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: ReportIssueScreen())),
+                    const NoTransitionPage(child: SettingsScreen())),
           ])
     ],
     errorBuilder: (context, state) =>
-        ErrorScreen(key: state.pageKey, error: state.error.toString()));
+        ErrorScreen(key: state.pageKey, error: state.error.toString()),
+    redirect: (context, state) {
+      if (state.subloc == Routes.login.toPath || state.subloc == '/') {
+        return null;
+      }
+      if (AuthService().firebaseUser == null) return Routes.login.toPath;
+      return null;
+    });
