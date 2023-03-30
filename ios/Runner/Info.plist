@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>LSApplicationQueriesSchemes</key>
-        <array>
+    <array>
         <string>instagram-stories</string>
         <string>facebook-stories</string>
         <string>facebook</string>
@@ -11,50 +11,69 @@
         <string>twitter</string>
         <string>whatsapp</string>
         <string>tg</string>
-        </array>
+    </array>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+
+	<!-- Calendar Permissions -->
 	<key>NSCalendarsUsageDescription</key>
-    <string>INSERT_REASON_HERE</string>
+    <string>"Add events to your calendar."</string>
+
+    <!-- Telephone Calling Permissions -->
     <key>LSApplicationQueriesSchemes</key>
     <array>
       <string>sms</string>
       <string>tel</string>
     </array>
-    <key>NSContactsUsageDescription</key>
-    <string>INSERT_REASON_HERE</string>
+
+    <!-- Instagram Sharing -->
     <key>FacebookAppID</key>
     <string>1891518221201628</string>
+
 	<key>CFBundleDisplayName</key>
 	<string>Milton Relay</string>
+
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+
 	<key>CFBundleName</key>
 	<string>milton_relay</string>
+
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
+
 	<key>CFBundleSignature</key>
 	<string>????</string>
+
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -62,10 +81,14 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 </dict>
+</plist>
