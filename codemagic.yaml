@@ -1,5 +1,6 @@
 workflows:
   ios-workflow:
+    working_directory: ios
     environment:
       vars:
         BUNDLE_ID: "org.fbla.kooper.miltonRelay"
