@@ -64,9 +64,11 @@ The program meets the requirements stated on the [FBLA Application Development R
 * [Table Calendar](https://pub.dev/packages/table_calendar)
 * [Image Picker](https://pub.dev/packages/image_picker)
 * [Flutter Spinkit](https://pub.dev/packages/flutter_spinkit)
-* [Drop Shadow](https://pub.dev/packages/drop_shadow)
 * [Responsive Sizer](https://pub.dev/packages/responsive_sizer)
 * [GetWidget](https://pub.dev/packages/getwidget)
+* [Social Share](https://pub.dev/packages/social_share)
+* [Add 2 Calendar](https://pub.dev/packages/add_2_calendar)
+* [dotenv](https://pub.dev/packages/flutter_dotenv)
 * [Checkbox Grouped](https://pub.dev/packages/checkbox_grouped)
 * [Intl](https://pub.dev/packages/intl)
 * [Loader Overlay](https://pub.dev/packages/loader_overlay)
@@ -86,6 +88,7 @@ The program meets the requirements stated on the [FBLA Application Development R
 * [Undraw](https://undraw.co/)
 * [TagBox](https://taggbox.com/)
 * [Pexels](https://www.pexels.com/)
+* [UX Wing](https://uxwing.com/)
 * [Lato Regular](https://fonts.google.com/specimen/Lato)
 * [Best Readme Template](https://github.com/othneildrew/Best-README-Template)
 * [Github Image Shields](https://github.com/badges/shields)
@@ -119,7 +122,7 @@ Clone the repository and compile the code in an IDE such as Android Studio, XCod
 * Go to Firebase and create an account. After that, create a project that supports IOS and/or Android and follow the given steps.
 * Add the following modules to the project: Authentication, Firestore, and Storage.
 * In Authentication, create an admin account with the email "admin@school.domain.com" and make a secure password.
-* In Firestore Database, create a users, posts, issues, and events collection.
+* In Firestore Database, create a users, posts, absences, issues, and events collection.
 * In Storage, create an avatars, events, issues, and posts folder.
 * Then, launch the application and sign in as an adminstrator.
 * Navigate to the users tab and at the top click the add user button. From there, add all of the students, teachers, and parents to the application.
