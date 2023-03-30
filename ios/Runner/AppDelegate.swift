@@ -1,6 +1,5 @@
 import UIKit
 import Flutter
-import FBSDKCoreKit
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -11,8 +10,4 @@ import FBSDKCoreKit
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
-  FBSDKCoreKit.ApplicationDelegate.shared.application(
-          application,
-          didFinishLaunchingWithOptions: launchOptions
-  )
 }
