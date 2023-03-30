@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:go_router/go_router.dart';
@@ -219,7 +218,7 @@ class _PostWidgetState extends State<PostWidget> {
                               await SocialShare.shareInstagramStory(
                                   imagePath: await _saveImageData(
                                       widget.post.images[_index]),
-                                  appId: dotenv.env['APP_ID']!),
+                                  appId: '1891518221201628'),
                           color: ColorUtil.red,
                           icon: SvgPicture.asset(
                             'assets/instagram-icon.svg',
