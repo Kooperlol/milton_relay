@@ -21,6 +21,7 @@ import 'package:social_share/social_share.dart';
 import '../utils/color_util.dart';
 
 class ViewEventScreen extends StatelessWidget {
+  // Model of event that is being viewed.
   final EventModel event;
   const ViewEventScreen({Key? key, required this.event}) : super(key: key);
 
@@ -39,6 +40,7 @@ class ViewEventScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Displays event banner.
                 Container(
                     width: double.infinity,
                     height: 30.w,
@@ -50,6 +52,7 @@ class ViewEventScreen extends StatelessWidget {
                                     .image,
                             fit: BoxFit.cover))),
                 SizedBox(height: 5.w),
+                // Displays date of event.
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
@@ -65,6 +68,7 @@ class ViewEventScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 5.w, color: Colors.black))
                 ])),
                 SizedBox(height: 3.w),
+                // Displays time of event.
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
@@ -81,6 +85,7 @@ class ViewEventScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 5.w, color: Colors.black))
                 ])),
                 SizedBox(height: 3.w),
+                // Displays location of event.
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
@@ -96,6 +101,7 @@ class ViewEventScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 5.w, color: Colors.black))
                 ])),
                 SizedBox(height: 3.w),
+                // Displays description of event.
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
@@ -111,29 +117,35 @@ class ViewEventScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 5.w, color: Colors.black))
                 ])),
                 SizedBox(height: 3.w),
+                // Button which copies the event to the calendar using the [_exportEvent] function.
                 Center(
                   child: GFButton(
                       onPressed: _exportEvent,
                       color: ColorUtil.red,
                       text: 'Copy to Calendar',
-                      size: GFSize.LARGE,
-                      icon: const Icon(Icons.calendar_month,
-                          color: Colors.white)),
+                      textStyle: TextStyle(fontSize: 4.w),
+                      size: 7.w,
+                      icon: Icon(Icons.calendar_month,
+                          color: Colors.white, size: 5.w)),
                 ),
-                SizedBox(height: 1.w),
+                SizedBox(height: 0.5.w),
+                // Button which copies the event details to the user's clipboard using Social Share.
                 Center(
                   child: GFButton(
                       onPressed: () {
                         SocialShare.copyToClipboard(
                             text:
                                 'Event: ${event.event} Date: ${DateFormat.yMMMMd().format(event.date)} Time: ${timeOfDayToString(event.startTime)} to ${timeOfDayToString(event.endTime)} Location: ${event.location} Description: ${event.description}');
+                        showSnackBar(context, 'Copied To Clipboard!');
                       },
                       color: ColorUtil.red,
                       text: 'Copy Details',
-                      size: GFSize.LARGE,
-                      icon: const Icon(Icons.copy, color: Colors.white)),
+                      textStyle: TextStyle(fontSize: 4.w),
+                      size: 7.w,
+                      icon: Icon(Icons.copy, color: Colors.white, size: 5.w)),
                 ),
-                SizedBox(height: 1.w),
+                SizedBox(height: 0.5.w),
+                // Button which shares the event details on Twitter using Social Share.
                 Center(
                   child: GFButton(
                       onPressed: () {
@@ -143,33 +155,42 @@ class ViewEventScreen extends StatelessWidget {
                       },
                       color: ColorUtil.red,
                       text: 'Share on Twitter',
-                      size: GFSize.LARGE,
+                      textStyle: TextStyle(fontSize: 4.w),
+                      size: 7.w,
                       icon: SvgPicture.asset(
                         'assets/twitter-icon.svg',
-                        width: 6.w,
-                        height: 6.w,
+                        width: 5.w,
+                        height: 5.w,
                         colorFilter: const ColorFilter.mode(
                             Colors.white, BlendMode.srcIn),
                       )),
                 ),
+                // Buttons for Admins to manage the event.
                 if (AuthService().isAdmin())
                   Center(
                     child: Column(
                       children: [
-                        SizedBox(height: 1.w),
+                        SizedBox(height: 0.5.w),
+                        // Button which deletes the event using [_deleteEvent].
                         GFButton(
                             onPressed: () => _deleteEvent(context),
                             color: ColorUtil.red,
                             text: 'Delete Event',
-                            icon:
-                                const Icon(Icons.delete, color: Colors.white)),
-                        SizedBox(height: 1.w),
+                            textStyle: TextStyle(fontSize: 4.w),
+                            size: 7.w,
+                            icon: Icon(Icons.delete,
+                                color: Colors.white, size: 5.w)),
+                        SizedBox(height: 0.5.w),
+                        // Button which edits the event by redirecting the admin to the edit event screen.
                         GFButton(
                             onPressed: () => GoRouter.of(context)
                                 .push(Routes.editEvent.toPath, extra: event),
                             color: ColorUtil.red,
                             text: 'Edit Event',
-                            icon: const Icon(Icons.edit, color: Colors.white))
+                            textStyle: TextStyle(fontSize: 4.w),
+                            size: 7.w,
+                            icon: Icon(Icons.edit,
+                                color: Colors.white, size: 5.w))
                       ],
                     ),
                   ),
@@ -181,6 +202,7 @@ class ViewEventScreen extends StatelessWidget {
     );
   }
 
+  /// Uses [Add2Calendar] to export the event to the user's calendar.
   void _exportEvent() => Add2Calendar.addEvent2Cal(Event(
         title: event.event,
         description: event.description,
@@ -191,13 +213,16 @@ class ViewEventScreen extends StatelessWidget {
             event.endTime.hour, event.endTime.minute),
       ));
 
+  /// Deletes the event from the Events collection.
   void _deleteEvent(BuildContext context) async {
     try {
+      // If the banner URL is set, it will delete it from Firestore.
       if (event.bannerURL != 'default') {
         Reference storageRef =
             FirebaseStorage.instance.ref().child("events/${event.id}");
         await storageRef.delete();
       }
+      // Gets the event's document from Firebase and then deletes it.
       CollectionReference eventsCollection =
           FirebaseFirestore.instance.collection(Collections.events.toPath);
       await eventsCollection.doc(event.id).delete();
@@ -206,6 +231,7 @@ class ViewEventScreen extends StatelessWidget {
           "An error has occurred while attempting to delete an event: ${error.toString()}");
     }
 
+    // If the screen is still mounted, it will display a success message and pop the screen.
     if (!context.mounted) return;
 
     showSnackBar(context, 'Event Deleted');

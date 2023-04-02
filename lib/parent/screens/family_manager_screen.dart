@@ -21,8 +21,10 @@ class FamilyManagerScreen extends StatefulWidget {
 }
 
 class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
-  List<Widget> studentCards = [];
-  ParentModel? parent;
+  // Stores the [UserCard] of the [parent]'s children.
+  List<Widget> _childrenCards = [];
+  // Stores the parent model which is declared in [_initData].
+  ParentModel? _parent;
 
   @override
   void initState() {
@@ -35,15 +37,17 @@ class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarWidget(title: 'Your Family'),
+      // Displays the [_childrenCards] list.
       body: ListView.builder(
         itemBuilder: (context, index) {
-          return studentCards[index];
+          return _childrenCards[index];
         },
-        itemCount: studentCards.length,
+        itemCount: _childrenCards.length,
       ),
     );
   }
 
+  /// Gets the parent from [AuthService] current UID and then traverses through the children to get their cards.
   void _initData() async {
     ParentModel parentModel = ParentService().getParentFromJson(
         await UserService().getDataFromID(AuthService().getUID()));
@@ -54,6 +58,7 @@ class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
           .getStudentFromJson(await UserService().getDataFromID(child));
       cards.add(
         UserCard(student,
+            // Creates a three dot vertical button to view absences or report an absence.
             icon: DropdownButtonHideUnderline(
               child: DropdownButton(
                 icon: Icon(Icons.more_vert, size: 5.w),
@@ -75,6 +80,7 @@ class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
                     ]),
                   )
                 ],
+                // When a dropdown value is selected, the parent is redirected to the corresponding screen.
                 onChanged: (int? value) {
                   if (value == 0) {
                     GoRouter.of(context)
@@ -83,6 +89,7 @@ class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
                   if (value == 1) {
                     GoRouter.of(context)
                         .push(Routes.reportAbsence.toPath, extra: student);
+                    // Add listener to refresh data when the report absence screen is exited.
                     GoRouter.of(context).addListener(_refreshListOnPop);
                   }
                 },
@@ -91,15 +98,20 @@ class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
       );
     }
 
+    // Updates the current state of the screen with the new data.
     setState(() {
-      parent = parentModel;
-      studentCards = cards;
+      _parent = parentModel;
+      _childrenCards = cards;
     });
 
+    // If the screen is still mounted, the loading overlay is hidden.
     if (!mounted) return;
     context.loaderOverlay.hide();
   }
 
+  /// Listener to check for the report absence screen being exited.
+  ///
+  /// Once exited, the [_initData] function is called and the listener is removed.
   void _refreshListOnPop() {
     if (!mounted) return;
     if (GoRouter.of(context).location == Routes.familyManager.toPath) {

@@ -20,17 +20,11 @@ class UserService {
         'role': user.role.toName,
       };
 
-  Future<UserModel> getUserFromID(String id) async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection(Collections.users.toPath)
-        .where('id', isEqualTo: id)
-        .get();
-    assert(snapshot.docs.isNotEmpty,
-        'Database Query Error: No user could be found with id $id');
-    QueryDocumentSnapshot document = snapshot.docs.first;
-    return getUserFromJson(document.data() as Map<String, dynamic>);
-  }
+  /// Returns the User Model from an ID.
+  Future<UserModel> getUserFromID(String id) async =>
+      getUserFromJson(await getDataFromID(id));
 
+  /// Returns the JSON data of a user from the ID.
   Future<Map<String, dynamic>> getDataFromID(String id) async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection(Collections.users.toPath)

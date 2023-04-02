@@ -18,6 +18,7 @@ import '../../shared/utils/color_util.dart';
 import '../../shared/utils/display_util.dart';
 import '../../shared/utils/text_util.dart';
 
+/// Creates a form to report an absence for [student].
 class ReportAbsenceScreen extends StatefulWidget {
   final StudentModel student;
   const ReportAbsenceScreen({Key? key, required this.student})
@@ -28,13 +29,18 @@ class ReportAbsenceScreen extends StatefulWidget {
 }
 
 class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
+  // Text field widgets for absence information.
   final TextEditingController _dateInput = TextEditingController(),
       _startTimeInput = TextEditingController(),
       _endTimeInput = TextEditingController();
+  // Date of absence, which is now by default.
   DateTime _date = DateTime.now();
+  // Time of day, which is the current time by default.
   TimeOfDay _startTime = TimeOfDay.now(), _endTime = TimeOfDay.now();
+  // Reason for absence from [AbsenceReason] enum. Other by default.
   String _reason = AbsenceReasons.other.toName;
 
+  /// Disposes text field widgets.
   @override
   void dispose() {
     super.dispose();
@@ -58,12 +64,13 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
                     padding: EdgeInsets.all(3.w),
                     child: Column(
                       children: [
+                        // Creates dropdown of [AbsenceReasons] that can be selected.
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               'Reason:',
-                              style: TextStyle(fontSize: 2.5.w),
+                              style: TextStyle(fontSize: 3.w),
                             ),
                             SizedBox(width: 2.w),
                             Expanded(
@@ -72,7 +79,7 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
                                     dropdownButtonColor: ColorUtil.snowWhite,
                                     dropdownColor: ColorUtil.snowWhite,
                                     padding: EdgeInsets.all(1.5.w),
-                                    itemHeight: 6.w,
+                                    itemHeight: 10.w,
                                     borderRadius: BorderRadius.circular(2.w),
                                     border: BorderSide(
                                         color: Colors.black12, width: 0.1.w),
@@ -95,6 +102,7 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
                           ],
                         ),
                         SizedBox(height: 5.w),
+                        // Date input for absence.
                         TextField(
                           controller: _dateInput,
                           readOnly: true,
@@ -116,6 +124,7 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
                           },
                         ),
                         SizedBox(height: 5.w),
+                        // Start time input.
                         TextField(
                           controller: _startTimeInput,
                           readOnly: true,
@@ -133,6 +142,7 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
                           },
                         ),
                         SizedBox(height: 5.w),
+                        // End time input.
                         TextField(
                           controller: _endTimeInput,
                           readOnly: true,
@@ -150,6 +160,7 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
                           },
                         ),
                         SizedBox(height: 5.w),
+                        // Option to set [_startTime] and [_endTime] to all day (7:35 AM to 2:55 PM).
                         GFButton(
                             onPressed: () => setState(() {
                                   _startTimeInput.text = '7:35 AM';
@@ -167,8 +178,9 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
                     ),
                   )),
               SizedBox(height: 5.w),
+              // Submit absence report, which calls [_addAbsence].
               GFButton(
-                  onPressed: () => _addAbsence(widget.student),
+                  onPressed: () => _addAbsence,
                   text: 'Submit',
                   icon: const Icon(Icons.add, color: Colors.white),
                   color: ColorUtil.red)
@@ -179,7 +191,9 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
     );
   }
 
-  void _addAbsence(StudentModel student) async {
+  /// Adds an absence to the [widget.student]'s data.
+  void _addAbsence() async {
+    // Checks to make sure that all input fields are filled out.
     if (_dateInput.text.isEmpty ||
         _startTimeInput.text.isEmpty ||
         _endTimeInput.text.isEmpty) {
@@ -187,27 +201,32 @@ class _ReportAbsenceScreenState extends State<ReportAbsenceScreen> {
       return;
     }
 
+    // Gets an instance of the users and absences collection.
     CollectionReference userCollection =
             FirebaseFirestore.instance.collection(Collections.users.toPath),
         absenceCollection =
             FirebaseFirestore.instance.collection(Collections.absences.toPath);
 
+    // Creates a document reference in the [absenceCollection].
     DocumentReference doc = absenceCollection.doc();
 
-    AbsenceModel absenceModel = AbsenceModel(doc.id, student.id, DateTime.now(),
-        _startTime, _endTime, absenceReasonFromString(_reason));
+    // Creates an absence model from the input data.
+    AbsenceModel absenceModel = AbsenceModel(doc.id, widget.student.id,
+        DateTime.now(), _startTime, _endTime, absenceReasonFromString(_reason));
 
+    // Attempts to save the absence to the user's absences and the absence model to the absence collection.
     try {
       doc.set(AbsenceService().absenceToJson(absenceModel));
-      student.absences.add(doc.id);
+      widget.student.absences.add(doc.id);
       await userCollection
-          .doc(student.id)
-          .update(StudentService().studentToJson(student));
+          .doc(widget.student.id)
+          .update(StudentService().studentToJson(widget.student));
     } catch (error) {
       stderr.writeln(
           "An error has occurred while attempting to create an absence: ${error.toString()}");
     }
 
+    // If the screen is still mounted, it will display a success message and pop the screen.
     if (!mounted) return;
     showSnackBar(context, "Absence submitted!");
 

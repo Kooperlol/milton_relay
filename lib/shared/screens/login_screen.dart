@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:milton_relay/shared/services/auth_service.dart';
-import 'package:milton_relay/shared/widgets/text_field_widget.dart';
 import '../utils/color_util.dart';
 import '../utils/display_util.dart';
 import '../widgets/app_bar_widget.dart';
@@ -15,9 +14,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // Text field widgets for login information.
   final TextEditingController _emailController = TextEditingController(),
       _passwordController = TextEditingController();
 
+  /// Disposes text field widgets.
   @override
   void dispose() {
     super.dispose();
@@ -25,10 +26,11 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
   }
 
-  void login() async {
+  /// Logs the user in and redirects them to the dashboard.
+  Future<void> _login() async {
     context.loaderOverlay.show();
-    String res = await AuthService().loginUser(
-        email: _emailController.text, password: _passwordController.text);
+    String res = await AuthService()
+        .loginUser(_emailController.text, _passwordController.text);
     if (!mounted) return;
     if (res == 'success') {
       redirectToDashboard(context);
@@ -50,11 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox.square(
               dimension: 32,
             ),
+            // Login Vector.
             SvgPicture.asset('assets/welcome-vector.svg',
                 width: 200, height: 200),
             const SizedBox.square(
               dimension: 32,
             ),
+            // Welcome back text.
             const Text(
               'Welcome Back!',
               textAlign: TextAlign.center,
@@ -65,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox.square(
               dimension: 32,
             ),
-            TextFieldInput(
+            // Email input field.
+            LoginInputField(
               textEditingController: _emailController,
               textInputType: TextInputType.emailAddress,
               hintText: 'Enter your school email',
@@ -73,7 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox.square(
               dimension: 16,
             ),
-            TextFieldInput(
+            // Password input field.
+            LoginInputField(
               textEditingController: _passwordController,
               textInputType: TextInputType.text,
               hintText: 'Enter your school password',
@@ -82,8 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox.square(
               dimension: 32,
             ),
+            // Login button which calls [_login].
             InkWell(
-              onTap: login,
+              onTap: _login,
               customBorder:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
               child: Container(
@@ -100,6 +107,44 @@ class _LoginScreenState extends State<LoginScreen> {
           ]),
         ),
       ),
+    );
+  }
+}
+
+/// Custom Text Input field to decorate the login fields.
+class LoginInputField extends StatelessWidget {
+  final TextEditingController textEditingController;
+  final bool isPass;
+  final String hintText;
+  final TextInputType textInputType;
+
+  const LoginInputField({
+    Key? key,
+    required this.textEditingController,
+    this.isPass = false,
+    required this.hintText,
+    required this.textInputType,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    OutlineInputBorder border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15.0),
+    );
+
+    return TextField(
+      controller: textEditingController,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: border,
+        fillColor: Colors.white,
+        focusedBorder: border,
+        enabledBorder: border,
+        filled: true,
+        contentPadding: const EdgeInsets.all(8),
+      ),
+      keyboardType: textInputType,
+      obscureText: isPass,
     );
   }
 }

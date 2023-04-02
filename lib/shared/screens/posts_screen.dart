@@ -41,6 +41,7 @@ class _PostsScreenState extends State<PostsScreen> with LoadModel {
   @override
   void initState() {
     super.initState();
+    // Load 3 posts.
     fetchData(3);
   }
 
@@ -49,6 +50,7 @@ class _PostsScreenState extends State<PostsScreen> with LoadModel {
     return Scaffold(
         appBar: AppBarWidget(
             title: 'Community Posts',
+            // Only show a create post button if the user is not an admin.
             icons: AuthService().isAdmin()
                 ? []
                 : [
@@ -61,9 +63,14 @@ class _PostsScreenState extends State<PostsScreen> with LoadModel {
                       },
                     )
                   ]),
+        // Gets the display from load model.
+        // Loads 3 posts everytime the user scrolls to the bottom.
         body: getDisplay(3));
   }
 
+  /// Listener to check for the create post screen being exited.
+  ///
+  /// Once exited, the current data is cleared, the [fetchData] function is called, and the listener is removed.
   void _refreshPostsOnPop() {
     if (!mounted) return;
     if (GoRouter.of(context).location.contains('/posts')) {
@@ -77,6 +84,9 @@ class _PostsScreenState extends State<PostsScreen> with LoadModel {
     }
   }
 
+  /// Gets [loadSize] amount of posts and adds it to [data].
+  ///
+  /// Queries the Database for posts and then converts them to [PostWidget]s.
   @override
   Future<void> fetchData(int loadSize) async {
     if (isLoading || isAllFetched) return;
@@ -104,12 +114,14 @@ class _PostsScreenState extends State<PostsScreen> with LoadModel {
     if (!mounted) return;
     setState(() {
       data.addAll(postCards);
+      // All is fetched if length of query is less than the load size.
       isAllFetched = postCards.length < loadSize;
       isLoading = false;
     });
   }
 }
 
+/// Displays information about a post.
 class PostWidget extends StatefulWidget {
   final PostModel post;
 
@@ -120,14 +132,18 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
+  // Posts collection in the database.
   final CollectionReference _postsCollection =
       FirebaseFirestore.instance.collection(Collections.posts.toPath);
+  // User Model of poster.
   UserModel? _poster;
+  // Index of image in carousal.
   int _index = 0;
 
   @override
   void initState() {
     super.initState();
+    // Gets poster from the post details.
     _initUser();
   }
 
@@ -146,6 +162,7 @@ class _PostWidgetState extends State<PostWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
+                // Poster's Avatar.
                 CircleAvatar(
                   radius: 5.w,
                   backgroundColor: ColorUtil.red,
@@ -153,6 +170,7 @@ class _PostWidgetState extends State<PostWidget> {
                       _poster != null ? _poster!.avatar.image : null,
                 ),
                 SizedBox(width: 2.w),
+                // Name and role of the poster.
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -166,6 +184,7 @@ class _PostWidgetState extends State<PostWidget> {
                   ],
                 ),
                 const Expanded(child: SizedBox.square()),
+                // If the viewer is an Admin, create an icon to delete the post.
                 if (AuthService().isAdmin())
                   IconButton(
                       onPressed: () async {
@@ -182,6 +201,8 @@ class _PostWidgetState extends State<PostWidget> {
                       icon: const Icon(Icons.delete))
               ]),
               SizedBox(height: 1.w),
+              // Displays the images in a carousel.
+              // Uses [_index] for the current image view.
               GFCarousel(
                   viewportFraction: 1.0,
                   enableInfiniteScroll: false,
@@ -194,6 +215,7 @@ class _PostWidgetState extends State<PostWidget> {
               Stack(
                 alignment: Alignment.center,
                 children: [
+                  // Displays a like button which updates the post data on toggle.
                   Row(
                     children: [
                       LikeButton(
@@ -213,26 +235,32 @@ class _PostWidgetState extends State<PostWidget> {
                           isLiked: _poster == null
                               ? false
                               : widget.post.likes.contains(_poster!.id)),
-                      IconButton(
-                          onPressed: () async =>
-                              await SocialShare.shareInstagramStory(
-                                  imagePath: await _saveImageData(
-                                      widget.post.images[_index]),
-                                  appId: '1891518221201628'),
-                          color: ColorUtil.red,
-                          icon: SvgPicture.asset(
-                            'assets/instagram-icon.svg',
-                            width: 6.w,
-                            height: 6.w,
-                            colorFilter: ColorFilter.mode(
-                                ColorUtil.red, BlendMode.srcIn),
-                          )),
+                      SizedBox(width: 1.w),
+                      // Creates a button to share the currently viewed image to Instagram.
+                      SizedBox(
+                        width: 10.w,
+                        height: 10.w,
+                        child: IconButton(
+                            onPressed: () async =>
+                                await SocialShare.shareInstagramStory(
+                                    imagePath: await _saveImageData(
+                                        widget.post.images[_index]),
+                                    appId: '1891518221201628'),
+                            color: ColorUtil.red,
+                            icon: SvgPicture.asset(
+                              'assets/instagram-icon.svg',
+                              colorFilter: ColorFilter.mode(
+                                  ColorUtil.red, BlendMode.srcIn),
+                            )),
+                      ),
                       const Expanded(child: SizedBox.square()),
+                      // Shows the date that the post was uploaded.
                       Text(DateFormat.yMMMMd().format(widget.post.date),
                           style: TextStyle(
                               color: ColorUtil.darkGray, fontSize: 2.5.w))
                     ],
                   ),
+                  // Shows a dot indicator for the carousel only if there is more than one image.
                   widget.post.images.length > 1
                       ? Center(
                           child: DotsIndicator(
@@ -247,9 +275,11 @@ class _PostWidgetState extends State<PostWidget> {
                       : Container(),
                 ],
               ),
+              // Title of post.
               Text(widget.post.title,
                   style:
                       TextStyle(fontSize: 2.5.w, fontWeight: FontWeight.w600)),
+              // Description of post with a read more button after two lines.
               ReadMoreText(
                 widget.post.description,
                 style: TextStyle(fontSize: 2.w),
@@ -263,17 +293,28 @@ class _PostWidgetState extends State<PostWidget> {
         ));
   }
 
+  /// Sets [_poster] to the User Model of the poster.
+  ///
+  /// Fetches the users collection for the ID using [UserService].
   Future<void> _initUser() async {
     UserModel userModel = await UserService().getUserFromID(widget.post.poster);
     if (!mounted) return;
     setState(() => _poster = userModel);
   }
 
+  /// Saves a web image temporarily in cache and returns the file path.
+  ///
+  /// Used to share the image to social media sites like Instagram.
   Future<String> _saveImageData(String url) async {
+    // Get image data from the URL.
     var response = await http.get(Uri.parse(url));
+    // Get the temporary storage directory.
     Directory? documentDirectory = await getTemporaryDirectory();
+    // Create a file with the directory and a unique ID for the name.
     File file = File(path.join(documentDirectory.path, const Uuid().v1()));
+    // Write the data from the [response] to the file.
     file.writeAsBytes(response.bodyBytes);
+    // Returns the file path.
     return file.path;
   }
 }

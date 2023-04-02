@@ -9,6 +9,7 @@ import '../../shared/utils/color_util.dart';
 import '../../shared/utils/text_util.dart';
 import '../../shared/widgets/app_bar_widget.dart';
 
+/// Views the absence of [student]
 class ViewAbsencesScreen extends StatefulWidget {
   final StudentModel student;
   const ViewAbsencesScreen({Key? key, required this.student}) : super(key: key);
@@ -18,6 +19,7 @@ class ViewAbsencesScreen extends StatefulWidget {
 }
 
 class _ViewAbsencesScreenState extends State<ViewAbsencesScreen> {
+  // Stores the absence widgets.
   final List<Widget> _data = [];
 
   @override
@@ -49,11 +51,14 @@ class _ViewAbsencesScreenState extends State<ViewAbsencesScreen> {
     );
   }
 
+  /// Gets the absences of [widget.student] from the absence database and sets it to [_data].
   void _initData() async {
     List<Widget> absences = [];
+    // Copies the user's current absences and sorts them based on date in descending order.
     List<AbsenceModel> sortedAbsences =
         await AbsenceService().getAbsencesFromIDs(widget.student.absences);
     sortedAbsences.sort((a, b) => b.date.compareTo(a.date));
+    // Traverses through the sorted absences and creates a card for each.
     for (AbsenceModel absence in sortedAbsences) {
       absences.add(Card(
           color: ColorUtil.snowWhite,
@@ -66,6 +71,7 @@ class _ViewAbsencesScreenState extends State<ViewAbsencesScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Displays date.
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
@@ -81,6 +87,7 @@ class _ViewAbsencesScreenState extends State<ViewAbsencesScreen> {
                       style: TextStyle(fontSize: 5.w, color: Colors.black))
                 ])),
                 SizedBox(height: 1.w),
+                // Displays time.
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
@@ -97,6 +104,7 @@ class _ViewAbsencesScreenState extends State<ViewAbsencesScreen> {
                       style: TextStyle(fontSize: 5.w, color: Colors.black))
                 ])),
                 SizedBox(height: 1.w),
+                // Displays reason.
                 RichText(
                     text: TextSpan(children: [
                   TextSpan(
@@ -115,6 +123,7 @@ class _ViewAbsencesScreenState extends State<ViewAbsencesScreen> {
             ),
           )));
     }
+    // Sets the [_data] to the list of absences as widgets.
     setState(() => _data.addAll(absences));
   }
 }

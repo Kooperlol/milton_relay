@@ -28,6 +28,9 @@ class AbsenceService {
         'reason': absence.reason.toName,
       };
 
+  /// Returns a list of absence models from a list of their IDs.
+  ///
+  /// Traverses [ids] and searches the database for each.
   Future<List<AbsenceModel>> getAbsencesFromIDs(List<String> ids) async {
     List<AbsenceModel> absences = [];
     CollectionReference absenceCollection =

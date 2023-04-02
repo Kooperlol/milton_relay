@@ -15,12 +15,14 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  /// Initializes the Firebase connection.
   Future<FirebaseApp> _initializeFirebase() async =>
       await Firebase.initializeApp();
 
   @override
   void initState() {
     super.initState();
+    // Once the Firebase connection is established, the user is redirected to the dashboard or to login.
     _initializeFirebase().then((value) =>
         FirebaseAuth.instance.currentUser != null
             ? redirectToDashboard(context)
@@ -32,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: ColorUtil.gray,
       body: Center(
+        // Loading status.
         child: CircularProgressIndicator(
           color: ColorUtil.red,
         ),

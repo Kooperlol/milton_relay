@@ -11,6 +11,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../models/roles.dart';
 
+/// Shows a snack bar with a message of [text].
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
     BuildContext context, String text) {
   return ScaffoldMessenger.of(context).showSnackBar(
@@ -18,7 +19,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
       backgroundColor: ColorUtil.red,
       behavior: SnackBarBehavior.floating,
       content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(Icons.info_outline, color: ColorUtil.darkRed, size: 4.w),
+        Icon(Icons.info_outline, color: Colors.white, size: 5.w),
         SizedBox.square(
           dimension: 1.w,
         ),
@@ -27,7 +28,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
               maxLines: 2,
               style: TextStyle(
                 overflow: TextOverflow.ellipsis,
-                fontSize: 3.w,
+                fontSize: 3.5.w,
               )),
         ),
       ]),
@@ -35,6 +36,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
   );
 }
 
+/// Widget that creates a [BottomNavigationBarItem] from giving a [location] and [icon].
 class NavBarItem extends BottomNavigationBarItem {
   final String location;
 
@@ -42,6 +44,7 @@ class NavBarItem extends BottomNavigationBarItem {
       : super(icon: icon, label: '');
 }
 
+/// Image picker, which shows the user their image gallery.
 Future<File?> pickImage() async {
   final XFile? image =
       await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -49,6 +52,9 @@ Future<File?> pickImage() async {
   return File(image.path);
 }
 
+/// Gets the user's role and sends them to their corresponding news page.
+///
+/// Initiates their bottom navigation bar.
 void redirectToDashboard(BuildContext context) async {
   if (AuthService().isAdmin()) {
     context.go(Routes.adminNews.toPath);

@@ -26,13 +26,16 @@ class IssueManagerScreen extends StatefulWidget {
 
 class _IssueManagerScreenState extends State<IssueManagerScreen>
     with SingleTickerProviderStateMixin {
+  // Tab controller for switching between resolved and unresolved.
   late TabController _tabController;
+  // Stores the state of widgets so they can be refreshed.
   final GlobalKey<_IssueViewState> _resolvedKey = GlobalKey(),
       _unresolvedKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
+    // Initializes the tab controller with vsync.
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -51,6 +54,7 @@ class _IssueManagerScreenState extends State<IssueManagerScreen>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox.square(dimension: 3.w),
+            // Tabs to switch between the unresolved and resolved screen.
             GFSegmentTabs(
               length: 2,
               unselectedLabelColor: Colors.black,
@@ -60,6 +64,8 @@ class _IssueManagerScreenState extends State<IssueManagerScreen>
               tabController: _tabController,
             ),
             SizedBox.square(dimension: 3.w),
+            // Shows the resolved or unresolved screen depending on the tab selected.
+            // Passes the [_refreshContent] function to be used from the key.
             Expanded(
               child: GFTabBarView(controller: _tabController, children: [
                 IssueView(false, _refreshContent, key: _unresolvedKey),
@@ -72,6 +78,7 @@ class _IssueManagerScreenState extends State<IssueManagerScreen>
     );
   }
 
+  /// Refreshes the issues by clearing the data and resetting the current index. Then, fetches 10 issues.
   void _refreshContent() {
     _resolvedKey.currentState?.setState(() {
       _resolvedKey.currentState?.isAllFetched = false;
@@ -88,6 +95,7 @@ class _IssueManagerScreenState extends State<IssueManagerScreen>
   }
 }
 
+/// Shows either all resolved issues or unresolved issues depending on [resolved].
 class IssueView extends StatefulWidget {
   final bool resolved;
   final Function refreshFunction;
@@ -103,6 +111,7 @@ class _IssueViewState extends State<IssueView>
   @override
   void initState() {
     super.initState();
+    // Load 10 issues.
     fetchData(10);
   }
 
@@ -114,6 +123,7 @@ class _IssueViewState extends State<IssueView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    // Loads data if the bottom is reached. Otherwise, it displays the issue at that index that is within [data].
     return NotificationListener<ScrollEndNotification>(
       child: ListView.builder(
         itemBuilder: (context, index) {
@@ -140,6 +150,10 @@ class _IssueViewState extends State<IssueView>
     );
   }
 
+  /// Returns a widget which displays information about [issue]
+  ///
+  /// On tap, the view issue screen will be opened to see more information and manage it.
+  /// Once the view issue screen is popped, the content will be refreshed using [_refreshIssuesOnPop].
   Future<Widget> _getIssueWidget(
           BuildContext context, IssueModel issue) async =>
       Container(
@@ -174,6 +188,9 @@ class _IssueViewState extends State<IssueView>
         ),
       );
 
+  /// Listener to check for the view issue screen being exited.
+  ///
+  /// Once exited, the [refreshFunction] is called and the listener is removed.
   void _refreshIssuesOnPop() {
     if (!mounted) return;
     if (GoRouter.of(context).location == Routes.issueManager.toPath) {
@@ -182,9 +199,13 @@ class _IssueViewState extends State<IssueView>
     }
   }
 
+  /// Saves the state of the screen so the data isn't always being refreshed.
   @override
   bool get wantKeepAlive => true;
 
+  /// Gets [loadSize] amount of resolved or unresolved issues depending on [widget.resolved].
+  ///
+  /// Queries the Database for issues that match and then adds them to [data] after calling the [_getIssueWidget] function.
   @override
   Future<void> fetchData(int loadSize) async {
     if (isLoading || isAllFetched) return;

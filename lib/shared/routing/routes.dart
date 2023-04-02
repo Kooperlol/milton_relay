@@ -39,148 +39,148 @@ extension RoutesExtension on Routes {
   String get toName {
     switch (this) {
       case Routes.login:
-        return "login";
+        return 'login';
       case Routes.adminCalendar:
-        return "adminCalendar";
+        return 'adminCalendar';
       case Routes.instructorCalendar:
-        return "instructorCalendar";
+        return 'instructorCalendar';
       case Routes.parentCalendar:
-        return "parentCalendar";
+        return 'parentCalendar';
       case Routes.studentCalendar:
-        return "studentCalendar";
+        return 'studentCalendar';
       case Routes.adminNews:
-        return "adminNews";
+        return 'adminNews';
       case Routes.studentNews:
-        return "studentNews";
+        return 'studentNews';
       case Routes.parentNews:
-        return "parentNews";
+        return 'parentNews';
       case Routes.instructorNews:
-        return "instructorNews";
+        return 'instructorNews';
       case Routes.adminUserManager:
-        return "adminUserManager";
+        return 'adminUserManager';
       case Routes.instructorUserList:
-        return "instructorUserList";
+        return 'instructorUserList';
       case Routes.viewChildren:
-        return "viewChildren";
+        return 'viewChildren';
       case Routes.editEvent:
-        return "editEvent";
+        return 'editEvent';
       case Routes.addEvent:
-        return "addEvent";
+        return 'addEvent';
       case Routes.viewEvent:
-        return "viewEvent";
+        return 'viewEvent';
       case Routes.viewUpcomingEvents:
-        return "viewUpcomingEvents";
+        return 'viewUpcomingEvents';
       case Routes.studentSettings:
-        return "studentSettings";
+        return 'studentSettings';
       case Routes.parentSettings:
-        return "parentSettings";
+        return 'parentSettings';
       case Routes.instructorSettings:
-        return "instructorSettings";
+        return 'instructorSettings';
       case Routes.viewImage:
-        return "viewImage";
+        return 'viewImage';
       case Routes.issueManager:
-        return "issueManager";
+        return 'issueManager';
       case Routes.studentProfile:
-        return "studentProfile";
+        return 'studentProfile';
       case Routes.studentLaudePointCalculator:
-        return "studentLaudePointCalculator";
+        return 'studentLaudePointCalculator';
       case Routes.viewIssue:
-        return "viewIssue";
+        return 'viewIssue';
       case Routes.familyManager:
-        return "familyManager";
+        return 'familyManager';
       case Routes.viewAbsences:
-        return "viewAbsences";
+        return 'viewAbsences';
       case Routes.instructorPosts:
-        return "instructorPosts";
+        return 'instructorPosts';
       case Routes.studentPosts:
-        return "studentPosts";
+        return 'studentPosts';
       case Routes.adminPosts:
-        return "adminPosts";
+        return 'adminPosts';
       case Routes.createPost:
-        return "createPost";
+        return 'createPost';
       case Routes.reportAbsence:
-        return "reportAbsence";
+        return 'reportAbsence';
       case Routes.absenceManager:
-        return "absenceManager";
+        return 'absenceManager';
       case Routes.reportIssue:
-        return "reportIssue";
+        return 'reportIssue';
       default:
-        return "loading";
+        return 'loading';
     }
   }
 
   String get toPath {
     switch (this) {
       case Routes.login:
-        return "/login";
+        return '/login';
       case Routes.adminNews:
-        return "/admin/news";
+        return '/admin/news';
       case Routes.parentNews:
-        return "/parent/news";
+        return '/parent/news';
       case Routes.studentNews:
-        return "/student/news";
+        return '/student/news';
       case Routes.instructorNews:
-        return "/instructor/news";
+        return '/instructor/news';
       case Routes.adminCalendar:
-        return "/admin/calendar";
+        return '/admin/calendar';
       case Routes.parentCalendar:
-        return "/parent/calendar";
+        return '/parent/calendar';
       case Routes.instructorCalendar:
-        return "/instructor/calendar";
+        return '/instructor/calendar';
       case Routes.studentCalendar:
-        return "/student/calendar";
+        return '/student/calendar';
       case Routes.adminUserManager:
-        return "/admin/userManager";
+        return '/admin/userManager';
       case Routes.instructorUserList:
-        return "/instructor/userList";
+        return '/instructor/userList';
       case Routes.addUser:
-        return "/addUser";
+        return '/addUser';
       case Routes.viewChildren:
-        return "/viewChildren";
+        return '/viewChildren';
       case Routes.editEvent:
-        return "/admin/editEvent";
+        return '/admin/editEvent';
       case Routes.addEvent:
-        return "/admin/addEvent";
+        return '/admin/addEvent';
       case Routes.viewEvent:
-        return "/viewEvent";
+        return '/viewEvent';
       case Routes.viewUpcomingEvents:
-        return "/viewUpcomingEvents";
+        return '/viewUpcomingEvents';
       case Routes.parentSettings:
-        return "/parent/settings";
+        return '/parent/settings';
       case Routes.instructorSettings:
-        return "/instructor/settings";
+        return '/instructor/settings';
       case Routes.studentSettings:
-        return "/student/settings";
+        return '/student/settings';
       case Routes.viewImage:
-        return "/viewImage";
+        return '/viewImage';
       case Routes.issueManager:
-        return "/admin/issueManager";
+        return '/admin/issueManager';
       case Routes.viewIssue:
-        return "/admin/viewIssue";
+        return '/admin/viewIssue';
       case Routes.studentProfile:
-        return "/student/profile";
+        return '/student/profile';
       case Routes.studentLaudePointCalculator:
-        return "/student/laudePointCalculator";
+        return '/student/laudePointCalculator';
       case Routes.familyManager:
-        return "/parent/familyManager";
+        return '/parent/familyManager';
       case Routes.viewAbsences:
-        return "/student/viewAbsences";
+        return '/student/viewAbsences';
       case Routes.studentPosts:
-        return "/student/posts";
+        return '/student/posts';
       case Routes.instructorPosts:
-        return "/instructor/posts";
+        return '/instructor/posts';
       case Routes.adminPosts:
-        return "/admin/posts";
+        return '/admin/posts';
       case Routes.createPost:
-        return "/createPost";
+        return '/createPost';
       case Routes.reportAbsence:
-        return "/reportAbsence";
+        return '/reportAbsence';
       case Routes.absenceManager:
-        return "/admin/absenceManager";
+        return '/admin/absenceManager';
       case Routes.reportIssue:
-        return "/reportIssue";
+        return '/reportIssue';
       default:
-        return "/";
+        return '/';
     }
   }
 }

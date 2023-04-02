@@ -19,6 +19,7 @@ import '../../shared/utils/color_util.dart';
 import '../../shared/utils/display_util.dart';
 
 class EventManagerScreen extends StatefulWidget {
+  // Stores an EventModel if the user is editing an event.
   final EventModel? event;
   const EventManagerScreen({Key? key, this.event}) : super(key: key);
 
@@ -27,20 +28,25 @@ class EventManagerScreen extends StatefulWidget {
 }
 
 class _EventManagerScreenState extends State<EventManagerScreen> {
+  // Text fields to store event information.
   final TextEditingController _eventInput = TextEditingController(),
       _dateInput = TextEditingController(),
       _startTimeInput = TextEditingController(),
       _endTimeInput = TextEditingController(),
       _descriptionInput = TextEditingController(),
       _locationInput = TextEditingController();
+  // Start and end time of the event using TimeOfDay.
   TimeOfDay _startTimeOfEvent = TimeOfDay.now(),
       _endTimeOfEvent = TimeOfDay.now();
+  // The date of the event which is now by default.
   DateTime _dateOfEvent = DateTime.now();
-  File? _image;
+  // The banner of the event.
+  File? _banner;
 
   @override
   void initState() {
     super.initState();
+    // If an event is being edited, the variables above will be set to match [widget.event].
     if (widget.event != null) {
       _eventInput.text = widget.event!.event;
       _dateInput.text = DateFormat('MM-dd-yy').format(widget.event!.date);
@@ -54,6 +60,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
     }
   }
 
+  /// Disposes text field widgets.
   @override
   void dispose() {
     super.dispose();
@@ -65,7 +72,9 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
     _locationInput.dispose();
   }
 
+  /// Creates an event based on the input fields.
   void _createEvent() async {
+    // Checks to make sure that all fields have been filled out.
     if (_eventInput.text.isEmpty ||
         _dateInput.text.isEmpty ||
         _startTimeInput.text.isEmpty ||
@@ -76,29 +85,34 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
       return;
     }
 
+    // Displays a message if the description is greater than 250 characters.
     if (_descriptionInput.text.characters.length > 250) {
       showSnackBar(
           context, "The description can't be greater than 250 characters!");
       return;
     }
 
+    // If new, it generates a UUID for the event, otherwise it uses the UUID of the event being edited.
     var uuid = const Uuid();
     var id = widget.event != null ? widget.event!.id : uuid.v1();
 
     try {
-      TaskSnapshot? uploadTask;
-      if (_image != null) {
-        Reference storageRef =
-            FirebaseStorage.instance.ref().child("events/$id");
-        uploadTask = await storageRef.putFile(_image!);
-      }
-
-      if (widget.event != null && _image != null) {
+      // Delete the current banner from Firestore if the user is editing an event and a banner is uploaded.
+      if (widget.event != null && _banner != null) {
         Reference storageRef =
             FirebaseStorage.instance.ref().child("events/$id");
         storageRef.delete();
       }
 
+      // If [_banner] is specified, it uploads the banner to Firestore.
+      TaskSnapshot? uploadTask;
+      if (_banner != null) {
+        Reference storageRef =
+            FirebaseStorage.instance.ref().child("events/$id");
+        uploadTask = await storageRef.putFile(_banner!);
+      }
+
+      // Creates event model from data and stores it in the Event's collection.
       CollectionReference eventsCollection =
           FirebaseFirestore.instance.collection(Collections.events.toPath);
       EventModel eventModel = EventModel(
@@ -122,6 +136,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
           'An error has occurred while attempting to create an event: ${error.toString()}');
     }
 
+    // If the screen is still mounted, the screen is popped and a success message is displayed.
     if (!mounted) return;
     showSnackBar(
         context, widget.event != null ? 'Edited Event' : 'Created event!');
@@ -149,11 +164,13 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
                 padding: const EdgeInsets.all(15.0),
                 child: Column(
                   children: [
+                    // Event name input.
                     TextField(
                         controller: _eventInput,
                         decoration: const InputDecoration(
                             icon: Icon(Icons.event_note), labelText: 'Event')),
                     SizedBox(height: 5.w),
+                    // Date input.
                     TextField(
                       controller: _dateInput,
                       readOnly: true,
@@ -173,6 +190,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
                       },
                     ),
                     SizedBox(height: 5.w),
+                    // Start time input.
                     TextField(
                       controller: _startTimeInput,
                       readOnly: true,
@@ -190,6 +208,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
                       },
                     ),
                     SizedBox(height: 5.w),
+                    // End time input.
                     TextField(
                       controller: _endTimeInput,
                       readOnly: true,
@@ -207,6 +226,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
                       },
                     ),
                     SizedBox.square(dimension: 5.w),
+                    // Description Input
                     TextField(
                       maxLines: null,
                       controller: _descriptionInput,
@@ -215,6 +235,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
                           labelText: 'Description'),
                     ),
                     SizedBox(height: 5.w),
+                    // Address Input.
                     TextField(
                       keyboardType: TextInputType.streetAddress,
                       controller: _locationInput,
@@ -222,10 +243,11 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
                           icon: Icon(Icons.location_on), labelText: 'Location'),
                     ),
                     SizedBox(height: 5.w),
+                    // Shows the current banner or the default banner. On tap, it opens an image selector.
                     GestureDetector(
                       onTap: () async {
                         File? image = await pickImage();
-                        setState(() => _image = image);
+                        setState(() => _banner = image);
                       },
                       child: Container(
                           width: 250,
@@ -235,8 +257,8 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 alignment: Alignment.center,
-                                image: _image != null
-                                    ? Image.file(_image!).image
+                                image: _banner != null
+                                    ? Image.file(_banner!).image
                                     : widget.event != null
                                         ? Image.network(widget.event!.bannerURL)
                                             .image
@@ -258,6 +280,7 @@ class _EventManagerScreenState extends State<EventManagerScreen> {
               ),
             ),
             SizedBox(height: 5.w),
+            // On tap, this calls the [_createEvent] function.
             GFButton(
                 onPressed: _createEvent,
                 text: widget.event != null ? 'Edit Event' : 'Add Event',

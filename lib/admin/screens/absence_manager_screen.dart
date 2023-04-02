@@ -20,18 +20,28 @@ class AbsenceManagerScreen extends StatefulWidget {
 }
 
 class _AbsenceManagerScreenState extends State<AbsenceManagerScreen> {
+  /// Stores the content to display in the listview.
   final List<Widget> _display = [];
+
+  /// Whether the absence content is currently being fetched.
   bool _loading = false;
+
+  /// The date to query for absences.
   DateTime _date = DateTime.now();
 
   @override
   void initState() {
     super.initState();
+    // Fetch the initial data.
     _setAbsencesOnDate();
   }
 
   @override
   Widget build(BuildContext context) {
+    /// Displays a date picker.
+    ///
+    /// Will return if the input [date] is null. Otherwise, it will update [_display].
+    /// Ranges from September of 2022 to June of 2050.
     IconButton selectDateButton = IconButton(
         icon: const Icon(Icons.calendar_month, color: Colors.white),
         tooltip: 'Select Date',
@@ -53,6 +63,12 @@ class _AbsenceManagerScreenState extends State<AbsenceManagerScreen> {
             Text('Absences on ${DateFormat.yMMMd().format(_date)}',
                 style: TextStyle(fontSize: 6.w)),
             SizedBox(height: 1.w),
+
+            /// Shows [_display] in a listview to the user.
+            ///
+            /// If [_display] is populated, it will return the widget at [index].
+            /// If [loading] is true, then a progress circle will display.
+            /// If [_display] is empty, a text widget will be returned.
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
@@ -77,18 +93,24 @@ class _AbsenceManagerScreenState extends State<AbsenceManagerScreen> {
         ));
   }
 
+  /// Populates the [_display] list to absence cards on [_date].
   Future<void> _setAbsencesOnDate() async {
     setState(() => _loading = true);
     List<Widget> absenceCards = [];
+    // Query for absences where the field 'date' is equal to [_date] in epoch time.
     await FirebaseFirestore.instance
         .collection(Collections.absences.toPath)
         .where('date', isEqualTo: _date.toUtc().microsecondsSinceEpoch)
         .get()
         .then((value) async {
+      // Traverses through the documents [each absence] found from the query.
       for (var doc in value.docs) {
+        // Converts the absence from JSON to a Dart model.
         AbsenceModel absence =
             AbsenceService().getAbsenceFromJson(doc.id, doc.data());
+        // Gets the User Model from the ID of the Student.
         UserModel user = await UserService().getUserFromID(absence.student);
+        // Adds a card which will display information about the absence.
         absenceCards.add(Card(
             color: ColorUtil.snowWhite,
             shadowColor: Colors.black,
@@ -100,16 +122,19 @@ class _AbsenceManagerScreenState extends State<AbsenceManagerScreen> {
                 padding: EdgeInsets.all(2.w),
                 child: Row(
                   children: [
+                    // User's avatar from [user] displayed in a circle.
                     CircleAvatar(
                       radius: 10.w,
                       backgroundColor: ColorUtil.red,
                       backgroundImage: user.avatar.image,
                     ),
                     SizedBox.square(dimension: 2.w),
+                    // Display information in a column.
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Student's name.
                         RichText(
                             text: TextSpan(children: [
                           TextSpan(
@@ -127,6 +152,7 @@ class _AbsenceManagerScreenState extends State<AbsenceManagerScreen> {
                                   TextStyle(fontSize: 5.w, color: Colors.black))
                         ])),
                         SizedBox(height: 1.w),
+                        // Time of absence which uses the function [timeOfDayToString()] to convert it to a readable string.
                         RichText(
                             text: TextSpan(children: [
                           TextSpan(
@@ -145,6 +171,7 @@ class _AbsenceManagerScreenState extends State<AbsenceManagerScreen> {
                                   TextStyle(fontSize: 5.w, color: Colors.black))
                         ])),
                         SizedBox(height: 1.w),
+                        // Reason for absence. Reasons are from the [AbsenceReasons] enum.
                         RichText(
                             text: TextSpan(children: [
                           TextSpan(
@@ -170,7 +197,9 @@ class _AbsenceManagerScreenState extends State<AbsenceManagerScreen> {
       }
     });
 
+    // Since async, make sure the content is still mounted.
     if (!mounted) return;
+    // Sets [_display] to the new list, [absenceCards].
     setState(() {
       _display.clear();
       _display.addAll(absenceCards);

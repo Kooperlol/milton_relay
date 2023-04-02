@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../utils/color_util.dart';
 
+/// Creates an AppBar from a [title] and [icons].
+///
+/// Contains the Milton Relay logo.
 class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
   final String title;
   final List<IconButton>? icons;

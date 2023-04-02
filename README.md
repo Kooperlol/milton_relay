@@ -79,6 +79,10 @@ The program meets the requirements stated on the [FBLA Application Development R
 * [Flutter SVG](https://pub.dev/packages/flutter_svg)
 * [Dots Indicator](https://pub.dev/packages/dots_indicator)
 * [Readmore](https://pub.dev/packages/readmore)
+* [URL Launcher](https://pub.dev/packages/url_launcher)
+* [Path](https://pub.dev/packages/path)
+* [HTTP](https://pub.dev/packages/http)
+* [Path Provider](https://pub.dev/packages/path_provider)
 
 
 
@@ -89,7 +93,7 @@ The program meets the requirements stated on the [FBLA Application Development R
 * [TagBox](https://taggbox.com/)
 * [Pexels](https://www.pexels.com/)
 * [UX Wing](https://uxwing.com/)
-* [Lato Regular](https://fonts.google.com/specimen/Lato)
+* [OpenSans](https://fonts.google.com/specimen/Open+Sans)
 * [Best Readme Template](https://github.com/othneildrew/Best-README-Template)
 * [Github Image Shields](https://github.com/badges/shields)
 
@@ -130,13 +134,6 @@ Clone the repository and compile the code in an IDE such as Android Studio, XCod
 
 
 ### 📑 Instructions
-
-Coming Soon!
-
-
-
-<!-- USAGE EXAMPLES -->
-## 📷 Images
 
 Coming Soon!
 

@@ -31,15 +31,21 @@ class AddUserScreen extends StatefulWidget {
 }
 
 class _AddUserScreenState extends State<AddUserScreen> {
+  // Text field widgets for user information.
   final TextEditingController _nameController = TextEditingController(),
       _emailController = TextEditingController(),
       _passwordController = TextEditingController(),
       _laudePointsController = TextEditingController();
+  // If [_roleValue] is a parent, this stores the results from the children dropdown.
   List<String> _parentChildrenPickerSelected = [];
+  // Stores a map with a key of a Student's full name and a value of their ID.
   final Map<String, String> _parentChildrenPickerDisplay = {};
+  // Stores the role of the user being created. By default, this is a student.
   String _roleValue = Roles.student.toName;
-  File? _image;
+  // Stores the avatar of the user.
+  File? _avatar;
 
+  /// Disposes text field widgets.
   @override
   void dispose() {
     super.dispose();
@@ -49,22 +55,19 @@ class _AddUserScreenState extends State<AddUserScreen> {
     _laudePointsController.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _setParentChildrenPickerDisplay();
-  }
-
+  /// Creates a user based on input fields.
   void _createUser() async {
+    // Checks to make sure that all input fields are filled out.
     if (_nameController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
-        await _image?.exists() == false) {
+        await _avatar?.exists() == false) {
       if (!mounted) return;
       showSnackBar(context, "Please fill out all fields!");
       return;
     }
 
+    // Makes sure the name contains a first and last name.
     List<String> name = _nameController.text.split(" ");
     if (name.length != 2) {
       if (!mounted) return;
@@ -72,12 +75,14 @@ class _AddUserScreenState extends State<AddUserScreen> {
       return;
     }
 
+    // Makes sure the password length is greater than or equal to 6.
     if (_passwordController.text.length < 6) {
       if (!mounted) return;
       showSnackBar(context, "Your password must be 6 characters!");
       return;
     }
 
+    // If specified, this makes sure that the laude points are a valid number.
     if (_laudePointsController.text.isNotEmpty &&
         !isNumeric(_laudePointsController.text)) {
       if (!mounted) return;
@@ -86,15 +91,18 @@ class _AddUserScreenState extends State<AddUserScreen> {
     }
 
     try {
+      // Creates a user in Firebase Authentication.
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: _emailController.text, password: _passwordController.text);
 
+      // Adds the avatar to Firestore and gets the link.
       Reference storageRef = FirebaseStorage.instance
           .ref()
           .child("avatars/${userCredential.user!.uid}");
-      TaskSnapshot uploadTask = await storageRef.putFile(_image!);
+      TaskSnapshot uploadTask = await storageRef.putFile(_avatar!);
 
+      // Gets the JSON data that corresponds to the [role] of the user.
       CollectionReference users =
           FirebaseFirestore.instance.collection(Collections.users.toPath);
       Roles role = roleFromString(_roleValue);
@@ -130,12 +138,14 @@ class _AddUserScreenState extends State<AddUserScreen> {
         case Roles.admin:
           return;
       }
+      // Creates a document with the Authentication ID of the user and sets it to [data].
       users.doc(userCredential.user!.uid).set(data);
     } catch (error) {
       stderr.writeln(
           "An error has occurred while attempting to create a new user: ${error.toString()}");
     }
 
+    // If the screen is still mounted, it will display a success message and pop the screen.
     if (!mounted) return;
     showSnackBar(context, "Created user!");
 
@@ -152,6 +162,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Creates a dropdown using GetWidget of all roles and a selection feature.
                 SizedBox(
                   height: 10.w,
                   width: double.infinity,
@@ -174,6 +185,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
                             .toList(),
                         onChanged: (value) {
                           if (value == null) return;
+                          if (value == Roles.parent.toName &&
+                              _parentChildrenPickerDisplay.isEmpty) {
+                            _setParentChildrenPickerDisplay();
+                          }
                           setState(() => _roleValue = value);
                         }),
                   ),
@@ -185,22 +200,23 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     padding: EdgeInsets.all(3.w),
                     child: Column(
                       children: [
+                        // Avatar selector and display.
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CircleAvatar(
                               radius: 7.5.w,
-                              backgroundImage: _image == null
+                              backgroundImage: _avatar == null
                                   ? Image.asset(
                                           "assets/default-user-avatar.jpg")
                                       .image
-                                  : Image.file(_image!).image,
+                                  : Image.file(_avatar!).image,
                             ),
                             SizedBox.square(dimension: 3.w),
                             GFButton(
                                 onPressed: () async {
                                   File? image = await pickImage();
-                                  setState(() => _image = image);
+                                  setState(() => _avatar = image);
                                 },
                                 text: 'Upload Avatar',
                                 icon: const Icon(Icons.add_photo_alternate,
@@ -209,18 +225,21 @@ class _AddUserScreenState extends State<AddUserScreen> {
                           ],
                         ),
                         SizedBox.square(dimension: 5.w),
+                        // Name Text Field.
                         TextField(
                             controller: _nameController,
                             decoration: const InputDecoration(
                                 icon: Icon(Icons.drive_file_rename_outline),
                                 labelText: 'Full Name')),
                         SizedBox.square(dimension: 5.w),
+                        // Email Field.
                         TextField(
                             controller: _emailController,
                             decoration: const InputDecoration(
                                 icon: Icon(Icons.email),
                                 labelText: 'Email Address')),
                         SizedBox.square(dimension: 5.w),
+                        // Password Field.
                         TextField(
                             controller: _passwordController,
                             enableSuggestions: false,
@@ -229,6 +248,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                             decoration: const InputDecoration(
                                 icon: Icon(Icons.lock), labelText: 'Password')),
                         SizedBox.square(dimension: 5.w),
+                        // Children dropdown if [_roleValue] is equal to Parent.
                         if (_roleValue == Roles.parent.toName)
                           Column(children: [
                             SizedBox.square(dimension: 5.w),
@@ -240,6 +260,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                 onChanged: (List<String> e) =>
                                     _parentChildrenPickerSelected = e)
                           ]),
+                        // Laude Point Text Field if [_roleValue] is equal to Student.
                         if (_roleValue == Roles.student.toName)
                           Column(children: [
                             SizedBox.square(dimension: 5.w),
@@ -255,6 +276,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   ),
                 ),
                 SizedBox.square(dimension: 5.w),
+                // Create user button which calls [_createUser()].
                 GFButton(
                     onPressed: () => _createUser(),
                     text: 'Create User',
@@ -265,6 +287,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
         ));
   }
 
+  /// Populates the [_parentChildrenPickerDisplay] with data from the user's collection.
   void _setParentChildrenPickerDisplay() async {
     CollectionReference userCollection =
         FirebaseFirestore.instance.collection(Collections.users.toPath);

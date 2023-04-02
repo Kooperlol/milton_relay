@@ -22,6 +22,7 @@ class StudentProfileScreen extends StatefulWidget {
 }
 
 class _StudentProfileScreenState extends State<StudentProfileScreen> {
+  // Stores the instance of the student and their data.
   StudentModel? student;
 
   @override
@@ -38,6 +39,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
         padding: EdgeInsets.all(2.5.w),
         child: Column(
           children: [
+            // Gets the user card of the student.
             student != null
                 ? UserCard(student!)
                 : Center(
@@ -56,6 +58,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 padding: EdgeInsets.all(1.5.w),
                 child: Column(
                   children: [
+                    // Shows the laude role the user is on track to graduate as.
                     RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
@@ -65,9 +68,9 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                                     'You’re currently on the path to graduate as: ',
                               ),
                               TextSpan(
-                                  text: _getLaudeRole() == null
+                                  text: getLaudeRole(student!) == null
                                       ? 'N/A'
-                                      : _getLaudeRole()!.toName,
+                                      : getLaudeRole(student!)!.toName,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: ColorUtil.blue))
@@ -85,6 +88,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             Text('Calculate Your Laude Points',
                 style: TextStyle(fontSize: 4.w)),
             SizedBox.square(dimension: 1.w),
+            // Button which on click will show the user a screen to re/calculate their laude points.
             GFButton(
                 onPressed: () {
                   if (student == null) return;
@@ -93,7 +97,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                   GoRouter.of(context).addListener(_refreshProfileOnView);
                 },
                 text: 'Calculate',
-                icon: const Icon(Icons.calculate, color: Colors.white),
+                icon: Icon(Icons.calculate, color: Colors.white, size: 5.w),
                 textStyle: TextStyle(fontSize: 4.w),
                 size: 7.w,
                 color: ColorUtil.red)
@@ -103,6 +107,9 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
     );
   }
 
+  /// Listener to check for the laude point calculator being exited.
+  ///
+  /// Once exited, the [_initUser] function is called and the listener is removed.
   void _refreshProfileOnView() {
     if (!mounted) return;
     if (GoRouter.of(context).location == Routes.studentProfile.toPath) {
@@ -111,14 +118,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
     }
   }
 
-  LaudeRoles? _getLaudeRole() {
-    if (student == null) return null;
-    if (student!.laudePoints >= 60) return LaudeRoles.summaCumLaude;
-    if (student!.laudePoints >= 40) return LaudeRoles.magnaCumLaude;
-    if (student!.laudePoints >= 20) return LaudeRoles.cumLaude;
-    return LaudeRoles.normal;
-  }
-
+  /// Sets [student] to a Student Model from the data of the user from their AuthService ID.
   void _initUser() async {
     StudentModel studentModel = StudentService().getStudentFromJson(
         await UserService().getDataFromID(AuthService().getUID()));

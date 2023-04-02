@@ -48,6 +48,7 @@ class _ViewIssueScreenState extends State<ViewIssueScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Shows the name of the reporter.
                       RichText(
                           text: TextSpan(
                         children: [
@@ -66,6 +67,7 @@ class _ViewIssueScreenState extends State<ViewIssueScreen> {
                                   TextStyle(fontSize: 5.w, color: Colors.black))
                         ],
                       )),
+                      // Shows the date of the report.
                       RichText(
                           text: TextSpan(
                         children: [
@@ -85,6 +87,7 @@ class _ViewIssueScreenState extends State<ViewIssueScreen> {
                                   TextStyle(fontSize: 5.w, color: Colors.black))
                         ],
                       )),
+                      // Shows the report's description.
                       RichText(
                           text: TextSpan(
                         children: [
@@ -103,6 +106,7 @@ class _ViewIssueScreenState extends State<ViewIssueScreen> {
                                   TextStyle(fontSize: 5.w, color: Colors.black))
                         ],
                       )),
+                      // Shows whether the report was resolved or not.
                       RichText(
                           text: TextSpan(
                         children: [
@@ -126,6 +130,7 @@ class _ViewIssueScreenState extends State<ViewIssueScreen> {
                                   TextStyle(fontSize: 5.w, color: Colors.black))
                         ],
                       )),
+                      // Shows a carousel of images of the report. If one image is present, pagination is disabled.
                       if (widget.issue.imageURLs.isNotEmpty)
                         GFCarousel(
                             enableInfiniteScroll: false,
@@ -143,6 +148,7 @@ class _ViewIssueScreenState extends State<ViewIssueScreen> {
                                     ))
                                 .toList()),
                       SizedBox(height: 1.h),
+                      // Button which sets the issue as resolved or unresolved.
                       Center(
                         child: GFButton(
                             onPressed: () async {
@@ -176,6 +182,7 @@ class _ViewIssueScreenState extends State<ViewIssueScreen> {
         ));
   }
 
+  /// Gets the name of the user from their id, which is stored as [widget.issue.reporter].
   void _initName() async {
     String name =
         (await UserService().getUserFromID(widget.issue.reporter)).fullName;

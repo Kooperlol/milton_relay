@@ -24,11 +24,13 @@ class _UserListScreenState extends State<UserListScreen> with LoadModel {
   @override
   void initState() {
     super.initState();
+    // Loads 10 users.
     fetchData(10);
   }
 
   @override
   Widget build(BuildContext context) {
+    // Button for admins, which redirects them to the add user screen.
     IconButton addUserButton = IconButton(
         tooltip: 'Add User',
         onPressed: () {
@@ -36,6 +38,7 @@ class _UserListScreenState extends State<UserListScreen> with LoadModel {
           GoRouter.of(context).addListener(_refreshUsersOnPop);
         },
         icon: const Icon(Icons.person_add_alt_1, color: Colors.white));
+    //  Button for Admins, which redirects them to the absence manager screen.
     IconButton viewAbsencesButton = IconButton(
         tooltip: 'View Absences',
         onPressed: () => context.push(Routes.absenceManager.toPath),
@@ -49,6 +52,9 @@ class _UserListScreenState extends State<UserListScreen> with LoadModel {
     );
   }
 
+  /// Listener to check for the absence manager or add user screen being exited.
+  ///
+  /// Once exited, the [data] is cleared, [fetchData] is called. and the listener is removed.
   void _refreshUsersOnPop() {
     if (!mounted) return;
     if (GoRouter.of(context).location == Routes.adminUserManager.toPath) {
@@ -62,6 +68,10 @@ class _UserListScreenState extends State<UserListScreen> with LoadModel {
     }
   }
 
+  /// Adds [loadSize] amount of user card widgets to [data].
+  ///
+  /// Sorts the widgets based on lastname in alphabetical order.
+  /// Queries for all parents, students, and instructors.
   @override
   Future<void> fetchData(int loadSize) async {
     if (isLoading || isAllFetched) return;

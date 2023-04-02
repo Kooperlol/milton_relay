@@ -13,20 +13,24 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
+  // Webview controller which stores data about the website.
   late final WebViewController _controller;
 
   @override
   void initState() {
     super.initState();
+    // Displays loading overlay.
     context.loaderOverlay.show();
 
     _controller = WebViewController();
+    // Listens for the page to be loaded and then hides the loading overlay.
     _controller.setNavigationDelegate(NavigationDelegate(
         onPageFinished: (finished) {
           if (mounted) {
             setState(() => context.loaderOverlay.hide());
           }
         },
+        // Blocks any request to leave the TagBox website.
         onNavigationRequest: (request) => NavigationDecision.prevent));
     _controller.setJavaScriptMode(JavaScriptMode.unrestricted);
     _controller.loadRequest(Uri.parse('https://widget.taggbox.com/122304'));
@@ -38,15 +42,19 @@ class _NewsScreenState extends State<NewsScreen> {
     return Scaffold(
       appBar: AppBarWidget(
         title: 'News',
-        icons: [
-          IconButton(
-              tooltip: 'Logout',
-              onPressed: () => AuthService().logout(context),
-              icon: const Icon(Icons.exit_to_app))
-        ],
+        // Shows a logout button as an Icon for Admins.
+        icons: AuthService().isAdmin()
+            ? [
+                IconButton(
+                    tooltip: 'Logout',
+                    onPressed: () => AuthService().logout(context),
+                    icon: const Icon(Icons.exit_to_app))
+              ]
+            : [],
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
+        // Shows the webview only if the content is not loading.
         child: context.loaderOverlay.visible
             ? Container()
             : WebViewWidget(controller: _controller),

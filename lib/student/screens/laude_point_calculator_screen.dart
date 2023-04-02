@@ -10,6 +10,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../shared/models/collections.dart';
 import '../../shared/utils/color_util.dart';
 import '../../shared/utils/display_util.dart';
+import '../../shared/utils/text_util.dart';
 
 class LaudePointCalculatorScreen extends StatefulWidget {
   const LaudePointCalculatorScreen({Key? key}) : super(key: key);
@@ -21,8 +22,10 @@ class LaudePointCalculatorScreen extends StatefulWidget {
 
 class _LaudePointCalculatorScreenState
     extends State<LaudePointCalculatorScreen> {
+  // GPA & Tutoring text field.
   final TextEditingController _GPAController = TextEditingController(),
       _tutoringController = TextEditingController();
+  // Stores the multi-selection fields for classes.
   final GroupController _APCourseController =
           GroupController(isMultipleSelection: true),
       _honorCoursesController = GroupController(isMultipleSelection: true),
@@ -31,6 +34,7 @@ class _LaudePointCalculatorScreenState
       _halfPointClassesController = GroupController(isMultipleSelection: true),
       _activitiesController = GroupController(isMultipleSelection: true),
       _twoPointCoursesController = GroupController(isMultipleSelection: true);
+  // List of all AP Courses.
   final List<String> _APCourseDisplay = const [
         'AP 2-D Art and Design',
         'AP Biology',
@@ -51,6 +55,7 @@ class _LaudePointCalculatorScreenState
         'AP U.S. History',
         'AP World History'
       ],
+      // List of all honors courses.
       _honorCoursesDisplay = const [
         'Honors English 9',
         'Honors English 10',
@@ -62,6 +67,7 @@ class _LaudePointCalculatorScreenState
         'Honors Physics',
         'Honors French III'
       ],
+      // List of all advanced classes.
       _advancedClassesDisplay = const [
         'Advanced Accounting',
         'Early Childhood Education',
@@ -74,6 +80,7 @@ class _LaudePointCalculatorScreenState
         'Principles of Engineering',
         'Advanced Spanish Foundations',
       ],
+      // List of all subjects you can have 4.0 credits in.
       _fourCreditSubjectsDisplay = const [
         '4.0 Credits of Art',
         '4.0 Credits of Agriculture Science',
@@ -84,6 +91,7 @@ class _LaudePointCalculatorScreenState
         '4.0 Credits of Technology Education',
         '4.0 Credits of a World Language'
       ],
+      // List of classes which are worth half a laude point.
       _halfPointClassesDisplay = const [
         'Advanced Drawing',
         'Advanced Painting',
@@ -91,15 +99,18 @@ class _LaudePointCalculatorScreenState
         'Shop Math II',
         'Honors Human Geography'
       ],
+      // Activities which can count towards laude points.
       _activitiesDisplay = [
         'Youth Apprenticeship Level 2',
         'Early College Credit Program',
         'GSP Qualifier'
       ],
+      // Two point courses.
       _twoPointCoursesDisplay = const [
         'Advanced Welding',
         'Constructions Trades II'
       ];
+  // List of all selected courses & activities.
   List<String> _APCourseSelected = [],
       _honorCoursesSelected = [],
       _advancedClassesSelected = [],
@@ -107,38 +118,55 @@ class _LaudePointCalculatorScreenState
       _halfPointClassesSelected = [],
       _activitiesSelected = [],
       _twoPointCoursesSelected = [];
+  // Saves the current step in the stepper widget.
   int _currentStep = 0;
 
+  /// Disposes text field widget.
   @override
   void dispose() {
     super.dispose();
     _GPAController.dispose();
   }
 
+  /// Calculates the student's laude points based on the filled in information.
   void _calculate() async {
+    // Makes sure the GPA field is filled out.
     if (_GPAController.text.isEmpty) {
       showSnackBar(context, 'Please enter your GPA.');
       return;
     }
     double points = 0;
+
+    // Adds the length of the lists multiplied by their laude worth.
     points += _APCourseSelected.length +
         _honorCoursesSelected.length +
         _advancedClassesSelected.length +
         _fourCreditSubjectsSelected.length +
         _activitiesSelected.length +
         (_twoPointCoursesSelected.length * 2);
+
+    // Adds classes worth half a laude point.
     if (_halfPointClassesSelected.isNotEmpty) {
       points += _halfPointClassesSelected.length / 2;
     }
-    if (_tutoringController.text.isNotEmpty) {
+
+    // If filled in, this will add tutoring laude points.
+    if (_tutoringController.text.isNotEmpty &&
+        isNumeric(_tutoringController.text)) {
       points += double.parse(_tutoringController.text) * 0.5;
     }
+
+    // Points are multiplied by the student's GPA.
     points *= double.parse(_GPAController.text);
     CollectionReference userCollection =
         FirebaseFirestore.instance.collection(Collections.users.toPath);
+
+    // Laude points of the student are updated in the user's collection.
     await userCollection
         .doc(AuthService().getUID())
         .update({'laudePoints': points});
+
+    // If the screen is still mounted, it will display a success message and pop the screen.
     if (!mounted) return;
     showSnackBar(context, "Calculated Laude Points!");
     context.pop();
@@ -155,210 +183,225 @@ class _LaudePointCalculatorScreenState
         selectedTextColor: Colors.white);
     return Scaffold(
       appBar: const AppBarWidget(title: 'Laude Point Calculator'),
-      body: Padding(
-        padding: EdgeInsets.all(1.w),
-        child: Column(
-          children: [
-            Stepper(
-              controlsBuilder: (context, _) {
-                return Row(
-                  children: <Widget>[
-                    TextButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.resolveWith(
-                              (states) => ColorUtil.red)),
-                      onPressed: () => _currentStep < 8
-                          ? setState(() => _currentStep++)
-                          : null,
-                      child: Text('Next',
-                          style: TextStyle(color: Colors.white, fontSize: 2.w)),
-                    ),
-                    TextButton(
-                      onPressed: () => _currentStep > 0
-                          ? setState(() => _currentStep--)
-                          : null,
-                      child: Text('Back', style: TextStyle(fontSize: 2.w)),
-                    ),
-                  ],
-                );
-              },
-              currentStep: _currentStep,
-              onStepTapped: (index) => setState(() => _currentStep = index),
-              steps: [
-                Step(
-                  title: Text('GPA', style: TextStyle(fontSize: 3.w)),
-                  isActive: _currentStep == 0,
-                  content: Padding(
-                    padding: EdgeInsets.all(2.w),
-                    child: TextField(
-                      controller: _GPAController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          icon: const Icon(Icons.grade),
-                          labelStyle: TextStyle(fontSize: 2.w),
-                          labelText: 'Enter your Grade Point Average.'),
-                    ),
-                  ),
-                ),
-                Step(
-                  title: Text('AP Courses', style: TextStyle(fontSize: 3.w)),
-                  subtitle: _currentStep == 1
-                      ? Text('Select the following that you have taken.',
-                          style: TextStyle(fontSize: 2.w))
-                      : null,
-                  isActive: _currentStep == 1,
-                  content: Padding(
-                    padding: EdgeInsets.all(2.w),
-                    child: SimpleGroupedChips(
-                        controller: _APCourseController,
-                        values: _APCourseDisplay,
-                        itemTitle: _APCourseDisplay,
-                        chipGroupStyle: groupStyle,
-                        onItemSelected: (list) => _APCourseSelected = list),
-                  ),
-                ),
-                Step(
-                  title:
-                      Text('Honors Courses', style: TextStyle(fontSize: 3.w)),
-                  subtitle: _currentStep == 2
-                      ? Text('Select the following that you have taken.',
-                          style: TextStyle(fontSize: 2.w))
-                      : null,
-                  isActive: _currentStep == 2,
-                  content: Padding(
-                    padding: EdgeInsets.all(2.w),
-                    child: SimpleGroupedChips(
-                        controller: _honorCoursesController,
-                        values: _honorCoursesDisplay,
-                        itemTitle: _honorCoursesDisplay,
-                        chipGroupStyle: groupStyle,
-                        onItemSelected: (list) => _honorCoursesSelected = list),
-                  ),
-                ),
-                Step(
-                  title:
-                      Text('Advanced Classes', style: TextStyle(fontSize: 3.w)),
-                  subtitle: _currentStep == 3
-                      ? Text('Select the following that you have taken.',
-                          style: TextStyle(fontSize: 2.w))
-                      : null,
-                  isActive: _currentStep == 3,
-                  content: Padding(
-                    padding: EdgeInsets.all(2.w),
-                    child: SimpleGroupedChips(
-                        controller: _advancedClassesController,
-                        values: _advancedClassesDisplay,
-                        itemTitle: _advancedClassesDisplay,
-                        chipGroupStyle: groupStyle,
-                        onItemSelected: (list) =>
-                            _advancedClassesSelected = list),
-                  ),
-                ),
-                Step(
-                  title: Text('4 Credits of a Subject',
-                      style: TextStyle(fontSize: 3.w)),
-                  subtitle: _currentStep == 4
-                      ? Text(
-                          'Select the subjects which you have four credits of.',
-                          style: TextStyle(fontSize: 2.w))
-                      : null,
-                  isActive: _currentStep == 4,
-                  content: Padding(
-                    padding: EdgeInsets.all(2.w),
-                    child: SimpleGroupedChips(
-                        controller: _fourCreditSubjectController,
-                        values: _fourCreditSubjectsDisplay,
-                        itemTitle: _fourCreditSubjectsDisplay,
-                        chipGroupStyle: groupStyle,
-                        onItemSelected: (list) =>
-                            _fourCreditSubjectsSelected = list),
-                  ),
-                ),
-                Step(
-                  title: Text('One Trimester Classes',
-                      style: TextStyle(fontSize: 3.w)),
-                  subtitle: _currentStep == 5
-                      ? Text('Select the following that you have taken.',
-                          style: TextStyle(fontSize: 2.w))
-                      : null,
-                  isActive: _currentStep == 5,
-                  content: Padding(
-                    padding: EdgeInsets.all(2.w),
-                    child: SimpleGroupedChips(
-                        controller: _halfPointClassesController,
-                        values: _halfPointClassesDisplay,
-                        itemTitle: _halfPointClassesDisplay,
-                        chipGroupStyle: groupStyle,
-                        onItemSelected: (list) =>
-                            _halfPointClassesSelected = list),
-                  ),
-                ),
-                Step(
-                  title: Text('Activities', style: TextStyle(fontSize: 3.w)),
-                  subtitle: _currentStep == 6
-                      ? Text('Select the following that you have taken.',
-                          style: TextStyle(fontSize: 2.w))
-                      : null,
-                  isActive: _currentStep == 6,
-                  content: Padding(
-                    padding: EdgeInsets.all(2.w),
-                    child: SimpleGroupedChips(
-                        controller: _activitiesController,
-                        values: _activitiesDisplay,
-                        chipGroupStyle: groupStyle,
-                        itemTitle: _activitiesDisplay,
-                        onItemSelected: (list) => _activitiesSelected = list),
-                  ),
-                ),
-                Step(
-                  title: Text('Multiple-Hour Courses',
-                      style: TextStyle(fontSize: 3.w)),
-                  subtitle: _currentStep == 7
-                      ? Text('Select the following that you have taken.',
-                          style: TextStyle(fontSize: 2.w))
-                      : null,
-                  isActive: _currentStep == 7,
-                  content: Padding(
-                    padding: EdgeInsets.all(2.w),
-                    child: SimpleGroupedChips(
-                        controller: _twoPointCoursesController,
-                        values: _twoPointCoursesDisplay,
-                        chipGroupStyle: groupStyle,
-                        itemTitle: _twoPointCoursesDisplay,
-                        onItemSelected: (list) =>
-                            _twoPointCoursesSelected = list),
-                  ),
-                ),
-                Step(
-                  title: Text('Tutoring', style: TextStyle(fontSize: 3.w)),
-                  isActive: _currentStep == 8,
-                  content: Padding(
-                    padding: EdgeInsets.all(1.5.w),
-                    child: Padding(
-                      padding: EdgeInsets.all(1.w),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(1.w),
+          child: Column(
+            children: [
+              Stepper(
+                physics: const NeverScrollableScrollPhysics(),
+                controlsBuilder: (context, _) {
+                  return Row(
+                    children: <Widget>[
+                      TextButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.resolveWith(
+                                (states) => ColorUtil.red)),
+                        onPressed: () => _currentStep < 8
+                            ? setState(() => _currentStep++)
+                            : null,
+                        child: Text('Next',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 2.w)),
+                      ),
+                      TextButton(
+                        onPressed: () => _currentStep > 0
+                            ? setState(() => _currentStep--)
+                            : null,
+                        child: Text('Back', style: TextStyle(fontSize: 2.w)),
+                      ),
+                    ],
+                  );
+                },
+                currentStep: _currentStep,
+                onStepTapped: (index) => setState(() => _currentStep = index),
+                steps: [
+                  // GPA Input.
+                  Step(
+                    title: Text('GPA', style: TextStyle(fontSize: 3.w)),
+                    isActive: _currentStep == 0,
+                    content: Padding(
+                      padding: EdgeInsets.all(2.w),
                       child: TextField(
-                        controller: _tutoringController,
+                        controller: _GPAController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                            icon: const Icon(Icons.assistant),
+                            icon: const Icon(Icons.grade),
                             labelStyle: TextStyle(fontSize: 2.w),
-                            labelText:
-                                'Enter the number of trimesters which you have tutored.'),
+                            labelText: 'Enter your Grade Point Average.'),
                       ),
                     ),
                   ),
-                )
-              ],
-            ),
-            SizedBox(height: 1.w),
-            GFButton(
-                onPressed: () => _calculate(),
-                text: 'Calculate',
-                size: 5.w,
-                textStyle: TextStyle(fontSize: 3.w),
-                icon: Icon(Icons.calculate, color: Colors.white, size: 3.w),
-                color: ColorUtil.red),
-          ],
+                  // AP Course selection.
+                  Step(
+                    title: Text('AP Courses', style: TextStyle(fontSize: 3.w)),
+                    subtitle: _currentStep == 1
+                        ? Text('Select the following that you have taken.',
+                            style: TextStyle(fontSize: 2.w))
+                        : null,
+                    isActive: _currentStep == 1,
+                    content: Padding(
+                      padding: EdgeInsets.all(2.w),
+                      child: SimpleGroupedChips(
+                          controller: _APCourseController,
+                          values: _APCourseDisplay,
+                          itemTitle: _APCourseDisplay,
+                          chipGroupStyle: groupStyle,
+                          onItemSelected: (list) => _APCourseSelected = list),
+                    ),
+                  ),
+                  // Honors course selection.
+                  Step(
+                    title:
+                        Text('Honors Courses', style: TextStyle(fontSize: 3.w)),
+                    subtitle: _currentStep == 2
+                        ? Text('Select the following that you have taken.',
+                            style: TextStyle(fontSize: 2.w))
+                        : null,
+                    isActive: _currentStep == 2,
+                    content: Padding(
+                      padding: EdgeInsets.all(2.w),
+                      child: SimpleGroupedChips(
+                          controller: _honorCoursesController,
+                          values: _honorCoursesDisplay,
+                          itemTitle: _honorCoursesDisplay,
+                          chipGroupStyle: groupStyle,
+                          onItemSelected: (list) =>
+                              _honorCoursesSelected = list),
+                    ),
+                  ),
+                  // Advanced class selection.
+                  Step(
+                    title: Text('Advanced Classes',
+                        style: TextStyle(fontSize: 3.w)),
+                    subtitle: _currentStep == 3
+                        ? Text('Select the following that you have taken.',
+                            style: TextStyle(fontSize: 2.w))
+                        : null,
+                    isActive: _currentStep == 3,
+                    content: Padding(
+                      padding: EdgeInsets.all(2.w),
+                      child: SimpleGroupedChips(
+                          controller: _advancedClassesController,
+                          values: _advancedClassesDisplay,
+                          itemTitle: _advancedClassesDisplay,
+                          chipGroupStyle: groupStyle,
+                          onItemSelected: (list) =>
+                              _advancedClassesSelected = list),
+                    ),
+                  ),
+                  // 4.0 Credits of a Subject selection.
+                  Step(
+                    title: Text('4 Credits of a Subject',
+                        style: TextStyle(fontSize: 3.w)),
+                    subtitle: _currentStep == 4
+                        ? Text(
+                            'Select the subjects which you have four credits of.',
+                            style: TextStyle(fontSize: 2.w))
+                        : null,
+                    isActive: _currentStep == 4,
+                    content: Padding(
+                      padding: EdgeInsets.all(2.w),
+                      child: SimpleGroupedChips(
+                          controller: _fourCreditSubjectController,
+                          values: _fourCreditSubjectsDisplay,
+                          itemTitle: _fourCreditSubjectsDisplay,
+                          chipGroupStyle: groupStyle,
+                          onItemSelected: (list) =>
+                              _fourCreditSubjectsSelected = list),
+                    ),
+                  ),
+                  // Half point classes selection.
+                  Step(
+                    title: Text('One Trimester Classes',
+                        style: TextStyle(fontSize: 3.w)),
+                    subtitle: _currentStep == 5
+                        ? Text('Select the following that you have taken.',
+                            style: TextStyle(fontSize: 2.w))
+                        : null,
+                    isActive: _currentStep == 5,
+                    content: Padding(
+                      padding: EdgeInsets.all(2.w),
+                      child: SimpleGroupedChips(
+                          controller: _halfPointClassesController,
+                          values: _halfPointClassesDisplay,
+                          itemTitle: _halfPointClassesDisplay,
+                          chipGroupStyle: groupStyle,
+                          onItemSelected: (list) =>
+                              _halfPointClassesSelected = list),
+                    ),
+                  ),
+                  // Activites selection.
+                  Step(
+                    title: Text('Activities', style: TextStyle(fontSize: 3.w)),
+                    subtitle: _currentStep == 6
+                        ? Text('Select the following that you have taken.',
+                            style: TextStyle(fontSize: 2.w))
+                        : null,
+                    isActive: _currentStep == 6,
+                    content: Padding(
+                      padding: EdgeInsets.all(2.w),
+                      child: SimpleGroupedChips(
+                          controller: _activitiesController,
+                          values: _activitiesDisplay,
+                          chipGroupStyle: groupStyle,
+                          itemTitle: _activitiesDisplay,
+                          onItemSelected: (list) => _activitiesSelected = list),
+                    ),
+                  ),
+                  // Multiple-hour course (2 point) selection.
+                  Step(
+                    title: Text('Multiple-Hour Courses',
+                        style: TextStyle(fontSize: 3.w)),
+                    subtitle: _currentStep == 7
+                        ? Text('Select the following that you have taken.',
+                            style: TextStyle(fontSize: 2.w))
+                        : null,
+                    isActive: _currentStep == 7,
+                    content: Padding(
+                      padding: EdgeInsets.all(2.w),
+                      child: SimpleGroupedChips(
+                          controller: _twoPointCoursesController,
+                          values: _twoPointCoursesDisplay,
+                          chipGroupStyle: groupStyle,
+                          itemTitle: _twoPointCoursesDisplay,
+                          onItemSelected: (list) =>
+                              _twoPointCoursesSelected = list),
+                    ),
+                  ),
+                  // Tutoring input.
+                  Step(
+                    title: Text('Tutoring', style: TextStyle(fontSize: 3.w)),
+                    isActive: _currentStep == 8,
+                    content: Padding(
+                      padding: EdgeInsets.all(1.5.w),
+                      child: Padding(
+                        padding: EdgeInsets.all(1.w),
+                        child: TextField(
+                          controller: _tutoringController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              icon: const Icon(Icons.assistant),
+                              labelStyle: TextStyle(fontSize: 2.w),
+                              labelText:
+                                  'Enter the number of trimesters which you have tutored.'),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 1.w),
+              // Button which when pressed will calculate the number of laude points by calling [_calculate].
+              GFButton(
+                  onPressed: () => _calculate,
+                  text: 'Calculate',
+                  size: 7.w,
+                  textStyle: TextStyle(fontSize: 4.w),
+                  icon: Icon(Icons.calculate, color: Colors.white, size: 5.w),
+                  color: ColorUtil.red),
+            ],
+          ),
         ),
       ),
     );
