@@ -141,7 +141,7 @@ https://github.com/Kooperlol/milton_relay/blob/master/documentation/instructions
 
 ### 📓 Planning Process
 
-https://github.com/Kooperlol/milton_relay/blob/master/documentation/instructions.pdf
+https://github.com/Kooperlol/milton_relay/blob/master/documentation/planning-process.pdf
 
 
 
