@@ -29,45 +29,58 @@ class ReportIssueScreen extends StatefulWidget {
 }
 
 class _ReportIssueScreenState extends State<ReportIssueScreen> {
+  // Text widget for description of issue.
   final TextEditingController _descriptionInput = TextEditingController();
+  // Images that will be stored for the issue.
   final List<File> _images = [];
+  // The type of issue being reported.
   String? _issueValue;
 
+  /// Disposes the text field.
   @override
   void dispose() {
     super.dispose();
     _descriptionInput.dispose();
   }
 
-  void _submitReport() async {
+  /// Submits the report to the issues collection.
+  Future<void> _submitReport() async {
+    // Checks to make sure that all input fields are filled out.
     if (_issueValue == null || _descriptionInput.text.isEmpty) {
       showSnackBar(context, "Please fill out all fields!");
       return;
     }
 
+    // Makes sure that the description is less than 750 characters.
     if (_descriptionInput.text.characters.length > 750) {
       showSnackBar(
           context, "The description can't be greater than 750 characters!");
       return;
     }
 
+    // Displays a loading overlay.
     context.loaderOverlay.show();
 
+    // Creates a unique ID for the post.
     var uuid = const Uuid();
     var id = uuid.v1();
 
-    List<String> imageURls = [];
+    List<String> imageURLs = [];
     try {
+      // Makes sure the user submitted an image.
       if (_images.isNotEmpty) {
+        // Traverses through each image and adds it to the Firestore database.
+        // Stores the URL of each image in the [imageURLs] array.
         for (var image in _images) {
           Reference storageRef = FirebaseStorage.instance
               .ref()
               .child("issues/$id/${image.path.split('/').last}");
           await storageRef.putFile(image);
-          imageURls.add(await storageRef.getDownloadURL());
+          imageURLs.add(await storageRef.getDownloadURL());
         }
       }
 
+      // Creates an Issue Model and uploads it to the database.
       CollectionReference issuesCollection =
           FirebaseFirestore.instance.collection(Collections.issues.toPath);
       IssueModel issueModel = IssueModel(
@@ -77,7 +90,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           AuthService().getUID(),
           DateTime.now(),
           false,
-          imageURls);
+          imageURLs);
       await issuesCollection
           .doc(id)
           .set(IssueService().issueToJson(issueModel));
@@ -86,10 +99,12 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
           "An error has occurred while attempting to create an issue report: ${error.toString()}");
     }
 
+    // If the screen is still mounted, it will display a success message and hide the load overlay.
     if (!mounted) return;
     showSnackBar(context, "Created Report. Thanks for your feedback!");
     context.loaderOverlay.hide();
 
+    // Resets all input values.
     setState(() {
       _descriptionInput.clear();
       _issueValue = null;
@@ -97,7 +112,8 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
     });
   }
 
-  void _attachContent() async {
+  /// Adds an image to [_images] based on user input.
+  void _addImage() async {
     File? file = await pickImage();
     if (file == null) return;
     setState(() => _images.add(file));
@@ -115,6 +131,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox.square(dimension: 3.w),
+              // Report Issue Vector.
               SvgPicture.asset('assets/issue-vector.svg',
                   width: 200.w, height: 50.w),
               SizedBox.square(dimension: 3.w),
@@ -130,6 +147,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         width: double.infinity,
                         height: 10.w,
                         child: DropdownButtonHideUnderline(
+                          // Dropdown which displays the different types of issues.
                           child: GFDropdown(
                             dropdownButtonColor: ColorUtil.snowWhite,
                             dropdownColor: ColorUtil.snowWhite,
@@ -142,8 +160,11 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                             icon: const Icon(Icons.arrow_drop_down,
                                 color: Colors.black),
                             onChanged: (value) {
+                              // Updates the issue value.
+                              // Will remain as hint text if nothing was selected.
                               setState(() => {_issueValue = value ?? ""});
                             },
+                            // Displays each field within the Issues enum.
                             items: Issues.values
                                 .map((e) => e.toName.capitalize())
                                 .map<DropdownMenuItem<dynamic>>((String value) {
@@ -156,6 +177,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                         ),
                       ),
                       SizedBox.square(dimension: 3.w),
+                      // Description input.
                       TextField(
                         maxLines: null,
                         controller: _descriptionInput,
@@ -166,14 +188,17 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                             labelStyle: TextStyle(fontSize: 3.w)),
                       ),
                       SizedBox.square(dimension: 3.w),
+                      // Button to add images.
+                      // On pressed, this will call the [_addImage] function.
                       GFButton(
                           onPressed: () {
+                            // Does not call the function if the user has already attached 3 images.
                             if (_images.length >= 3) {
                               showSnackBar(context,
                                   'The maximum number of attachments is 3!');
                               return;
                             }
-                            _attachContent();
+                            _addImage();
                           },
                           text: 'Attach Photos',
                           textStyle: TextStyle(fontSize: 3.w),
@@ -187,11 +212,13 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                 ),
               ),
               SizedBox.square(dimension: 3.w),
+              // Shows a list of the images attached.
               ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return Center(
                       child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    // Delete button which removes the image from the list on tap.
                     IconButton(
                         onPressed: () =>
                             setState(() => _images.removeAt(index)),
@@ -199,6 +226,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                     TextButton(
                       child: Text(_images[index].path.split('/').last,
                           style: TextStyle(fontSize: 2.w)),
+                      // Displays the image in a new screen on tap
                       onPressed: () {
                         context.push(Routes.viewImage.toPath,
                             extra: _images[index]);
@@ -209,8 +237,9 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
                 itemCount: _images.length,
               ),
               SizedBox.square(dimension: 3.w),
+              // Submit button that calls the [_submitReport] function on tap.
               GFButton(
-                  onPressed: () => _submitReport(),
+                  onPressed: _submitReport,
                   icon: Icon(Icons.send, color: Colors.white, size: 4.w),
                   textStyle: TextStyle(fontSize: 4.w),
                   size: 8.w,

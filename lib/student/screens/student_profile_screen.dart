@@ -68,9 +68,9 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                                     'You’re currently on the path to graduate as: ',
                               ),
                               TextSpan(
-                                  text: getLaudeRole(student!) == null
+                                  text: student == null
                                       ? 'N/A'
-                                      : getLaudeRole(student!)!.toName,
+                                      : getLaudeRole(student!).toName,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: ColorUtil.blue))

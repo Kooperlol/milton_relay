@@ -27,9 +27,9 @@ Milton Relay is a mobile application for my school to help keep parents and the 
 
 The program meets the requirements stated on the [FBLA Application Development Rubric](https://www.fbla-pbl.org/media/Mobile-Application-Development-FBLA-Rating-Sheet-1.pdf)
 - [x] Packaged with complete file, readme, and instructions.
-  - The readme contains instructions and relavent information. The program is packaged so that it can easily be cloned and ran on another machine.
+  - The readme contains instructions and relevant information. The program is packaged so that it can easily be cloned and ran on another machine.
 - [x] Application functionality.
-  - The application is compatiable with both IOS and Android. In addition, it can be resized to display on phones and tablets.
+  - The application is compatible with both IOS and Android. In addition, it can be resized to display on phones and tablets.
 - [x] Documentation and copyright compliance.
   - The application is licensed under MIT and all resources used are cited below and copyright free.
 - [x] Application addresses the topic.
@@ -37,7 +37,7 @@ The program meets the requirements stated on the [FBLA Application Development R
 - [x] Planning process.
   - Tangible documents will be provided to show the planning process. This includes some flowcharts, google documents, and Figma blueprints.
 - [x] Navigation.
-  - The app navigation is simplistic and easy to use with there being a bottom navigation bar and header contating intuitive UI.
+  - The app navigation is simplistic and easy to use with there being a bottom navigation bar and header containing intuitive UI.
 - [x] Code.
   - The code contains comments and all code is error free during compilation. If runtime errors occur, they can be reported through the bug report system.
 - [x] Icons and Graphics.
@@ -128,12 +128,18 @@ Clone the repository and compile the code in an IDE such as Android Studio, XCod
 * In Authentication, create an admin account with the email "admin@school.domain.com" and make a secure password.
 * In Firestore Database, create a users, posts, absences, issues, and events collection.
 * In Storage, create an avatars, events, issues, and posts folder.
-* Then, launch the application and sign in as an adminstrator.
+* Then, launch the application and sign in as an administrator.
 * Navigate to the users tab and at the top click the add user button. From there, add all of the students, teachers, and parents to the application.
 
 
 
 ### 📑 Instructions
+
+Coming Soon!
+
+
+
+### 📓 Planning Process
 
 Coming Soon!
 

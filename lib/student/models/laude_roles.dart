@@ -18,8 +18,7 @@ extension LaudeRoleExtension on LaudeRoles {
 }
 
 /// Returns the laude role of the student based on their laude points.
-LaudeRoles? getLaudeRole(StudentModel student) {
-  if (student == null) return null;
+LaudeRoles getLaudeRole(StudentModel student) {
   if (student.laudePoints >= 60) return LaudeRoles.summaCumLaude;
   if (student.laudePoints >= 40) return LaudeRoles.magnaCumLaude;
   if (student.laudePoints >= 20) return LaudeRoles.cumLaude;
