@@ -10,7 +10,7 @@
 <h3 align="center">Milton Relay</h3>
 
   <p align="center">
-    A project for FBLA Mobile App Development
+    A project for FBLA Mobile App Development (2022 - 2023)
   </p>
 </div>
 
