@@ -135,13 +135,13 @@ Clone the repository and compile the code in an IDE such as Android Studio, XCod
 
 ### 📑 Instructions
 
-Coming Soon!
+https://github.com/Kooperlol/milton_relay/blob/master/documentation/instructions.pdf
 
 
 
 ### 📓 Planning Process
 
-Coming Soon!
+https://github.com/Kooperlol/milton_relay/blob/master/documentation/instructions.pdf
 
 
 
