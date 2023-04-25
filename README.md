@@ -25,7 +25,7 @@ Milton Relay is a mobile application for my school to help keep parents and the 
 
 ## 🏆 Program Awards
 
-#1 Wisconsin - State
+#1 Wisconsin - State<br>
 #TBD Georgia - Nationals
 
 
