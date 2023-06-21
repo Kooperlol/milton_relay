@@ -23,10 +23,10 @@ class LaudePointCalculatorScreen extends StatefulWidget {
 class _LaudePointCalculatorScreenState
     extends State<LaudePointCalculatorScreen> {
   // GPA & Tutoring text field.
-  final TextEditingController _GPAController = TextEditingController(),
+  final TextEditingController _gPAController = TextEditingController(),
       _tutoringController = TextEditingController();
   // Stores the multi-selection fields for classes.
-  final GroupController _APCourseController =
+  final GroupController _aPCourseController =
           GroupController(isMultipleSelection: true),
       _honorCoursesController = GroupController(isMultipleSelection: true),
       _advancedClassesController = GroupController(isMultipleSelection: true),
@@ -35,7 +35,7 @@ class _LaudePointCalculatorScreenState
       _activitiesController = GroupController(isMultipleSelection: true),
       _twoPointCoursesController = GroupController(isMultipleSelection: true);
   // List of all AP Courses.
-  final List<String> _APCourseDisplay = const [
+  final List<String> _aPCourseDisplay = const [
         'AP 2-D Art and Design',
         'AP Biology',
         'AP Calculus',
@@ -111,7 +111,7 @@ class _LaudePointCalculatorScreenState
         'Constructions Trades II'
       ];
   // List of all selected courses & activities.
-  List<String> _APCourseSelected = [],
+  List<String> _aPCourseSelected = [],
       _honorCoursesSelected = [],
       _advancedClassesSelected = [],
       _fourCreditSubjectsSelected = [],
@@ -125,20 +125,20 @@ class _LaudePointCalculatorScreenState
   @override
   void dispose() {
     super.dispose();
-    _GPAController.dispose();
+    _gPAController.dispose();
   }
 
   /// Calculates the student's laude points based on the filled in information.
   void _calculate() async {
     // Makes sure the GPA field is filled out.
-    if (_GPAController.text.isEmpty) {
+    if (_gPAController.text.isEmpty) {
       showSnackBar(context, 'Please enter your GPA.');
       return;
     }
     double points = 0;
 
     // Adds the length of the lists multiplied by their laude worth.
-    points += _APCourseSelected.length +
+    points += _aPCourseSelected.length +
         _honorCoursesSelected.length +
         _advancedClassesSelected.length +
         _fourCreditSubjectsSelected.length +
@@ -157,7 +157,7 @@ class _LaudePointCalculatorScreenState
     }
 
     // Points are multiplied by the student's GPA.
-    points *= double.parse(_GPAController.text);
+    points *= double.parse(_gPAController.text);
     CollectionReference userCollection =
         FirebaseFirestore.instance.collection(Collections.users.toPath);
 
@@ -223,7 +223,7 @@ class _LaudePointCalculatorScreenState
                     content: Padding(
                       padding: EdgeInsets.all(2.w),
                       child: TextField(
-                        controller: _GPAController,
+                        controller: _gPAController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                             icon: const Icon(Icons.grade),
@@ -243,11 +243,11 @@ class _LaudePointCalculatorScreenState
                     content: Padding(
                       padding: EdgeInsets.all(2.w),
                       child: SimpleGroupedChips(
-                          controller: _APCourseController,
-                          values: _APCourseDisplay,
-                          itemTitle: _APCourseDisplay,
+                          controller: _aPCourseController,
+                          values: _aPCourseDisplay,
+                          itemTitle: _aPCourseDisplay,
                           chipGroupStyle: groupStyle,
-                          onItemSelected: (list) => _APCourseSelected = list),
+                          onItemSelected: (list) => _aPCourseSelected = list),
                     ),
                   ),
                   // Honors course selection.
@@ -394,7 +394,7 @@ class _LaudePointCalculatorScreenState
               SizedBox(height: 1.w),
               // Button which when pressed will calculate the number of laude points by calling [_calculate].
               GFButton(
-                  onPressed: () => _calculate,
+                  onPressed: _calculate,
                   text: 'Calculate',
                   size: 7.w,
                   textStyle: TextStyle(fontSize: 4.w),

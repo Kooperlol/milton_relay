@@ -26,6 +26,7 @@ class MiltonRelayApp extends StatelessWidget {
         child: MaterialApp.router(
           title: 'Milton Relay',
           routerConfig: router,
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
               colorScheme: ColorScheme(
                   primary: ColorUtil.red,

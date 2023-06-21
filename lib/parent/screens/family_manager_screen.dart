@@ -23,8 +23,6 @@ class FamilyManagerScreen extends StatefulWidget {
 class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
   // Stores the [UserCard] of the [parent]'s children.
   List<Widget> _childrenCards = [];
-  // Stores the parent model which is declared in [_initData].
-  ParentModel? _parent;
 
   @override
   void initState() {
@@ -100,7 +98,6 @@ class _FamilyManagerScreenState extends State<FamilyManagerScreen> {
 
     // Updates the current state of the screen with the new data.
     setState(() {
-      _parent = parentModel;
       _childrenCards = cards;
     });
 

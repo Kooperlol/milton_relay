@@ -94,7 +94,7 @@ class ViewEventScreen extends StatelessWidget {
                   WidgetSpan(
                       child: Padding(
                     padding: EdgeInsets.only(right: 1.w),
-                    child: Icon(Icons.access_time, size: 5.w),
+                    child: Icon(Icons.location_on, size: 5.w),
                   )),
                   TextSpan(
                       text: event.location,
@@ -232,6 +232,7 @@ class ViewEventScreen extends StatelessWidget {
     }
 
     // If the screen is still mounted, it will display a success message and pop the screen.
+    // ignore: use_build_context_synchronously
     if (!context.mounted) return;
 
     showSnackBar(context, 'Event Deleted');

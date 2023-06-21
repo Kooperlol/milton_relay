@@ -26,9 +26,9 @@ class _NewsScreenState extends State<NewsScreen> {
     // Listens for the page to be loaded and then hides the loading overlay.
     _controller.setNavigationDelegate(NavigationDelegate(
         onPageFinished: (finished) {
-          if (mounted) {
-            setState(() => context.loaderOverlay.hide());
-          }
+          setState(() {
+            context.loaderOverlay.hide();
+          });
         },
         // Blocks any request to leave the TagBox website.
         onNavigationRequest: (request) => NavigationDecision.prevent));
