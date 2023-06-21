@@ -10,7 +10,7 @@
 <h3 align="center">Milton Relay</h3>
 
   <p align="center">
-    A project for FBLA Mobile App Development
+    A project for FBLA Mobile App Development (2022 - 2023)
   </p>
 </div>
 
@@ -20,6 +20,13 @@
 ## ❓ About The Project
 
 Milton Relay is a mobile application for my school to help keep parents and the community up to date. The app includes upcoming events, important information such as the school calendar and activities schedule, a way for teachers and students to share photos, and a way for parents to notify the school of student absences. In addition, I added a Laude Point calculator recommended by the school administration. In the program, there is a admin, student, teacher, and parent interface, each with different features.
+
+
+
+## 🏆 Program Awards
+
+#1 Wisconsin - State<br>
+#TBD Georgia - Nationals
 
 
 
@@ -135,13 +142,13 @@ Clone the repository and compile the code in an IDE such as Android Studio, XCod
 
 ### 📑 Instructions
 
-Coming Soon!
+https://github.com/Kooperlol/milton_relay/blob/master/documentation/instructions.pdf
 
 
 
 ### 📓 Planning Process
 
-Coming Soon!
+https://github.com/Kooperlol/milton_relay/blob/master/documentation/planning-process.pdf
 
 
 
