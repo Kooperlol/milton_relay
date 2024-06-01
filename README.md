@@ -162,7 +162,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## ✉️ Contact
 
-Kooper Propp - kooperjack8@gmail.com<br>
+Kooper Propp - koopercodes@gmail.com<br>
 Project Link: [https://github.com/Kooperlol/milton_relay](https://github.com/Kooperlol/milton_relay)
 
 
